@@ -8,6 +8,7 @@ interface WeeklyReportPreviewProps {
   report: WeeklyReport | null;
   isGenerating?: boolean;
   onGenerate?: () => void;
+  transactionsCount?: number;
   className?: string;
 }
 
@@ -20,6 +21,8 @@ export function WeeklyReportPreview({
   const navigate = useNavigate();
 
   if (!report) {
+    const threshold = 5;
+    const remaining = Math.max(0, threshold - (transactionsCount ?? 0));
     return (
       <motion.div
         initial={{ opacity: 0, y: 20 }}
@@ -35,7 +38,9 @@ export function WeeklyReportPreview({
           <ArrowRight size={20} className="text-white/60 group-hover:text-white transition-colors" />
         </div>
         <p className="text-sm text-white/60 mb-4">
-          Generate your first weekly financial summary to unlock AI-powered insights.
+          {transactionsCount === 0
+            ? "Add your first transaction to see your weekly financial profile and starter insights."
+            : `Add ${remaining} more transaction${remaining === 1 ? "" : "s"} to unlock deeper AI analysis.`}
         </p>
         <button
           type="button"

@@ -27,6 +27,7 @@ import { toast } from "sonner";
 import { BottomNav } from "../components/BottomNav";
 import { MonthlyBarChart } from "../components/transactions";
 import { WeeklyReportPreview } from "../components/weekly/WeeklyReportPreview";
+import { FinancialSetupChecklist, LowDataEmptyState } from "../components/ui/LowDataDashboard";
 import { useAuthStore } from "../../store/authStore";
 import { usePersonalityStore } from "../../store/personalityStore";
 import { useUserData } from "../../hooks/useUserData";
@@ -34,6 +35,10 @@ import { useTransactions } from "../../hooks/useTransactions";
 import { useGeminiInsights } from "../../hooks/useGeminiInsights";
 import { useEmotionalInsights } from "../../hooks/useEmotionalInsights";
 import { useWeeklyReport } from "../../hooks/useWeeklyReport";
+import { useAchievements } from "../../hooks/useAchievements";
+import { useFinancialLevels } from "../../hooks/useFinancialLevels";
+import { AchievementUnlockModal } from "../components/achievements/AchievementUnlockModal";
+import { FinancialLevelWidget } from "../components/levels/FinancialLevelWidget";
 import {
   computeBalanceFromTransactions,
   getCategoryBreakdown,
@@ -216,6 +221,60 @@ function buildFallbackInsightCards(
   const breakdown = getCategoryBreakdown(transactions, monthKey);
   const top = breakdown[0];
   const weekly = getWeeklySummary(transactions);
+  const lowData = transactions.length < 5;
+  const noData = transactions.length === 0;
+
+  if (noData) {
+    return [
+      {
+        type: "strength" as InsightCardType,
+        title: "Your spending profile is starting",
+        description:
+          "Add your first transactions to unlock your personal financial picture and emotion-aware coaching.",
+        metric: "First step",
+      },
+      {
+        type: "trigger" as InsightCardType,
+        title: "Data building",
+        description:
+          "Spendr is waiting for enough history to reveal emotional spending triggers and category pressure points.",
+        metric: "Need 5 transactions",
+      },
+      {
+        type: "suggestion" as InsightCardType,
+        title: "Start small",
+        description:
+          "Record your next two purchases now to begin generating meaningful insights this week.",
+        metric: "2 more",
+      },
+    ];
+  }
+
+  if (lowData) {
+    return [
+      {
+        type: "strength" as InsightCardType,
+        title: "Early momentum",
+        description:
+          "Every entry helps Spendr refine your financial behavior and personalize advice faster.",
+        metric: `${transactions.length} entries`,
+      },
+      {
+        type: "trigger" as InsightCardType,
+        title: top ? `${top.name} pressure` : "Pattern building",
+        description: top
+          ? `${top.name} is showing up early in your spend mix. Keep tracking for clearer emotional context.`
+          : "Keep logging expenses to reveal your strongest spending triggers.",
+        metric: top ? formatCurrency(top.value) : `+${5 - transactions.length} to unlock`,
+      },
+      {
+        type: "suggestion" as InsightCardType,
+        title: "AI unlock goal",
+        description: `Add ${5 - transactions.length} more transaction${transactions.length === 4 ? "" : "s"} to unlock deeper AI analysis.`,
+        metric: "Starter report",
+      },
+    ];
+  }
 
   return [
     {
@@ -303,6 +362,30 @@ export function Home() {
     generateReport,
   } = useWeeklyReport();
 
+  const {
+    statuses: achievements,
+    recentUnlocked,
+    openUnlocks,
+    isLoading: achievementsLoading,
+    onClearUnlocks,
+  } = useAchievements(transactions, userData ?? null);
+
+  const { financialLevel } = useFinancialLevels(transactions, achievements, userData ?? null);
+
+  const unlockedBadges = achievements.filter((achievement) => achievement.earned);
+  const upcomingBadges = achievements
+    .filter((achievement) => !achievement.earned)
+    .sort((a, b) => a.percent - b.percent)
+    .slice(0, 3);
+  const rareHighlights = unlockedBadges
+    .filter(
+      (achievement) =>
+        achievement.rarity === "rare" ||
+        achievement.rarity === "epic" ||
+        achievement.rarity === "legendary"
+    )
+    .slice(0, 3);
+
   useEffect(() => {
     if (authUser?.uid && !personalityInitialized && !personalityLoading) {
       void fetchPersonality(authUser.uid);
@@ -351,6 +434,37 @@ export function Home() {
   const topCategory = categoryBreakdown[0];
   const aiCards = buildFallbackInsightCards(transactions, analysis);
   const emotionalTriggers = analysis?.emotionalSpending.triggers ?? [];
+  const lowData = transactions.length > 0 && transactions.length < 5;
+  const noData = transactions.length === 0;
+  const hasReport = Boolean(latestReport);
+  const onboardingComplete = Boolean(userData?.onboardingCompleted);
+
+  const checklistItems = [
+    {
+      title: "Complete onboarding",
+      subtitle: onboardingComplete
+        ? "Your profile is ready for smarter insights."
+        : "Tell Spendr a bit more about your goals.",
+      completed: onboardingComplete,
+    },
+    {
+      title: "Add transactions",
+      subtitle: transactions.length === 0
+        ? "Your spending profile is still empty."
+        : `${transactions.length} transaction${transactions.length === 1 ? "" : "s"} logged so far.`,
+      completed: transactions.length >= 5,
+    },
+    {
+      title: "Run AI insights",
+      subtitle: analysis ? "Dashboard intelligence is active." : "Start your first AI session.",
+      completed: Boolean(analysis),
+    },
+    {
+      title: "Generate starter report",
+      subtitle: hasReport ? "Weekly summary ready." : "Get your first financial overview.",
+      completed: hasReport,
+    },
+  ];
 
   const handleRunAi = useCallback(async () => {
     try {
@@ -385,15 +499,17 @@ export function Home() {
   const handleGenerateWeeklyReport = useCallback(async () => {
     try {
       await generateReport(false);
-      toast.success("Weekly report generated");
+      toast.success("✨ Weekly report generated! Check your report to see AI insights.");
     } catch (err) {
-      const message =
-        err instanceof AiError
-          ? err.message
-          : err instanceof Error
-            ? err.message
-            : "Could not generate weekly report.";
-      toast.error(message);
+      const errorMsg = err instanceof Error ? err.message : "Could not generate weekly report";
+      
+      if (errorMsg.includes("onboarding")) {
+        toast.error("Complete onboarding to unlock AI insights");
+      } else if (errorMsg.includes("transaction")) {
+        toast.error("Add your first transaction to get started");
+      } else {
+        toast.error(errorMsg);
+      }
     }
   }, [generateReport]);
 
@@ -499,6 +615,8 @@ export function Home() {
                 </div>
               </DashboardCard>
 
+              <FinancialLevelWidget level={financialLevel} />
+
               <div className="grid grid-cols-1 min-[360px]:grid-cols-2 sm:grid-cols-3 gap-3">
                 <DashboardCard delay={0.1}>
                   <div className="flex items-center justify-between mb-4">
@@ -542,6 +660,102 @@ export function Home() {
                   </p>
                 </DashboardCard>
               </div>
+
+              <section className="grid gap-4 lg:grid-cols-[1.3fr_0.9fr]">
+                <div className="rounded-3xl border border-white/10 bg-white/5 p-4">
+                  <div className="flex items-center justify-between gap-3 mb-4">
+                    <div>
+                      <p className="text-white/60 text-xs uppercase tracking-[0.2em]">
+                        Badge collection
+                      </p>
+                      <h3 className="text-white text-lg font-semibold mt-2">
+                        Recent unlocks & progress
+                      </h3>
+                    </div>
+                    <button
+                      type="button"
+                      onClick={() => navigate("/gamification")}
+                      className="text-[#00d9ff] text-xs font-semibold"
+                    >
+                      View all
+                    </button>
+                  </div>
+
+                  {unlockedBadges.length > 0 ? (
+                    <div className="grid grid-cols-3 gap-3">
+                      {unlockedBadges.slice(0, 3).map((achievement) => (
+                        <div
+                          key={achievement.id}
+                          className="rounded-3xl border border-white/10 bg-black/15 p-3 text-center"
+                        >
+                          <div className="text-2xl mb-2">{achievement.icon}</div>
+                          <p className="text-white text-xs font-semibold">
+                            {achievement.title}
+                          </p>
+                        </div>
+                      ))}
+                    </div>
+                  ) : (
+                    <div className="rounded-3xl border border-white/10 bg-black/10 p-5 text-white/60 text-sm">
+                      No badges unlocked yet. Log transactions consistently to start collecting achievements.
+                    </div>
+                  )}
+                </div>
+
+                <div className="rounded-3xl border border-white/10 bg-white/5 p-4">
+                  <div className="flex items-center justify-between gap-3 mb-4">
+                    <div>
+                      <p className="text-white/60 text-xs uppercase tracking-[0.2em]">
+                        Upcoming milestones
+                      </p>
+                      <h3 className="text-white text-lg font-semibold mt-2">
+                        Progress to next badges
+                      </h3>
+                    </div>
+                    <span className="text-white/50 text-xs">
+                      {upcomingBadges.length} pending
+                    </span>
+                  </div>
+                  <div className="space-y-3">
+                    {upcomingBadges.map((achievement) => (
+                      <div key={achievement.id} className="rounded-3xl border border-white/10 bg-black/10 p-4">
+                        <div className="flex items-center justify-between gap-3 mb-3">
+                          <div className="flex items-center gap-3">
+                            <span className="text-xl">{achievement.icon}</span>
+                            <div>
+                              <p className="text-white font-semibold text-sm">
+                                {achievement.title}
+                              </p>
+                              <p className="text-white/50 text-[11px]">
+                                {achievement.progressText}
+                              </p>
+                            </div>
+                          </div>
+                          <span className="text-xs text-white/60 uppercase tracking-[0.18em]">
+                            {achievement.rarity}
+                          </span>
+                        </div>
+                        <div className="h-2 rounded-full bg-white/10 overflow-hidden">
+                          <div
+                            className="h-full rounded-full bg-gradient-to-r from-[#00d9ff] to-[#00ff88]"
+                            style={{ width: `${achievement.percent}%` }}
+                          />
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </section>
+
+              {(lowData || noData) && (
+                <LowDataEmptyState
+                  transactionsCount={transactions.length}
+                  hasReport={hasReport}
+                  onAddTransaction={() => navigate("/transactions")}
+                  onRunAi={() => handleRunAi()}
+                  onViewReport={() => navigate("/weekly-report")}
+                />
+              )}
 
               <section>
                 <SectionHeader
@@ -783,6 +997,8 @@ export function Home() {
                 </div>
               </DashboardCard>
 
+              <FinancialSetupChecklist items={checklistItems} />
+
               <DashboardCard delay={0.18}>
                 <div className="flex items-center gap-3 mb-4 min-w-0">
                   <CalendarDays className="text-[#ffd60a]" size={22} />
@@ -919,6 +1135,7 @@ export function Home() {
                 report={latestReport}
                 isGenerating={reportGenerating}
                 onGenerate={handleGenerateWeeklyReport}
+                transactionsCount={transactions.length}
               />
 
               <section>
@@ -933,9 +1150,17 @@ export function Home() {
                       <div className="text-center py-6">
                         <Wallet className="text-[#00d9ff] mx-auto mb-3" size={28} />
                         <p className="text-white font-semibold">No transactions yet</p>
-                        <p className="text-white/45 text-sm mt-1">
-                          Add your first transaction to activate the dashboard.
+                        <p className="text-white/60 text-sm mt-1 mb-4">
+                          Your spending profile is still forming. Add the first few transactions to start seeing meaningful insights.
                         </p>
+                        <div className="inline-flex flex-col gap-2 items-center">
+                          <span className="rounded-full bg-[#00d9ff]/10 px-3 py-1 text-xs text-white/80">
+                            Add 5 transactions to unlock weekly reports
+                          </span>
+                          <span className="rounded-full bg-[#ffd60a]/10 px-3 py-1 text-xs text-white/80">
+                            Track daily purchases to reveal emotional trends
+                          </span>
+                        </div>
                       </div>
                     </DashboardCard>
                   ) : (
@@ -1002,6 +1227,7 @@ export function Home() {
         )}
       </main>
 
+      <AchievementUnlockModal achievements={openUnlocks} onClose={onClearUnlocks} />
       <BottomNav />
     </div>
   );

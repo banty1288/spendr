@@ -6,6 +6,9 @@ export const USERS_COLLECTION = "users";
 export const TRANSACTIONS_SUBCOLLECTION = "transactions";
 export const AI_REPORTS_SUBCOLLECTION = "ai_reports";
 export const EMOTIONAL_INSIGHTS_SUBCOLLECTION = "emotional_insights";
+export const ACHIEVEMENTS_SUBCOLLECTION = "achievements";
+export const FINANCIAL_LEVELS_SUBCOLLECTION = "financial_levels";
+export const FINANCIAL_LEVELS_DOC = "summary";
 
 export function userDocRef(uid: string) {
   return doc(db, USERS_COLLECTION, uid);
@@ -33,4 +36,16 @@ export function userEmotionalInsightsRef(uid: string) {
 
 export function userEmotionalInsightRef(uid: string, insightId = "current") {
   return doc(db, USERS_COLLECTION, uid, EMOTIONAL_INSIGHTS_SUBCOLLECTION, insightId);
+}
+
+export function userAchievementsRef(uid: string) {
+  return collection(db, USERS_COLLECTION, uid, ACHIEVEMENTS_SUBCOLLECTION);
+}
+
+export function userAchievementRef(uid: string, achievementId: string) {
+  return doc(db, USERS_COLLECTION, uid, ACHIEVEMENTS_SUBCOLLECTION, achievementId);
+}
+
+export function userFinancialLevelRef(uid: string) {
+  return doc(db, USERS_COLLECTION, uid, FINANCIAL_LEVELS_SUBCOLLECTION, FINANCIAL_LEVELS_DOC);
 }

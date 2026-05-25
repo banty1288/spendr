@@ -28,10 +28,14 @@ export function WeeklyReport() {
   const navigate = useNavigate();
   const {
     latestReport,
+    transactions,
     isLoading,
+    isDataLoading,
     isGenerating,
     error,
     canGenerate,
+    hasMinimalData,
+    hasGoodData,
     isBlockedByOnboarding,
     isBlockedByTransactions,
     generateReport,
@@ -62,7 +66,7 @@ export function WeeklyReport() {
       : error.message
     : null;
 
-  if (isLoading || (!latestReport && isGenerating)) {
+  if (isLoading || isDataLoading || (!latestReport && isGenerating)) {
     return (
       <div className="min-h-screen pb-24 relative overflow-hidden">
         <div className="absolute inset-0 opacity-20">
@@ -110,16 +114,26 @@ export function WeeklyReport() {
                 <div>
                   <h2 className="text-lg font-semibold text-white mb-2">Unable to Generate Report</h2>
                   <p className="text-sm text-white/80 mb-4">{errorMessage}</p>
+                  
                   {isBlockedByOnboarding && (
-                    <p className="text-xs text-white/60 mb-4">
-                      Complete onboarding before generating reports.
-                    </p>
+                    <div className="mb-4 p-3 rounded-lg bg-white/5 border border-white/10">
+                      <p className="text-xs text-white/70">
+                        ✨ Complete your onboarding profile to unlock AI-powered financial insights.
+                      </p>
+                    </div>
                   )}
+                  
                   {isBlockedByTransactions && (
-                    <p className="text-xs text-white/60 mb-4">
-                      Add at least one transaction to generate a report.
-                    </p>
+                    <div className="mb-4 p-3 rounded-lg bg-white/5 border border-white/10">
+                      <p className="text-xs text-white/70 mb-2">
+                        📝 Add your first transaction to get started with weekly reports.
+                      </p>
+                      <p className="text-xs text-white/50">
+                        Pro tip: Log 5+ transactions to unlock detailed AI analysis.
+                      </p>
+                    </div>
                   )}
+                  
                   <div className="flex gap-2">
                     <button
                       type="button"
@@ -128,7 +142,7 @@ export function WeeklyReport() {
                     >
                       Back to Home
                     </button>
-                    {!isBlockedByOnboarding && !isBlockedByTransactions && (
+                    {!isBlockedByOnboarding && !isBlockedByTransactions && canGenerate && (
                       <button
                         type="button"
                         onClick={() => handleGenerate(true)}
@@ -175,31 +189,73 @@ export function WeeklyReport() {
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
-              className="rounded-2xl border border-white/10 bg-gradient-to-br from-white/5 to-white/[0.02] p-8 backdrop-blur-xl text-center"
+              className="rounded-2xl border border-white/10 bg-gradient-to-br from-white/5 to-white/[0.02] p-8 backdrop-blur-xl text-center space-y-6"
             >
-              <div className="mb-4 text-4xl">📊</div>
-              <h2 className="text-lg font-semibold text-white mb-2">No Report Generated Yet</h2>
-              <p className="text-sm text-white/60 mb-6">
-                Generate your first weekly financial report to see insights about your spending patterns.
-              </p>
+              <div className="text-5xl">📊</div>
+              <div>
+                <h2 className="text-lg font-semibold text-white mb-2">Your Weekly Financial Report</h2>
+                <p className="text-sm text-white/60">
+                  {isBlockedByOnboarding
+                    ? "Complete your onboarding to get AI-powered insights"
+                    : hasGoodData
+                      ? "Generate detailed AI analysis with advanced spending patterns"
+                      : hasMinimalData
+                        ? "Start building your financial profile with your transactions"
+                        : "Add transactions to unlock personalized financial insights"}
+                </p>
+              </div>
+
+              {hasMinimalData && (
+                <div className="space-y-3">
+                  <div className="p-3 rounded-lg bg-[#9d4edd]/10 border border-[#9d4edd]/20">
+                    <p className="text-xs text-white/80">
+                      💡 <span className="font-semibold">Getting Started:</span> You have {transactions.length} transaction{transactions.length === 1 ? "" : "s"}
+                    </p>
+                  </div>
+                  {!hasGoodData && (
+                    <div className="p-3 rounded-lg bg-[#00d9ff]/10 border border-[#00d9ff]/20">
+                      <p className="text-xs text-white/80">
+                        📝 <span className="font-semibold">Tip:</span> Add {5 - transactions.length} more transactions to unlock full AI analysis
+                      </p>
+                    </div>
+                  )}
+                </div>
+              )}
+
               <button
                 type="button"
                 onClick={() => handleGenerate(false)}
-                disabled={!canGenerate || isGenerating}
-                className="px-6 py-3 rounded-lg bg-gradient-to-r from-[#00d9ff] to-[#00ff88] text-black font-semibold hover:shadow-lg hover:shadow-[#00d9ff]/50 disabled:opacity-50 disabled:cursor-not-allowed transition-all flex items-center gap-2 mx-auto"
+                disabled={!canGenerate || isGenerating || isDataLoading}
+                className="w-full px-6 py-3 rounded-lg bg-gradient-to-r from-[#00d9ff] to-[#00ff88] text-black font-semibold hover:shadow-lg hover:shadow-[#00d9ff]/50 disabled:opacity-50 disabled:cursor-not-allowed transition-all flex items-center justify-center gap-2 mx-auto"
               >
                 {isGenerating ? (
                   <>
                     <Loader2 size={18} className="animate-spin" />
                     Generating...
                   </>
+                ) : isDataLoading ? (
+                  <>
+                    <Loader2 size={18} className="animate-spin" />
+                    Loading data...
+                  </>
                 ) : (
                   <>
                     <Sparkles size={18} />
-                    Generate Report
+                    {hasGoodData ? "Generate AI Report" : "Generate Starter Report"}
                   </>
                 )}
               </button>
+
+              {!canGenerate && (
+                <button
+                  type="button"
+                  onClick={() => navigate("/transactions")}
+                  className="w-full px-6 py-3 rounded-lg bg-white/10 hover:bg-white/20 transition-colors text-white font-semibold flex items-center justify-center gap-2"
+                >
+                  <ArrowLeft size={16} className="rotate-180" />
+                  Add Transactions
+                </button>
+              )}
             </motion.div>
           </div>
         </div>

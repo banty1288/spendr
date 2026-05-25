@@ -11,6 +11,7 @@ import {
   where,
 } from "firebase/firestore";
 import type { WeeklyReport } from "../../types/weeklyReport";
+import { sanitizeWeeklyReport } from "../../services/ai/sanitizeReport";
 import { waitForFirestoreAuth } from "./assertAuth";
 import {
   userAiReportRef,
@@ -19,7 +20,7 @@ import {
 } from "./paths";
 
 function mapDoc(id: string, data: Record<string, unknown>): WeeklyReport {
-  return {
+  const mapped: Record<string, unknown> = {
     id,
     uid: String(data.uid ?? ""),
     weekStartDate: String(data.weekStartDate ?? ""),
@@ -38,7 +39,7 @@ function mapDoc(id: string, data: Record<string, unknown>): WeeklyReport {
     riskAssessment: String(data.riskAssessment ?? ""),
     emotionalTrends: (data.emotionalTrends as Array<unknown>) ?? [],
     emotionalInsight: String(data.emotionalInsight ?? ""),
-    dominantEmotionalTrigger: (data.dominantEmotionalTrigger as string) ?? undefined,
+    dominantEmotionalTrigger: (data.dominantEmotionalTrigger as string) ?? "Unknown",
     savingsProgress: (data.savingsProgress as Array<unknown>) ?? [],
     savingsRate: Number(data.savingsRate ?? 0),
     weeklyTrends: (data.weeklyTrends as Array<unknown>) ?? [],
@@ -57,12 +58,19 @@ function mapDoc(id: string, data: Record<string, unknown>): WeeklyReport {
     generatedBy: String(data.generatedBy ?? "gemini-pro"),
     modelVersion: String(data.modelVersion ?? "1.0"),
     isGenerating: Boolean(data.isGenerating ?? false),
-    error: (data.error as string) ?? undefined,
   };
+
+  // Optional error field
+  if (data.error && typeof data.error === "string") {
+    mapped.error = data.error;
+  }
+
+  return mapped as WeeklyReport;
 }
 
 /**
  * Save a weekly report to Firestore
+ * Sanitizes the report to remove undefined values before saving
  */
 export async function saveWeeklyReport(
   uid: string,
@@ -71,8 +79,10 @@ export async function saveWeeklyReport(
   await waitForFirestoreAuth(uid);
   const reportRef = userAiReportRef(uid, report.id);
   
+  const sanitizedReport = sanitizeWeeklyReport(report);
+  
   await setDoc(reportRef, {
-    ...report,
+    ...sanitizedReport,
     uid,
     createdAt: serverTimestamp(),
     updatedAt: serverTimestamp(),

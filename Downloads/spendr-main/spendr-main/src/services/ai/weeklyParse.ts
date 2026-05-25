@@ -47,20 +47,24 @@ export function parseWeeklyReport(
     })),
     topCategory:
       (parsed.categoryBreakdown as Array<unknown>)?.[0] ?? null,
-    wins: ((parsed.wins as Array<unknown>) ?? []).map((win: unknown) => ({
-      title: String((win as Record<string, unknown>).title ?? ""),
-      description: String((win as Record<string, unknown>).description ?? ""),
-      impact: (
-        ["savings", "discipline", "consistency"].includes(
-          String((win as Record<string, unknown>).impact ?? "")
-        )
-          ? (win as Record<string, unknown>).impact
-          : "discipline"
-      ) as "savings" | "discipline" | "consistency",
-      amount: (win as Record<string, unknown>).amount
-        ? Number((win as Record<string, unknown>).amount)
-        : undefined,
-    })),
+    wins: ((parsed.wins as Array<unknown>) ?? []).map((win: unknown) => {
+      const winObj: Record<string, unknown> = {
+        title: String((win as Record<string, unknown>).title ?? ""),
+        description: String((win as Record<string, unknown>).description ?? ""),
+        impact: (
+          ["savings", "discipline", "consistency"].includes(
+            String((win as Record<string, unknown>).impact ?? "")
+          )
+            ? (win as Record<string, unknown>).impact
+            : "discipline"
+        ) as "savings" | "discipline" | "consistency",
+      };
+      const amount = (win as Record<string, unknown>).amount;
+      if (amount !== undefined && amount !== null) {
+        winObj.amount = Number(amount);
+      }
+      return winObj;
+    }) as Array<unknown>,
     highlightSummary: String(parsed.highlightSummary ?? ""),
     riskyBehaviors: ((parsed.riskyBehaviors as Array<unknown>) ?? []).map(
       (risk: unknown) => ({
@@ -80,23 +84,27 @@ export function parseWeeklyReport(
     ),
     riskAssessment: String(parsed.riskAssessment ?? ""),
     emotionalTrends: ((parsed.emotionalTrends as Array<unknown>) ?? []).map(
-      (trend: unknown) => ({
-        date: String((trend as Record<string, unknown>).date ?? ""),
-        spendingType: (
-          ["rational", "emotional", "impulse"].includes(
-            String((trend as Record<string, unknown>).spendingType ?? "")
-          )
-            ? (trend as Record<string, unknown>).spendingType
-            : "rational"
-        ) as "rational" | "emotional" | "impulse",
-        amount: Number((trend as Record<string, unknown>).amount ?? 0),
-        note: (trend as Record<string, unknown>).note
-          ? String((trend as Record<string, unknown>).note)
-          : undefined,
-      })
-    ),
+      (trend: unknown) => {
+        const trendObj: Record<string, unknown> = {
+          date: String((trend as Record<string, unknown>).date ?? ""),
+          spendingType: (
+            ["rational", "emotional", "impulse"].includes(
+              String((trend as Record<string, unknown>).spendingType ?? "")
+            )
+              ? (trend as Record<string, unknown>).spendingType
+              : "rational"
+          ) as "rational" | "emotional" | "impulse",
+          amount: Number((trend as Record<string, unknown>).amount ?? 0),
+        };
+        const note = (trend as Record<string, unknown>).note;
+        if (note) {
+          trendObj.note = String(note);
+        }
+        return trendObj;
+      }
+    ) as Array<unknown>,
     emotionalInsight: String(parsed.emotionalInsight ?? ""),
-    dominantEmotionalTrigger: (parsed.dominantEmotionalTrigger as string) ?? undefined,
+    dominantEmotionalTrigger: (parsed.dominantEmotionalTrigger as string) ?? "Unknown",
     savingsProgress: ((parsed.savingsProgress as Array<unknown>) ?? []).map(
       (goal: unknown) => ({
         goalName: String((goal as Record<string, unknown>).goalName ?? ""),
@@ -126,36 +134,45 @@ export function parseWeeklyReport(
     ),
     trendSummary: String(parsed.trendSummary ?? ""),
     improvementGoals: ((parsed.improvementGoals as Array<unknown>) ?? []).map(
-      (goal: unknown) => ({
-        goalId: String((goal as Record<string, unknown>).goalId ?? ""),
-        title: String((goal as Record<string, unknown>).title ?? ""),
-        description: String((goal as Record<string, unknown>).description ?? ""),
-        targetAmount: (goal as Record<string, unknown>).targetAmount
-          ? Number((goal as Record<string, unknown>).targetAmount)
-          : undefined,
-        category: (goal as Record<string, unknown>).category
-          ? String((goal as Record<string, unknown>).category)
-          : undefined,
-        priority: (
-          ["high", "medium", "low"].includes(
-            String((goal as Record<string, unknown>).priority ?? "")
-          )
-            ? (goal as Record<string, unknown>).priority
-            : "medium"
-        ) as "high" | "medium" | "low",
-        aiReasoning: String((goal as Record<string, unknown>).aiReasoning ?? ""),
-      })
-    ),
+      (goal: unknown) => {
+        const goalObj: Record<string, unknown> = {
+          goalId: String((goal as Record<string, unknown>).goalId ?? ""),
+          title: String((goal as Record<string, unknown>).title ?? ""),
+          description: String((goal as Record<string, unknown>).description ?? ""),
+          priority: (
+            ["high", "medium", "low"].includes(
+              String((goal as Record<string, unknown>).priority ?? "")
+            )
+              ? (goal as Record<string, unknown>).priority
+              : "medium"
+          ) as "high" | "medium" | "low",
+          aiReasoning: String((goal as Record<string, unknown>).aiReasoning ?? ""),
+        };
+        const targetAmount = (goal as Record<string, unknown>).targetAmount;
+        if (targetAmount !== undefined && targetAmount !== null) {
+          goalObj.targetAmount = Number(targetAmount);
+        }
+        const category = (goal as Record<string, unknown>).category;
+        if (category) {
+          goalObj.category = String(category);
+        }
+        return goalObj;
+      }
+    ) as Array<unknown>,
     coachingInsights: ((parsed.coachingInsights as Array<unknown>) ?? []).map(
-      (insight: unknown) => ({
-        category: String((insight as Record<string, unknown>).category ?? ""),
-        insight: String((insight as Record<string, unknown>).insight ?? ""),
-        actionableStep: String((insight as Record<string, unknown>).actionableStep ?? ""),
-        emoji: (insight as Record<string, unknown>).emoji
-          ? String((insight as Record<string, unknown>).emoji)
-          : undefined,
-      })
-    ),
+      (insight: unknown) => {
+        const insightObj: Record<string, unknown> = {
+          category: String((insight as Record<string, unknown>).category ?? ""),
+          insight: String((insight as Record<string, unknown>).insight ?? ""),
+          actionableStep: String((insight as Record<string, unknown>).actionableStep ?? ""),
+        };
+        const emoji = (insight as Record<string, unknown>).emoji;
+        if (emoji) {
+          insightObj.emoji = String(emoji);
+        }
+        return insightObj;
+      }
+    ) as Array<unknown>,
     coachingMessage: String(parsed.coachingMessage ?? ""),
     healthScore: {
       discipline: Number(

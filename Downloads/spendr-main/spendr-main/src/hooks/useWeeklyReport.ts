@@ -4,14 +4,16 @@ import { useAuthStore } from "../store/authStore";
 import { useUserData } from "./useUserData";
 import { useTransactions } from "./useTransactions";
 import { generateWeeklyReport } from "../services/ai/weeklyGateway";
+import { generateFallbackWeeklyReport } from "../services/ai/weeklyFallback";
 import { fetchLatestWeeklyReport, saveWeeklyReport, fetchWeeklyReports } from "../lib/firebase/weeklyReports";
+import { hasUndefinedValues } from "../services/ai/sanitizeReport";
 import { AiError } from "../services/ai/errors";
 import { startOfWeek, subWeeks, format } from "date-fns";
 
 export function useWeeklyReport() {
   const auth = useAuthStore();
-  const { userData, isLoading: userLoading } = useUserData();
-  const { transactions, isLoading: txLoading } = useTransactions();
+  const queryUserData = useUserData();
+  const queryTransactions = useTransactions();
   
   const [reports, setReports] = useState<WeeklyReport[]>([]);
   const [latestReport, setLatestReport] = useState<WeeklyReport | null>(null);
@@ -21,10 +23,19 @@ export function useWeeklyReport() {
   const [error, setError] = useState<Error | null>(null);
 
   const uid = auth.user?.uid;
+  const userData = queryUserData.data;
+  const transactions = queryTransactions.transactions ?? [];
   
-  const isBlockedByOnboarding = !userData?.onboardingCompleted;
-  const isBlockedByTransactions = (transactions?.length ?? 0) === 0;
-  const canGenerate = uid && userData && (transactions?.length ?? 0) > 0;
+  const isBlockedByOnboarding = userData ? !userData.onboardingCompleted : false;
+  const isBlockedByTransactions = transactions.length === 0;
+  const hasMinimalData = transactions.length >= 1;
+  const hasGoodData = transactions.length >= 5;
+  
+  // Can generate if user is authenticated, onboarded, and has data
+  const canGenerate = uid && userData?.onboardingCompleted && hasMinimalData;
+  
+  // Data is still loading if either query is in flight
+  const isDataLoading = queryUserData.isLoading || queryTransactions.isLoading;
 
   // Fetch latest report on mount
   useEffect(() => {
@@ -49,10 +60,34 @@ export function useWeeklyReport() {
   // Generate a weekly report
   const generateReport = useCallback(
     async (force = false) => {
-      if (!canGenerate || !uid) {
+      if (!uid) {
         throw new AiError(
-          "INVALID",
-          "Cannot generate report: missing user data or transactions",
+          "AUTH",
+          "Not authenticated. Please log in.",
+          false
+        );
+      }
+
+      if (!userData) {
+        throw new AiError(
+          "USER",
+          "User profile not loaded. Please wait.",
+          false
+        );
+      }
+
+      if (!userData.onboardingCompleted) {
+        throw new AiError(
+          "ONBOARDING",
+          "Complete onboarding before generating weekly reports.",
+          false
+        );
+      }
+
+      if (transactions.length === 0) {
+        throw new AiError(
+          "EMPTY",
+          "Add at least one transaction to generate a weekly report.",
           false
         );
       }
@@ -70,7 +105,7 @@ export function useWeeklyReport() {
         const periodLabel = format(weekStart, "MMM d") + " - " + format(weekEnd, "MMM d, yyyy");
 
         // Filter transactions for this week
-        const weekTransactions = (transactions ?? []).filter((tx) => {
+        const weekTransactions = transactions.filter((tx) => {
           const txDate = new Date(tx.date);
           return txDate >= weekStart && txDate <= weekEnd;
         });
@@ -78,7 +113,7 @@ export function useWeeklyReport() {
         // Calculate previous week expenses
         const prevWeekStart = subWeeks(weekStart, 1);
         const prevWeekEnd = weekStart;
-        const prevWeekTransactions = (transactions ?? []).filter((tx) => {
+        const prevWeekTransactions = transactions.filter((tx) => {
           const txDate = new Date(tx.date);
           return txDate >= prevWeekStart && txDate < prevWeekEnd;
         });
@@ -86,19 +121,36 @@ export function useWeeklyReport() {
           .filter((tx) => tx.type === "expense")
           .reduce((sum, tx) => sum + tx.amount, 0);
 
-        // Generate report
-        const report = await generateWeeklyReport({
-          uid,
-          userData,
-          transactions: weekTransactions.length > 0 ? weekTransactions : (transactions ?? []),
-          weekStartDate: weekStartStr,
-          weekEndDate: weekEndStr,
-          periodLabel,
-          previousWeekExpenses,
-          force,
-        });
+        let report: WeeklyReport;
+
+        // Use AI generation if we have enough data, otherwise use fallback
+        if (hasGoodData || force) {
+          report = await generateWeeklyReport({
+            uid,
+            userData,
+            transactions: weekTransactions.length > 0 ? weekTransactions : transactions,
+            weekStartDate: weekStartStr,
+            weekEndDate: weekEndStr,
+            periodLabel,
+            previousWeekExpenses,
+            force,
+          });
+        } else {
+          // Fallback for limited transaction history
+          report = generateFallbackWeeklyReport(
+            uid,
+            transactions,
+            weekStartStr,
+            weekEndStr,
+            periodLabel
+          );
+        }
 
         // Save to Firestore
+        const undefinedIssues = hasUndefinedValues(report);
+        if (undefinedIssues.length > 0) {
+          console.warn("Warning: Report contains undefined values:", undefinedIssues);
+        }
         await saveWeeklyReport(uid, report);
         setLatestReport(report);
 
@@ -111,7 +163,7 @@ export function useWeeklyReport() {
         setIsGenerating(false);
       }
     },
-    [uid, userData, transactions, canGenerate]
+    [uid, userData, transactions, hasGoodData]
   );
 
   // Fetch all reports
@@ -133,11 +185,15 @@ export function useWeeklyReport() {
   return {
     latestReport,
     reports,
+    transactions,
     isLoading,
     isFetching,
     isGenerating,
+    isDataLoading,
     error,
     canGenerate,
+    hasMinimalData,
+    hasGoodData,
     isBlockedByOnboarding,
     isBlockedByTransactions,
     generateReport,

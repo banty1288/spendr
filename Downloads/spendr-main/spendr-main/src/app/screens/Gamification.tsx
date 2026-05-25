@@ -1,46 +1,76 @@
 import { motion } from "motion/react";
-import { ArrowLeft, Flame, Trophy, Target, Zap, Star, Award } from "lucide-react";
+import { ArrowLeft, Flame, Target, Trophy, Zap, Award } from "lucide-react";
 import { BottomNav } from "../components/BottomNav";
+import { FinancialLevelWidget } from "../components/levels/FinancialLevelWidget";
 import { useNavigate } from "react-router";
+import { useTransactions } from "../../hooks/useTransactions";
+import { useUserData } from "../../hooks/useUserData";
+import { useAchievements } from "../../hooks/useAchievements";
+import { useFinancialLevels } from "../../hooks/useFinancialLevels";
+import { AchievementBadgeCard } from "../components/achievements/AchievementBadgeCard";
+import { AchievementUnlockModal } from "../components/achievements/AchievementUnlockModal";
 
 export function Gamification() {
   const navigate = useNavigate();
+  const { transactions } = useTransactions();
+  const { data: userData } = useUserData();
+  const {
+    statuses,
+    recentUnlocked,
+    openUnlocks,
+    isLoading: achievementsLoading,
+    onClearUnlocks,
+  } = useAchievements(transactions, userData ?? null);
+  const { financialLevel } = useFinancialLevels(transactions, statuses, userData ?? null);
 
-  const challenges = [
-    {
-      title: "No Impulse Week",
-      description: "Go 7 days without impulse purchases",
-      progress: 4,
-      total: 7,
-      reward: 250,
-      color: "#00d9ff",
-      icon: Target,
-    },
-    {
-      title: "Savings Superstar",
-      description: "Save $500 this month",
-      progress: 340,
-      total: 500,
-      reward: 500,
-      color: "#00ff88",
-      icon: Star,
-    },
-    {
-      title: "Budget Master",
-      description: "Stay under budget in 3 categories",
-      progress: 2,
-      total: 3,
-      reward: 150,
-      color: "#9d4edd",
-      icon: Trophy,
-    },
-  ];
+  const unlockedCount = statuses.filter((achievement) => achievement.earned).length;
+  const rareCount = statuses.filter(
+    (achievement) =>
+      achievement.earned &&
+      ["rare", "epic", "legendary"].includes(achievement.rarity)
+  ).length;
+  const streakAchievement = statuses.find((achievement) => achievement.id === "seven_day_savings_streak");
+  const upcoming = statuses
+    .filter((achievement) => !achievement.earned)
+    .sort((a, b) => a.percent - b.percent)
+    .slice(0, 3);
+  const rareHighlights = statuses
+    .filter(
+      (achievement) =>
+        achievement.earned &&
+        ["rare", "epic", "legendary"].includes(achievement.rarity)
+    )
+    .slice(0, 3);
 
-  const recentRewards = [
-    { name: "Daily Login Bonus", xp: 50, time: "2h ago", icon: "🎯" },
-    { name: "Completed Transaction Review", xp: 100, time: "5h ago", icon: "✅" },
-    { name: "3-Day Streak Bonus", xp: 150, time: "Yesterday", icon: "🔥" },
-  ];
+  const totalXp = financialLevel.totalXp;
+  const currentLevel = financialLevel.currentLevel;
+  const levelProgress = financialLevel.progress;
+  const levelTitle = financialLevel.rankTitle;
+  const xpToNext = financialLevel.xpToNext;
+
+  const recentRewards = financialLevel.recentGains.map((gain) => ({
+    name: gain.title,
+    xp: gain.xp,
+    time: "recent",
+    icon: <Zap size={18} className="text-[#00d9ff]" />,
+  }));
+
+  const challenges = upcoming.map((achievement) => ({
+    title: achievement.title,
+    description: achievement.description,
+    progress: achievement.current,
+    total: achievement.total,
+    reward: achievement.rewardXp,
+    color:
+      achievement.rarity === "rare"
+        ? "#9d4edd"
+        : achievement.rarity === "epic"
+        ? "#00ff88"
+        : achievement.rarity === "uncommon"
+        ? "#00d9ff"
+        : "#ffd60a",
+    icon: Target,
+  }));
 
   return (
     <div className="min-h-screen pb-24 relative overflow-hidden">
@@ -62,6 +92,8 @@ export function Gamification() {
             <p className="text-white/60 text-sm">Level up your finances</p>
           </div>
         </div>
+
+        <FinancialLevelWidget level={financialLevel} />
 
         <motion.div
           initial={{ opacity: 0, scale: 0.95 }}
@@ -97,26 +129,26 @@ export function Gamification() {
                 <div>
                   <p className="text-white/60 text-xs mb-1">Current Level</p>
                   <div className="flex items-baseline gap-2">
-                    <h2 className="text-4xl font-black text-white">Level 4</h2>
-                    <span className="text-[#ffd60a] text-sm font-bold">Elite</span>
+                    <h2 className="text-4xl font-black text-white">Level {currentLevel}</h2>
+                    <span className="text-[#ffd60a] text-sm font-bold">{levelTitle}</span>
                   </div>
                 </div>
               </div>
               <div className="text-right">
                 <p className="text-white/60 text-xs mb-1">Total XP</p>
-                <p className="text-white text-3xl font-black">8,450</p>
-                <p className="text-[#00ff88] text-xs font-semibold">+250 today</p>
+                <p className="text-white text-3xl font-black">{totalXp.toLocaleString()}</p>
+                <p className="text-[#00ff88] text-xs font-semibold">{xpToNext} XP to next level</p>
               </div>
             </div>
             <div className="space-y-2">
               <div className="flex items-center justify-between text-sm">
-                <span className="text-white/80 font-medium">Progress to Level 5: Financial Guru</span>
-                <span className="text-white font-bold">6,850 / 10,000 XP</span>
+                <span className="text-white/80 font-medium">Progress toward Level {currentLevel + 1}</span>
+                <span className="text-white font-bold">{totalXp % 1000} / 1000 XP</span>
               </div>
               <div className="relative h-4 bg-white/10 rounded-full overflow-hidden">
                 <motion.div
                   initial={{ width: 0 }}
-                  animate={{ width: "68.5%" }}
+                  animate={{ width: `${levelProgress}%` }}
                   transition={{ delay: 0.2, duration: 1.2, ease: "easeOut" }}
                   className="absolute inset-y-0 left-0 bg-gradient-to-r from-[#ffd60a] via-[#ff9500] to-[#ffd60a] rounded-full relative"
                 >
@@ -127,10 +159,10 @@ export function Gamification() {
                   />
                 </motion.div>
                 <div className="absolute right-2 top-1/2 -translate-y-1/2 text-black text-xs font-bold">
-                  3,150 XP to go
+                  {Math.round(levelProgress)}%
                 </div>
               </div>
-              <p className="text-white/50 text-xs">You're ahead of 78% of Spendr users 🔥</p>
+              <p className="text-white/50 text-xs">Earn badges to climb faster and unlock rare milestones.</p>
             </div>
           </div>
         </motion.div>
@@ -143,18 +175,20 @@ export function Gamification() {
         >
           <div className="bg-gradient-to-br from-[#ff6b35]/20 to-[#f7931e]/20 backdrop-blur-sm p-4 rounded-2xl border border-[#ff6b35]/30 text-center">
             <Flame size={24} className="text-[#ff6b35] mx-auto mb-2" />
-            <p className="text-white text-2xl font-black mb-1">12</p>
-            <p className="text-white/60 text-xs">Day Streak</p>
+            <p className="text-white text-2xl font-black mb-1">
+              {streakAchievement?.current ?? 0}
+            </p>
+            <p className="text-white/60 text-xs">Savings streak</p>
           </div>
           <div className="bg-gradient-to-br from-[#00d9ff]/20 to-[#0099ff]/20 backdrop-blur-sm p-4 rounded-2xl border border-[#00d9ff]/30 text-center">
             <Award size={24} className="text-[#00d9ff] mx-auto mb-2" />
-            <p className="text-white text-2xl font-black mb-1">18</p>
-            <p className="text-white/60 text-xs">Achievements</p>
+            <p className="text-white text-2xl font-black mb-1">{unlockedCount}</p>
+            <p className="text-white/60 text-xs">Badges unlocked</p>
           </div>
           <div className="bg-gradient-to-br from-[#00ff88]/20 to-[#00d9a5]/20 backdrop-blur-sm p-4 rounded-2xl border border-[#00ff88]/30 text-center">
             <Zap size={24} className="text-[#00ff88] mx-auto mb-2" />
-            <p className="text-white text-2xl font-black mb-1">5</p>
-            <p className="text-white/60 text-xs">Challenges</p>
+            <p className="text-white text-2xl font-black mb-1">{rareCount}</p>
+            <p className="text-white/60 text-xs">Rare badges</p>
           </div>
         </motion.div>
 
@@ -166,61 +200,81 @@ export function Gamification() {
         >
           <h3 className="text-white font-semibold mb-4">Active Challenges</h3>
           <div className="space-y-4">
-            {challenges.map((challenge, index) => {
-              const Icon = challenge.icon;
-              const progress = (challenge.progress / challenge.total) * 100;
-              return (
-                <motion.div
-                  key={index}
-                  initial={{ opacity: 0, x: -20 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  transition={{ delay: 0.3 + index * 0.1 }}
-                  className="bg-white/5 backdrop-blur-sm p-5 rounded-3xl border border-white/10 relative overflow-hidden"
-                >
-                  <div
-                    className="absolute top-0 right-0 w-32 h-32 rounded-full blur-3xl opacity-10"
-                    style={{ backgroundColor: challenge.color }}
-                  />
-                  <div className="relative">
-                    <div className="flex items-start gap-4 mb-4">
-                      <div
-                        className="p-3 rounded-2xl shrink-0"
-                        style={{ backgroundColor: `${challenge.color}20` }}
-                      >
-                        <Icon size={24} style={{ color: challenge.color }} />
+            {challenges.length > 0 ? (
+              challenges.map((challenge, index) => {
+                const Icon = challenge.icon;
+                const progress = (challenge.progress / challenge.total) * 100;
+                return (
+                  <motion.div
+                    key={index}
+                    initial={{ opacity: 0, x: -20 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={{ delay: 0.3 + index * 0.1 }}
+                    className="bg-white/5 backdrop-blur-sm p-5 rounded-3xl border border-white/10 relative overflow-hidden"
+                  >
+                    <div
+                      className="absolute top-0 right-0 w-32 h-32 rounded-full blur-3xl opacity-10"
+                      style={{ backgroundColor: challenge.color }}
+                    />
+                    <div className="relative">
+                      <div className="flex items-start gap-4 mb-4">
+                        <div
+                          className="p-3 rounded-2xl shrink-0"
+                          style={{ backgroundColor: `${challenge.color}20` }}
+                        >
+                          <Icon size={24} style={{ color: challenge.color }} />
+                        </div>
+                        <div className="flex-1">
+                          <h4 className="text-white font-semibold mb-1">{challenge.title}</h4>
+                          <p className="text-white/60 text-sm">{challenge.description}</p>
+                        </div>
+                        <div className="text-right shrink-0">
+                          <div className="flex items-center gap-1 bg-[#ffd60a]/20 px-2 py-1 rounded-full">
+                            <Zap size={12} className="text-[#ffd60a]" />
+                            <span className="text-[#ffd60a] text-xs font-bold">{challenge.reward}</span>
+                          </div>
+                        </div>
                       </div>
-                      <div className="flex-1">
-                        <h4 className="text-white font-semibold mb-1">{challenge.title}</h4>
-                        <p className="text-white/60 text-sm">{challenge.description}</p>
-                      </div>
-                      <div className="text-right shrink-0">
-                        <div className="flex items-center gap-1 bg-[#ffd60a]/20 px-2 py-1 rounded-full">
-                          <Zap size={12} className="text-[#ffd60a]" />
-                          <span className="text-[#ffd60a] text-xs font-bold">{challenge.reward}</span>
+                      <div className="space-y-2">
+                        <div className="flex items-center justify-between text-sm">
+                          <span className="text-white/60">Progress</span>
+                          <span className="text-white font-semibold">
+                            {challenge.progress} / {challenge.total}
+                          </span>
+                        </div>
+                        <div className="relative h-2 bg-white/5 rounded-full overflow-hidden">
+                          <motion.div
+                            initial={{ width: 0 }}
+                            animate={{ width: `${progress}%` }}
+                            transition={{ delay: 0.4 + index * 0.1, duration: 0.8 }}
+                            className="absolute inset-y-0 left-0 rounded-full"
+                            style={{ backgroundColor: challenge.color }}
+                          />
                         </div>
                       </div>
                     </div>
-                    <div className="space-y-2">
-                      <div className="flex items-center justify-between text-sm">
-                        <span className="text-white/60">Progress</span>
-                        <span className="text-white font-semibold">
-                          {challenge.progress} / {challenge.total}
-                        </span>
-                      </div>
-                      <div className="relative h-2 bg-white/5 rounded-full overflow-hidden">
-                        <motion.div
-                          initial={{ width: 0 }}
-                          animate={{ width: `${progress}%` }}
-                          transition={{ delay: 0.4 + index * 0.1, duration: 0.8 }}
-                          className="absolute inset-y-0 left-0 rounded-full"
-                          style={{ backgroundColor: challenge.color }}
-                        />
-                      </div>
-                    </div>
-                  </div>
-                </motion.div>
-              );
-            })}
+                  </motion.div>
+                );
+              })
+            ) : (
+              <div className="rounded-3xl border border-white/10 bg-black/10 p-6 text-white/60">
+                You’re on track! Unlock a new challenge by logging more spending and savings activity.
+              </div>
+            )}
+          </div>
+        </motion.div>
+
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.45 }}
+          className="mb-6"
+        >
+          <h3 className="text-white font-semibold mb-4">Badge gallery</h3>
+          <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-3">
+            {statuses.map((achievement) => (
+              <AchievementBadgeCard key={achievement.id} achievement={achievement} />
+            ))}
           </div>
         </motion.div>
 
@@ -231,29 +285,36 @@ export function Gamification() {
         >
           <h3 className="text-white font-semibold mb-4">Recent Rewards</h3>
           <div className="space-y-3">
-            {recentRewards.map((reward, index) => (
-              <motion.div
-                key={index}
-                initial={{ opacity: 0, x: -20 }}
-                animate={{ opacity: 1, x: 0 }}
-                transition={{ delay: 0.6 + index * 0.1 }}
-                className="bg-white/5 backdrop-blur-sm p-4 rounded-2xl border border-white/10 flex items-center gap-4"
-              >
-                <div className="text-2xl">{reward.icon}</div>
-                <div className="flex-1">
-                  <p className="text-white font-medium text-sm">{reward.name}</p>
-                  <p className="text-white/40 text-xs">{reward.time}</p>
-                </div>
-                <div className="flex items-center gap-1.5 bg-gradient-to-r from-[#00d9ff]/20 to-[#00ff88]/20 px-3 py-1.5 rounded-full">
-                  <Zap size={14} className="text-[#00d9ff]" />
-                  <span className="text-white font-bold text-sm">+{reward.xp}</span>
-                </div>
-              </motion.div>
-            ))}
+            {recentRewards.length > 0 ? (
+              recentRewards.map((reward, index) => (
+                <motion.div
+                  key={index}
+                  initial={{ opacity: 0, x: -20 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ delay: 0.6 + index * 0.1 }}
+                  className="bg-white/5 backdrop-blur-sm p-4 rounded-2xl border border-white/10 flex items-center gap-4"
+                >
+                  <div className="text-2xl">{reward.icon}</div>
+                  <div className="flex-1">
+                    <p className="text-white font-medium text-sm">{reward.name}</p>
+                    <p className="text-white/40 text-xs">{reward.time}</p>
+                  </div>
+                  <div className="flex items-center gap-1.5 bg-gradient-to-r from-[#00d9ff]/20 to-[#00ff88]/20 px-3 py-1.5 rounded-full">
+                    <Zap size={14} className="text-[#00d9ff]" />
+                    <span className="text-white font-bold text-sm">+{reward.xp}</span>
+                  </div>
+                </motion.div>
+              ))
+            ) : (
+              <div className="rounded-3xl border border-white/10 bg-black/10 p-6 text-white/60">
+                No badge unlocks yet. Complete your first achievement to start collecting XP rewards.
+              </div>
+            )}
           </div>
         </motion.div>
       </div>
 
+      <AchievementUnlockModal achievements={openUnlocks} onClose={onClearUnlocks} />
       <BottomNav />
     </div>
   );
