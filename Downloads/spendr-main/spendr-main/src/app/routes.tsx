@@ -41,6 +41,9 @@ const Premium = lazy(() =>
 const Profile = lazy(() =>
   import("./screens/Profile").then((m) => ({ default: m.Profile }))
 );
+const WeeklyReport = lazy(() =>
+  import("./screens/WeeklyReport").then((m) => ({ default: m.WeeklyReport }))
+);
 
 function LazyScreen({ children }: { children: ReactNode }) {
   return (
@@ -144,6 +147,14 @@ export const router = createBrowserRouter([
                 element: (
                   <LazyScreen>
                     <Profile />
+                  </LazyScreen>
+                ),
+              },
+              {
+                path: "weekly-report",
+                element: (
+                  <LazyScreen>
+                    <WeeklyReport />
                   </LazyScreen>
                 ),
               },

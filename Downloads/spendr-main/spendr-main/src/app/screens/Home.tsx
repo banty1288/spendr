@@ -26,12 +26,14 @@ import {
 import { toast } from "sonner";
 import { BottomNav } from "../components/BottomNav";
 import { MonthlyBarChart } from "../components/transactions";
+import { WeeklyReportPreview } from "../components/weekly/WeeklyReportPreview";
 import { useAuthStore } from "../../store/authStore";
 import { usePersonalityStore } from "../../store/personalityStore";
 import { useUserData } from "../../hooks/useUserData";
 import { useTransactions } from "../../hooks/useTransactions";
 import { useGeminiInsights } from "../../hooks/useGeminiInsights";
 import { useEmotionalInsights } from "../../hooks/useEmotionalInsights";
+import { useWeeklyReport } from "../../hooks/useWeeklyReport";
 import {
   computeBalanceFromTransactions,
   getCategoryBreakdown,
@@ -294,6 +296,12 @@ export function Home() {
     initialized: personalityInitialized,
     fetchPersonality,
   } = usePersonalityStore();
+  const {
+    latestReport,
+    isGenerating: reportGenerating,
+    canGenerate,
+    generateReport,
+  } = useWeeklyReport();
 
   useEffect(() => {
     if (authUser?.uid && !personalityInitialized && !personalityLoading) {
@@ -373,6 +381,21 @@ export function Home() {
       toast.error(message);
     }
   }, [runEmotionalAnalysis]);
+
+  const handleGenerateWeeklyReport = useCallback(async () => {
+    try {
+      await generateReport(false);
+      toast.success("Weekly report generated");
+    } catch (err) {
+      const message =
+        err instanceof AiError
+          ? err.message
+          : err instanceof Error
+            ? err.message
+            : "Could not generate weekly report.";
+      toast.error(message);
+    }
+  }, [generateReport]);
 
   return (
     <div className="min-h-screen pb-32 sm:pb-36 relative overflow-x-clip bg-black">
@@ -891,6 +914,12 @@ export function Home() {
                   </div>
                 </div>
               </DashboardCard>
+
+              <WeeklyReportPreview
+                report={latestReport}
+                isGenerating={reportGenerating}
+                onGenerate={handleGenerateWeeklyReport}
+              />
 
               <section>
                 <SectionHeader
