@@ -42,7 +42,7 @@ export function buildAiUserContext(
   transactions: Transaction[]
 ): AiUserContext {
   const profile = userData?.profile;
-  const currency = "INR";
+  const currency = userData?.settings?.app?.currency || "INR";
 
   return {
     displayName: userData?.displayName ?? "User",

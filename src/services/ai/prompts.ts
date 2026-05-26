@@ -42,15 +42,16 @@ export const SPENDR_ANALYSIS_SCHEMA = `{
 }`;
 
 export function buildAnalysisPrompt(contextBlock: string): string {
-  // Extract currency from context block to inject rules
-  const currencyStr = contextBlock.match(/Currency: (.*)/)?.[1] || "USD";
+  const currencyStr = contextBlock.match(/Currency: (.*)/)?.[1] || "INR";
 
   return `${SPENDR_ANALYSIS_SYSTEM}
 
-CRITICAL CURRENCY INSTRUCTION: 
-The transaction data provided below is ALWAYS in USD (Base Currency).
-However, the user wants to see their insights in: ${currencyStr}.
-You MUST convert all monetary amounts from USD to ${currencyStr} using current approximate exchange rates before writing them into the JSON. Use the correct symbol for ${currencyStr}.
+CRITICAL FINANCIAL INSTRUCTION: 
+All financial values in the transaction data provided below are already in the user's native currency: ${currencyStr}.
+DO NOT perform any exchange rate conversions (e.g. from USD to INR). 
+Use the exact numeric values provided. 
+For large numbers, use the correct Indian numbering system (e.g., Lakhs and Crores) and use the correct symbol for ${currencyStr}.
+NEVER use words like "dollars", "USD", or "$". 
 
 USER DATA:
 ${contextBlock}
