@@ -1,7 +1,6 @@
 import { useCallback } from "react";
 import { motion } from "motion/react";
 import {
-  ArrowLeft,
   Brain,
   AlertCircle,
   Lightbulb,
@@ -13,7 +12,6 @@ import {
   Calendar,
   MessageCircle,
 } from "lucide-react";
-import { BottomNav } from "../components/BottomNav";
 import { useNavigate } from "react-router";
 import { toast } from "sonner";
 import { useGeminiInsights } from "../../hooks/useGeminiInsights";
@@ -21,6 +19,9 @@ import { AiError } from "../../services/ai/errors";
 import { getActiveGeminiModelLabel } from "../../services/ai/config/index";
 import { getInsightColor, getInsightIcon } from "../components/ai/insightIcons";
 import { AiInsightSection } from "../components/ai/AiInsightSection";
+import { PageShell } from "../components/ui/PageShell";
+import { BackButton } from "../components/ui/BackButton";
+import { EmptyState } from "../components/ui/EmptyState";
 export function AIInsights() {
   const navigate = useNavigate();
   const {
@@ -72,44 +73,38 @@ export function AIInsights() {
   const showResults = hasAnalysis && !isLoading;
 
   return (
-    <div className="min-h-screen pb-24 relative overflow-hidden">
-      <div className="absolute inset-0 opacity-20">
-        <div className="absolute top-0 left-0 w-96 h-96 bg-[#9d4edd]/30 rounded-full blur-[120px]" />
-        <div className="absolute bottom-0 right-0 w-96 h-96 bg-[#00d9ff]/30 rounded-full blur-[120px]" />
-      </div>
-
-      <div className="relative z-10">
-        <div className="px-6 pt-12 pb-6">
-          <div className="flex items-center gap-4 mb-6">
-            <button
-              type="button"
-              onClick={() => navigate("/home")}
-              className="bg-white/5 backdrop-blur-sm p-3 rounded-full border border-white/10"
-            >
-              <ArrowLeft size={20} className="text-white" />
-            </button>
-            <div className="flex-1">
+    <PageShell orbs={[{ color: "#9d4edd", position: "top-left" }, { color: "#00d9ff", position: "bottom-right" }]}>
+      <div className="relative">
+        <div className="px-4 sm:px-6 pt-12 pb-6 max-w-3xl mx-auto">
+          <motion.div
+            initial={{ opacity: 0, y: -10 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="flex items-center gap-4 mb-6"
+          >
+            <BackButton onClick={() => navigate("/home")} />
+            <div className="flex-1 min-w-0">
               <h1 className="text-2xl font-bold text-white">AI Insights</h1>
-              <p className="text-white/60 text-sm flex items-center gap-1.5">
-                <Sparkles size={12} className="text-[#00d9ff]" />
+              <p className="text-white/50 text-sm flex items-center gap-1.5">
+                <Sparkles size={12} className="text-[#9d4edd]" />
                 {getActiveGeminiModelLabel()}
               </p>
             </div>
             {hasAnalysis && (
-              <button
+              <motion.button
                 type="button"
+                whileTap={{ scale: 0.9 }}
                 onClick={() => handleGenerate(true)}
                 disabled={isLoading || !canRun}
-                className="bg-white/5 backdrop-blur-sm p-3 rounded-full border border-white/10 disabled:opacity-50"
+                className="bg-white/5 backdrop-blur-sm p-3 rounded-full border border-white/10 disabled:opacity-50 shrink-0"
                 aria-label="Refresh insights"
               >
                 <RefreshCw
                   size={18}
-                  className={`text-[#00d9ff] ${isFetching ? "animate-spin" : ""}`}
+                  className={`text-[#9d4edd] ${isFetching ? "animate-spin" : ""}`}
                 />
-              </button>
+              </motion.button>
             )}
-          </div>
+          </motion.div>
 
           {isStale && hasAnalysis && !isLoading && (
             <div className="bg-[#ffd60a]/10 border border-[#ffd60a]/30 rounded-2xl px-4 py-3 mb-4 flex items-center justify-between gap-3">
@@ -127,74 +122,98 @@ export function AIInsights() {
           )}
 
           {(onboardingLoading || txLoading) && !hasAnalysis && (
-            <div className="flex items-center justify-center gap-2 py-8 text-white/50 text-sm">
-              <Loader2 size={18} className="animate-spin text-[#00d9ff]" />
-              Loading your data…
+            <div className="flex flex-col items-center justify-center gap-3 py-16">
+              <motion.div
+                animate={{ rotate: 360 }}
+                transition={{ duration: 1.5, repeat: Infinity, ease: "linear" }}
+              >
+                <Loader2 size={32} className="text-[#9d4edd]" />
+              </motion.div>
+              <p className="text-white/50 text-sm">Loading your data…</p>
             </div>
           )}
 
           {!hasAnalysis && !isLoading && !onboardingLoading && !txLoading && (
-            <div className="bg-white/5 border border-white/10 rounded-3xl p-6 mb-6 text-center">
-              <Brain className="w-10 h-10 text-[#9d4edd] mx-auto mb-3" />
+            <div className="mb-4">
               {isBlockedByOnboarding ? (
-                <>
-                  <p className="text-white/80 text-sm mb-4">
-                    Complete onboarding to unlock AI insights.
-                  </p>
-                  <button
-                    type="button"
-                    onClick={() => navigate("/setup")}
-                    className="text-[#00d9ff] font-medium text-sm"
-                  >
-                    Finish setup →
-                  </button>
-                </>
+                <EmptyState
+                  icon={<Brain size={36} />}
+                  title="Complete your setup"
+                  description="Finish onboarding to unlock AI-powered spending insights personalized to your goals."
+                  action={{ label: "Finish Setup →", onClick: () => navigate("/setup") }}
+                  accentColor="#9d4edd"
+                />
               ) : isBlockedByTransactions ? (
-                <>
-                  <p className="text-white/80 text-sm mb-4">
-                    Add transactions so Gemini can analyze your spending.
-                  </p>
-                  <button
-                    type="button"
-                    onClick={() => navigate("/transactions")}
-                    className="text-[#00d9ff] font-medium text-sm"
-                  >
-                    Add transactions →
-                  </button>
-                </>
+                <EmptyState
+                  icon={<Sparkles size={36} />}
+                  title="Add transactions first"
+                  description="Gemini needs your spending data to generate personalized financial insights."
+                  action={{ label: "Add Transactions →", onClick: () => navigate("/transactions") }}
+                  accentColor="#9d4edd"
+                />
               ) : (
-                <>
-                  <p className="text-white/80 text-sm mb-4">
-                    Tap below to analyze your spending. Requests run only when
-                    you ask — no background calls.
+                <motion.div
+                  initial={{ opacity: 0, scale: 0.97 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  className="bg-gradient-to-br from-[#9d4edd]/15 to-[#00d9ff]/10 border border-[#9d4edd]/30 rounded-3xl p-8 mb-4 text-center"
+                >
+                  <motion.div
+                    animate={{ y: [0, -6, 0] }}
+                    transition={{ duration: 3, repeat: Infinity }}
+                    className="inline-flex p-4 bg-[#9d4edd]/20 rounded-3xl mb-5"
+                  >
+                    <Brain size={40} className="text-[#9d4edd]" />
+                  </motion.div>
+                  <h3 className="text-white font-bold text-lg mb-2">Ready for AI Analysis</h3>
+                  <p className="text-white/60 text-sm mb-6 max-w-xs mx-auto">
+                    Gemini will analyze your spending patterns and generate personalized insights.
+                    No background calls — only when you ask.
                   </p>
-                  <button
+                  <motion.button
                     type="button"
+                    whileTap={{ scale: 0.97 }}
                     onClick={() => handleGenerate(false)}
                     disabled={!canRun}
-                    className="w-full bg-gradient-to-r from-[#00d9ff] to-[#00ff88] text-black py-3.5 rounded-2xl font-semibold disabled:opacity-50"
+                    className="w-full bg-gradient-to-r from-[#9d4edd] to-[#00d9ff] text-white py-4 rounded-2xl font-bold disabled:opacity-50 shadow-lg shadow-[#9d4edd]/25"
                   >
-                    Generate AI insights
-                  </button>
-                </>
+                    Generate AI Insights
+                  </motion.button>
+                </motion.div>
               )}
             </div>
           )}
 
           {isLoading && (
-            <div className="flex flex-col items-center justify-center py-16 gap-4">
-              <Loader2 className="w-10 h-10 text-[#9d4edd] animate-spin" />
-              <p className="text-white/60 text-sm text-center max-w-xs">
-                Gemini is analyzing your spending patterns…
-              </p>
-              <p className="text-white/40 text-xs">This may take up to 45 seconds</p>
-            </div>
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              className="flex flex-col items-center justify-center py-16 gap-4"
+            >
+              <div className="relative">
+                <motion.div
+                  animate={{ rotate: 360 }}
+                  transition={{ duration: 2, repeat: Infinity, ease: "linear" }}
+                  className="w-14 h-14 rounded-full border-2 border-[#9d4edd]/30 border-t-[#9d4edd]"
+                />
+                <Brain size={22} className="text-[#9d4edd] absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2" />
+              </div>
+              <div className="text-center">
+                <p className="text-white/70 text-sm font-medium mb-1">Gemini is analyzing your spending</p>
+                <p className="text-white/40 text-xs">This may take up to 45 seconds</p>
+              </div>
+            </motion.div>
           )}
 
           {isError && !isLoading && !showResults && (
-            <div className="bg-[#ff3366]/10 border border-[#ff3366]/30 rounded-3xl p-6 mb-6 text-center">
-              <AlertCircle className="w-8 h-8 text-[#ff3366] mx-auto mb-3" />
-              <p className="text-white/90 text-sm mb-4">{errorMessage}</p>
+            <motion.div
+              initial={{ opacity: 0, scale: 0.97 }}
+              animate={{ opacity: 1, scale: 1 }}
+              className="bg-[#ff3366]/10 border border-[#ff3366]/30 rounded-3xl p-6 mb-4 text-center"
+            >
+              <div className="inline-flex p-3 bg-[#ff3366]/20 rounded-2xl mb-3">
+                <AlertCircle size={24} className="text-[#ff3366]" />
+              </div>
+              <p className="text-white/80 text-sm mb-4 leading-relaxed">{errorMessage}</p>
               {isBlockedByTransactions ? (
                 <button
                   type="button"
@@ -204,16 +223,17 @@ export function AIInsights() {
                   Add transactions →
                 </button>
               ) : (
-                <button
+                <motion.button
                   type="button"
+                  whileTap={{ scale: 0.97 }}
                   onClick={() => handleGenerate(true)}
                   disabled={!canRun}
-                  className="bg-white/10 px-4 py-2 rounded-xl text-white text-sm font-medium disabled:opacity-50"
+                  className="bg-white/10 hover:bg-white/15 px-5 py-2.5 rounded-xl text-white text-sm font-semibold disabled:opacity-50 transition-colors"
                 >
                   Try again
-                </button>
+                </motion.button>
               )}
-            </div>
+            </motion.div>
           )}
 
           {showResults && (
@@ -428,8 +448,6 @@ export function AIInsights() {
           </>
         )}
       </div>
-
-      <BottomNav />
-    </div>
+    </PageShell>
   );
 }

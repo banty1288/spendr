@@ -1,6 +1,5 @@
 import { motion } from "motion/react";
 import {
-  ArrowLeft,
   User,
   Bell,
   Lock,
@@ -9,21 +8,25 @@ import {
   Settings,
   LogOut,
   ChevronRight,
-  Crown,
   Loader2,
 } from "lucide-react";
-import { BottomNav } from "../components/BottomNav";
 import { useNavigate } from "react-router";
 import { useAuthStore } from "../../store/authStore";
 import { useUserData } from "../../hooks/useUserData";
 import { useLogout } from "../../hooks/useLogout";
-import { formatCurrency, getInitials } from "../../lib/userDisplay";
+import { useTranslation } from "react-i18next";
+import { getInitials } from "../../lib/userDisplay";
+import { useCurrency } from "../../hooks/useCurrency";
+import { PageShell } from "../components/ui/PageShell";
+import { BackButton } from "../components/ui/BackButton";
 
 export function Profile() {
   const navigate = useNavigate();
   const authUser = useAuthStore((s) => s.user);
   const { data: userData, isLoading: isProfileLoading } = useUserData();
   const { logout, isLoggingOut } = useLogout();
+  const { t } = useTranslation();
+  const { convertAndFormat } = useCurrency();
 
   const displayName =
     userData?.displayName ?? authUser?.displayName ?? "Spendr User";
@@ -32,48 +35,41 @@ export function Profile() {
   const balance = userData?.balance ?? 0;
 
   const stats = [
-    { label: "Balance", value: isProfileLoading ? "—" : formatCurrency(balance) },
-    { label: "Plan", value: "Free" },
+    { label: t("home.totalBalance", "Balance"), value: isProfileLoading ? "—" : convertAndFormat(balance) },
     {
-      label: "Setup",
-      value: userData?.onboardingCompleted ? "Complete" : "Pending",
+      label: t("settings.title", "Setup"),
+      value: userData?.onboardingCompleted ? t("common.success", "Complete") : t("common.loading", "Pending"),
     },
   ];
 
   const menuSections = [
     {
       items: [
-        { icon: User, label: "Personal Information", path: "#" },
-        { icon: Bell, label: "Notifications", path: "#" },
-        { icon: Lock, label: "Security & Privacy", path: "#" },
-        { icon: CreditCard, label: "Linked Accounts", path: "#" },
+        { icon: User, label: t("settings.personalInfo", "Personal Information"), path: "/settings/personal-info" },
+        { icon: Bell, label: t("settings.notifications", "Notifications"), path: "/settings/notifications" },
+        { icon: Lock, label: t("settings.security", "Security & Privacy"), path: "/settings/security" },
+        { icon: CreditCard, label: t("settings.linkedAccounts", "Linked Accounts"), path: "/settings/linked-accounts" },
       ],
     },
     {
       items: [
-        { icon: Crown, label: "Upgrade to Premium", path: "/premium", highlight: true },
-        { icon: Settings, label: "App Settings", path: "#" },
-        { icon: HelpCircle, label: "Help & Support", path: "#" },
+        { icon: Settings, label: t("settings.appSettings", "App Settings"), path: "/settings/app" },
+        { icon: HelpCircle, label: t("settings.helpSupport", "Help & Support"), path: "/settings/support" },
       ],
     },
   ];
 
   return (
-    <div className="min-h-screen pb-24 relative overflow-hidden">
-      <div className="absolute inset-0 opacity-20">
-        <div className="absolute top-0 right-0 w-96 h-96 bg-[#00d9ff]/30 rounded-full blur-[120px]" />
-      </div>
-
-      <div className="relative z-10 px-6 pt-12">
-        <div className="flex items-center gap-4 mb-8">
-          <button
-            onClick={() => navigate("/home")}
-            className="bg-white/5 backdrop-blur-sm p-3 rounded-full border border-white/10"
-          >
-            <ArrowLeft size={20} className="text-white" />
-          </button>
+    <PageShell orbs={[{ color: "#00d9ff", position: "top-right" }]}>
+      <div className="relative px-4 sm:px-6 pt-12 pb-6 max-w-2xl mx-auto">
+        <motion.div
+          initial={{ opacity: 0, y: -10 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="flex items-center gap-4 mb-7"
+        >
+          <BackButton onClick={() => navigate("/home")} />
           <h1 className="text-2xl font-bold text-white">Profile</h1>
-        </div>
+        </motion.div>
 
         <motion.div
           initial={{ opacity: 0, scale: 0.95 }}
@@ -82,25 +78,34 @@ export function Profile() {
         >
           <div className="absolute inset-0 bg-gradient-to-br from-[#00d9ff]/5 to-transparent" />
           <div className="relative flex items-center gap-4 mb-6">
-            <div className="w-20 h-20 bg-gradient-to-br from-[#00d9ff] to-[#00ff88] rounded-full flex items-center justify-center text-black text-2xl font-black">
-              {isProfileLoading ? "…" : initials}
-            </div>
-            <div className="flex-1">
-              <h2 className="text-white text-xl font-bold mb-1">
-                {isProfileLoading ? "Loading…" : displayName}
-              </h2>
-              <p className="text-white/60 text-sm truncate">
-                {isProfileLoading ? "…" : email || "No email on file"}
-              </p>
-              <div className="flex items-center gap-2 mt-2">
-                <div className="bg-white/10 px-3 py-1 rounded-full">
-                  <span className="text-white/80 text-xs">Free Plan</span>
-                </div>
+            <div className="flex flex-col items-center mt-6">
+              <div className="relative">
+                {userData?.profile?.avatarUrl ? (
+                  <img 
+                    src={userData.profile.avatarUrl} 
+                    alt="Profile" 
+                    className="w-24 h-24 rounded-full object-cover border-2 border-[#00d9ff]/30 shadow-[0_0_30px_rgba(0,217,255,0.2)]"
+                  />
+                ) : (
+                  <div className="w-24 h-24 bg-gradient-to-br from-[#00d9ff] to-[#00ff88] rounded-full flex items-center justify-center shadow-[0_0_30px_rgba(0,217,255,0.2)] relative z-10">
+                    <span className="text-3xl font-black text-black">
+                      {displayName.charAt(0).toUpperCase()}
+                    </span>
+                  </div>
+                )}
               </div>
+            </div>
+            <div className="flex-1 min-w-0">
+              <h2 className="text-white text-xl font-bold mb-0.5 truncate">
+                {isProfileLoading ? t("common.loading", "Loading…") : displayName}
+              </h2>
+              <p className="text-white/50 text-sm truncate">
+                {isProfileLoading ? "…" : email || t("profile.noEmail", "No email on file")}
+              </p>
             </div>
           </div>
 
-          <div className="grid grid-cols-3 gap-4">
+          <div className="flex justify-around">
             {stats.map((stat, index) => (
               <div key={index} className="text-center">
                 <p className="text-white text-xl font-black mb-1">{stat.value}</p>
@@ -129,25 +134,12 @@ export function Profile() {
                   onClick={() => item.path && navigate(item.path)}
                   className={`w-full flex items-center gap-4 p-5 transition-colors ${
                     index !== section.items.length - 1 ? "border-b border-white/10" : ""
-                  } ${item.highlight ? "bg-gradient-to-r from-[#ffd60a]/10 to-transparent" : "hover:bg-white/5"}`}
+                  } hover:bg-white/5`}
                 >
-                  <div
-                    className={`p-2.5 rounded-xl ${
-                      item.highlight
-                        ? "bg-gradient-to-br from-[#ffd60a] to-[#ff9500]"
-                        : "bg-white/10"
-                    }`}
-                  >
-                    <Icon
-                      size={20}
-                      className={item.highlight ? "text-black" : "text-white/80"}
-                    />
+                  <div className="p-2.5 rounded-xl bg-white/10">
+                    <Icon size={20} className="text-white/80" />
                   </div>
-                  <span
-                    className={`flex-1 text-left ${
-                      item.highlight ? "text-white font-semibold" : "text-white/80"
-                    }`}
-                  >
+                  <span className="flex-1 text-left text-white/80">
                     {item.label}
                   </span>
                   <ChevronRight size={20} className="text-white/40" />
@@ -174,7 +166,7 @@ export function Profile() {
             )}
           </div>
           <span className="flex-1 text-left text-[#ff3366] font-medium">
-            {isLoggingOut ? "Signing out…" : "Log Out"}
+            {isLoggingOut ? t("common.loading", "Signing out…") : t("settings.logout", "Log Out")}
           </span>
         </motion.button>
 
@@ -184,11 +176,9 @@ export function Profile() {
           transition={{ delay: 0.5 }}
           className="text-white/40 text-xs text-center mt-8"
         >
-          Spendr v1.0.0
+          Spendr MVP
         </motion.p>
       </div>
-
-      <BottomNav />
-    </div>
+    </PageShell>
   );
 }

@@ -22,7 +22,7 @@ export function ErrorFallback({
   const publicMessage = getPublicErrorMessage(error, isDev);
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-black p-6">
+    <div className="min-h-screen flex items-center justify-center bg-background p-6">
       <div className="max-w-[430px] w-full min-h-screen flex flex-col items-center justify-center relative overflow-hidden">
         <div className="absolute inset-0 bg-gradient-to-br from-[#00d9ff]/10 via-black to-[#00ff88]/10" />
         <div className="absolute top-16 left-4 w-48 h-48 bg-[#00d9ff]/15 rounded-full blur-[80px]" />

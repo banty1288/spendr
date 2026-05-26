@@ -1,6 +1,6 @@
 import { motion } from "motion/react";
 import { TrendingDown, TrendingUp } from "lucide-react";
-import { formatCurrency } from "../../../lib/userDisplay";
+import { useCurrency } from "../../../hooks/useCurrency";
 
 interface MonthlySummaryCardProps {
   income: number;
@@ -15,6 +15,7 @@ export function MonthlySummaryCard({
   net,
   monthLabel = "This month",
 }: MonthlySummaryCardProps) {
+  const { convertAndFormat } = useCurrency();
   return (
     <motion.div
       initial={{ opacity: 0, scale: 0.95 }}
@@ -26,16 +27,16 @@ export function MonthlySummaryCard({
         <div>
           <div className="flex items-center gap-1.5 mb-1">
             <TrendingUp size={14} className="text-[#00ff88]" />
-            <span className="text-white/40 text-xs">Income</span>
+            <span className="text-white/40 text-xs">Total Income</span>
           </div>
-          <p className="text-[#00ff88] font-bold">{formatCurrency(income)}</p>
+          <p className="text-[#00ff88] font-bold">{convertAndFormat(income)}</p>
         </div>
         <div>
           <div className="flex items-center gap-1.5 mb-1">
             <TrendingDown size={14} className="text-[#ff3366]" />
-            <span className="text-white/40 text-xs">Spent</span>
+            <span className="text-white/40 text-xs">Total Expenses</span>
           </div>
-          <p className="text-white font-bold">{formatCurrency(expenses)}</p>
+          <p className="text-white font-bold">{convertAndFormat(expenses)}</p>
         </div>
         <div>
           <span className="text-white/40 text-xs">Net</span>
@@ -44,7 +45,8 @@ export function MonthlySummaryCard({
               net >= 0 ? "text-[#00d9ff]" : "text-[#ff3366]"
             }`}
           >
-            {formatCurrency(net)}
+            {net >= 0 ? "+" : "-"}
+            {convertAndFormat(Math.abs(net))}
           </p>
         </div>
       </div>

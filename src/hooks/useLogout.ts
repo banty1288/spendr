@@ -4,6 +4,7 @@ import { useQueryClient } from "@tanstack/react-query";
 import { signOut } from "firebase/auth";
 import { toast } from "sonner";
 import { auth } from "../lib/firebase";
+import { trackLogout } from "../services/analytics";
 
 export function useLogout() {
   const navigate = useNavigate();
@@ -14,6 +15,7 @@ export function useLogout() {
     setIsLoggingOut(true);
     try {
       await signOut(auth);
+      trackLogout();
       queryClient.clear();
       navigate("/login", { replace: true });
       toast.success("Signed out successfully");

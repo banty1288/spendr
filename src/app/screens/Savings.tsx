@@ -1,10 +1,11 @@
 import { motion } from "motion/react";
 import { ArrowLeft, Target, TrendingUp, Award, Plus } from "lucide-react";
-import { BottomNav } from "../components/BottomNav";
 import { useNavigate } from "react-router";
+import { useCurrency } from "../../hooks/useCurrency";
 
 export function Savings() {
   const navigate = useNavigate();
+  const { convertAndFormat } = useCurrency();
 
   const goals = [
     {
@@ -44,13 +45,13 @@ export function Savings() {
   ];
 
   return (
-    <div className="min-h-screen pb-24 relative overflow-hidden">
+    <div className="min-h-screen pb-6 relative overflow-hidden">
       <div className="absolute inset-0 opacity-20">
         <div className="absolute top-0 left-0 w-96 h-96 bg-[#00ff88]/30 rounded-full blur-[120px]" />
         <div className="absolute bottom-0 right-0 w-96 h-96 bg-[#00d9ff]/30 rounded-full blur-[120px]" />
       </div>
 
-      <div className="relative z-10 px-6 pt-12">
+      <div className="relative z-10 px-4 sm:px-6 pt-12 pb-6 max-w-3xl mx-auto">
         <div className="flex items-center gap-4 mb-8">
           <button
             onClick={() => navigate("/home")}
@@ -84,14 +85,14 @@ export function Savings() {
             <p className="text-white/60 text-sm mb-2">Total Saved Across Goals</p>
             <div className="flex items-baseline gap-3 mb-1">
               <h2 className="text-5xl font-black bg-gradient-to-r from-[#00ff88] to-[#00d9ff] bg-clip-text text-transparent">
-                $5,950
+                {convertAndFormat(5950)}
               </h2>
-              <span className="text-white/60 text-lg">/ $10,500</span>
+              <span className="text-white/60 text-lg">/ {convertAndFormat(10500)}</span>
             </div>
             <div className="flex items-center gap-6 mb-4">
               <div className="flex items-center gap-2">
                 <TrendingUp size={16} className="text-[#00ff88]" />
-                <span className="text-[#00ff88] font-bold text-sm">+$395</span>
+                <span className="text-[#00ff88] font-bold text-sm">+{convertAndFormat(395)}</span>
                 <span className="text-white/60 text-sm">this month</span>
               </div>
             </div>
@@ -158,10 +159,10 @@ export function Savings() {
                         <div>
                           <h4 className="text-white font-bold text-base">{goal.name}</h4>
                           <p className="text-white/60 text-xs">
-                            ${goal.current.toLocaleString()} of ${goal.target.toLocaleString()}
+                            {convertAndFormat(goal.current)} of {convertAndFormat(goal.target)}
                           </p>
                           <p className="text-white/40 text-xs mt-1">
-                            ${goal.monthlyContribution}/month · ~{Math.ceil(goal.monthsLeft)}mo left
+                            {convertAndFormat(goal.monthlyContribution)}/month · ~{Math.ceil(goal.monthsLeft)}mo left
                           </p>
                         </div>
                       </div>
@@ -173,7 +174,7 @@ export function Savings() {
                           {progress.toFixed(0)}%
                         </p>
                         <p className="text-white/50 text-xs">
-                          ${(goal.target - goal.current).toLocaleString()} to go
+                          {convertAndFormat(goal.target - goal.current)} to go
                         </p>
                       </div>
                     </div>
@@ -268,8 +269,6 @@ export function Savings() {
           </div>
         </motion.div>
       </div>
-
-      <BottomNav />
     </div>
   );
 }

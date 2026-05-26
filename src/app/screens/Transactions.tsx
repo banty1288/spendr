@@ -1,9 +1,9 @@
 import { useState } from "react";
 import { useNavigate } from "react-router";
+import { useTranslation } from "react-i18next";
 import { motion } from "motion/react";
-import { ArrowLeft, Plus, Loader2 } from "lucide-react";
+import { Plus, Receipt } from "lucide-react";
 import { toast } from "sonner";
-import { BottomNav } from "../components/BottomNav";
 import {
   GradientBackdrop,
   TransactionCard,
@@ -26,9 +26,14 @@ import {
 } from "../../lib/transactions/analytics";
 import { formatMonthLabel } from "../../lib/transactions/format";
 import { format } from "date-fns";
+import { PageShell } from "../components/ui/PageShell";
+import { BackButton } from "../components/ui/BackButton";
+import { EmptyState } from "../components/ui/EmptyState";
+import { TransactionListSkeleton } from "../components/ui/ScreenLoader";
 
 export function Transactions() {
   const navigate = useNavigate();
+  const { t } = useTranslation();
   const [filters, setFilters] = useState<TransactionFilters>(DEFAULT_TRANSACTION_FILTERS);
   const [formOpen, setFormOpen] = useState(false);
   const [editing, setEditing] = useState<Transaction | null>(null);
@@ -62,112 +67,128 @@ export function Transactions() {
   };
 
   return (
-    <div className="min-h-screen pb-28 relative overflow-hidden">
+    <PageShell orbs={[{ color: "#9d4edd", position: "top-right" }, { color: "#00d9ff", position: "bottom-left" }]}>
+      {/* Keep existing gradient for chart compat */}
       <GradientBackdrop />
 
-      <div className="relative z-10 px-6 pt-12">
-        <div className="flex items-center gap-4 mb-6">
-          <button
-            type="button"
-            onClick={() => navigate("/home")}
-            className="bg-white/5 backdrop-blur-sm p-3 rounded-full border border-white/10"
-          >
-            <ArrowLeft size={20} className="text-white" />
-          </button>
-          <div className="flex-1">
-            <h1 className="text-2xl font-bold text-white">Transactions</h1>
-            <p className="text-white/60 text-sm">Manage spending & income</p>
+      <div className="relative px-4 sm:px-6 pt-12 pb-6 max-w-2xl mx-auto">
+        {/* Header */}
+        <motion.div
+          initial={{ opacity: 0, y: -10 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="flex items-center gap-4 mb-6"
+        >
+          <BackButton onClick={() => navigate("/home")} />
+          <div className="flex-1 min-w-0">
+            <h1 className="text-2xl font-bold text-white">{t("transactions.title", "Transactions")}</h1>
+            <p className="text-white/50 text-sm">{t("transactions.subtitle", "Manage spending & income")}</p>
           </div>
           <motion.button
             type="button"
-            whileTap={{ scale: 0.95 }}
-            onClick={() => {
-              setEditing(null);
-              setFormOpen(true);
-            }}
-            className="bg-gradient-to-r from-[#00d9ff] to-[#00ff88] p-3 rounded-2xl text-black shadow-lg shadow-[#00d9ff]/20"
+            whileTap={{ scale: 0.9 }}
+            whileHover={{ scale: 1.05 }}
+            onClick={() => { setEditing(null); setFormOpen(true); }}
+            aria-label="Add transaction"
+            className="bg-gradient-to-r from-[#00d9ff] to-[#00ff88] p-3 rounded-2xl text-black shadow-lg shadow-[#00d9ff]/20 shrink-0"
           >
             <Plus size={22} />
           </motion.button>
-        </div>
+        </motion.div>
 
-        <MonthlySummaryCard
-          income={totals.income}
-          expenses={totals.expenses}
-          net={totals.net}
-          monthLabel={
-            filters.month === "all" ? "This month" : formatMonthLabel(filters.month)
-          }
-        />
+        <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.05 }}>
+          <MonthlySummaryCard
+            income={totals.income}
+            expenses={totals.expenses}
+            net={totals.net}
+            monthLabel={filters.month === "all" ? "This month" : formatMonthLabel(filters.month)}
+          />
+        </motion.div>
 
-        <div className="bg-white/5 backdrop-blur-sm rounded-3xl border border-white/10 p-4 mb-6">
-          <p className="text-white/60 text-sm mb-3">Spending by category</p>
+        <motion.div
+          initial={{ opacity: 0, y: 8 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.08 }}
+          className="bg-white/5 backdrop-blur-sm rounded-3xl border border-white/10 p-5 mb-5"
+        >
+          <p className="text-white/50 text-xs font-semibold uppercase tracking-wider mb-3">{t("transactions.spendingByCategory", "Spending by Category")}</p>
           <CategoryPieChart data={breakdown} />
-        </div>
+        </motion.div>
 
-        <div className="bg-white/5 backdrop-blur-sm rounded-3xl border border-white/10 p-4 mb-6">
-          <p className="text-white/60 text-sm mb-3">Monthly expenses</p>
+        <motion.div
+          initial={{ opacity: 0, y: 8 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.11 }}
+          className="bg-white/5 backdrop-blur-sm rounded-3xl border border-white/10 p-5 mb-5"
+        >
+          <p className="text-white/50 text-xs font-semibold uppercase tracking-wider mb-3">Monthly Expenses</p>
           <MonthlyBarChart data={monthlyChart} />
-        </div>
+        </motion.div>
 
-        <TransactionFiltersBar
-          filters={filters}
-          availableMonths={availableMonths}
-          onChange={(patch) => setFilters((f) => ({ ...f, ...patch }))}
-        />
+        <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.12 }}>
+          <TransactionFiltersBar
+            filters={filters}
+            availableMonths={availableMonths}
+            onChange={(patch) => setFilters((f) => ({ ...f, ...patch }))}
+          />
+        </motion.div>
 
-        {isLoading && (
-          <div className="flex flex-col items-center py-12 gap-3">
-            <Loader2 className="w-8 h-8 text-[#00d9ff] animate-spin" />
-            <p className="text-white/50 text-sm">Loading transactions…</p>
-          </div>
-        )}
+        {isLoading && <TransactionListSkeleton count={5} />}
 
         {isError && (
-          <p className="text-[#ff6b6b] text-sm text-center py-8" role="alert">
-            Could not load transactions. Check your connection and Firestore rules.
-          </p>
+          <div className="text-center py-10 px-4">
+            <p className="text-[#ff6b6b] text-sm" role="alert">
+              {t("common.error", "Could not load transactions.")}
+            </p>
+          </div>
         )}
 
         {!isLoading && !isError && transactions.length === 0 && (
-          <div className="text-center py-12">
-            <p className="text-white/60 text-sm mb-4">No transactions yet</p>
-            <button
-              type="button"
-              onClick={() => setFormOpen(true)}
-              className="text-[#00d9ff] font-medium"
-            >
-              Add your first transaction
-            </button>
-          </div>
+          <EmptyState
+            icon={<Receipt size={36} />}
+            title={all.length > 0 ? t("transactions.noMatches", "No matches") : t("transactions.noTransactions", "No transactions yet")}
+            description={
+              all.length > 0
+                ? t("transactions.tryAdjusting", "Try adjusting your filters to find what you're looking for.")
+                : t("transactions.startTracking", "Start tracking your spending and income by adding your first transaction.")
+            }
+            action={
+              all.length === 0
+                ? { label: t("home.addTransaction", "Add Transaction"), onClick: () => setFormOpen(true) }
+                : undefined
+            }
+            secondaryAction={
+              all.length > 0
+                ? { label: t("transactions.clearFilters", "Clear filters"), onClick: () => setFilters(DEFAULT_TRANSACTION_FILTERS) }
+                : undefined
+            }
+            accentColor="#00d9ff"
+          />
         )}
 
-        <div className="space-y-3">
-          {transactions.map((tx) => (
-            <TransactionCard
+        <div className="space-y-2.5 pb-4">
+          {transactions.map((tx, i) => (
+            <motion.div
               key={tx.id}
-              transaction={tx}
-              onEdit={() => {
-                setEditing(tx);
-                setFormOpen(true);
-              }}
-              onDelete={() => handleDelete(tx)}
-              isDeleting={isDeleting}
-            />
+              initial={{ opacity: 0, y: 6 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: i * 0.03 }}
+            >
+              <TransactionCard
+                transaction={tx}
+                onEdit={() => { setEditing(tx); setFormOpen(true); }}
+                onDelete={() => handleDelete(tx)}
+                isDeleting={isDeleting}
+              />
+            </motion.div>
           ))}
         </div>
       </div>
-
-      <BottomNav />
 
       <TransactionFormSheet
         open={formOpen}
         mode={editing ? "edit" : "add"}
         initial={editing}
-        onClose={() => {
-          setFormOpen(false);
-          setEditing(null);
-        }}
+        onClose={() => { setFormOpen(false); setEditing(null); }}
         onSubmit={async (input) => {
           try {
             if (editing) {
@@ -184,6 +205,6 @@ export function Transactions() {
         }}
         isSubmitting={isAdding || isUpdating}
       />
-    </div>
+    </PageShell>
   );
 }

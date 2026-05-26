@@ -1,0 +1,97 @@
+{
+  "nav": {
+    "home": "Home",
+    "analytics": "Analytics",
+    "transactions": "Transactions",
+    "achievements": "Badges",
+    "profile": "Profile"
+  },
+  "home": {
+    "greeting": "Hello",
+    "totalBalance": "Total Balance",
+    "monthlySpending": "Monthly Spending",
+    "recentTransactions": "Recent Transactions",
+    "viewAll": "View All",
+    "addTransaction": "Add Transaction",
+    "aiInsights": "AI Insights",
+    "liveBalance": "Live balance from your transactions",
+    "income": "Income",
+    "expenses": "Expenses"
+  },
+  "analytics": {
+    "totalSpending": "Total Spending",
+    "netCashFlow": "Net Cash Flow",
+    "spendingBreakdown": "Spending Breakdown",
+    "monthlyTrend": "Monthly Trend",
+    "noData": "No expense data for this period",
+    "trackMoney": "Track where your money goes"
+  },
+  "transactions": {
+    "title": "Transactions",
+    "search": "Search transactions...",
+    "allCategories": "All Categories",
+    "allTypes": "All Types",
+    "addIncome": "Add Income",
+    "addExpense": "Add Expense",
+    "noTransactions": "No transactions found",
+    "tryAdjusting": "Try adjusting your filters to find what you're looking for.",
+    "save": "Save Transaction",
+    "cancel": "Cancel",
+    "merchant": "Merchant / Description",
+    "amount": "Amount",
+    "category": "Category",
+    "date": "Date",
+    "notes": "Notes (Optional)"
+  },
+  "gamification": {
+    "title": "Achievements",
+    "levels": "Levels & Progress",
+    "currentLevel": "Current Level",
+    "xpToNext": "XP to next level",
+    "badges": "Your Badges",
+    "challenges": "Active Challenges",
+    "locked": "Locked",
+    "unlocked": "Unlocked",
+    "streak": "Day Savings Streak",
+    "keepItUp": "Keep it up!"
+  },
+  "badges": {
+    "first_transaction_title": "First Step",
+    "first_transaction_desc": "Added your first transaction",
+    "savings_starter_title": "Savings Starter",
+    "savings_starter_desc": "Saved 10% of income this month",
+    "frugal_week_title": "Frugal Week",
+    "frugal_week_desc": "Kept expenses under budget for 7 days"
+  },
+  "weeklyReport": {
+    "title": "Weekly Report",
+    "insights": "Weekly Insights",
+    "generating": "Generating your analysis...",
+    "generate": "Generate Weekly Report",
+    "summary": "Summary",
+    "highlights": "Highlights",
+    "topCategories": "Top Categories",
+    "noData": "Not enough data for a report yet."
+  },
+  "settings": {
+    "title": "Settings",
+    "personalInfo": "Personal Information",
+    "notifications": "Notifications",
+    "security": "Security & Privacy",
+    "linkedAccounts": "Linked Accounts",
+    "appSettings": "App Settings",
+    "helpSupport": "Help & Support",
+    "theme": "Theme Appearance",
+    "language": "Language",
+    "currency": "Currency",
+    "logout": "Log Out"
+  },
+  "common": {
+    "loading": "Loading...",
+    "success": "Success",
+    "error": "Error",
+    "save": "Save",
+    "cancel": "Cancel",
+    "delete": "Delete"
+  }
+}

@@ -2,6 +2,8 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { format } from "date-fns";
 import { useMemo } from "react";
 import { useAuthStore } from "../store/authStore";
+import { useRewards } from "./useRewards";
+import { XP_VALUES, REWARD_ICONS } from "../services/rewards/xpEngine";
 import {
   createTransaction,
   fetchTransactions,
@@ -26,6 +28,7 @@ import type {
 } from "../types/transaction";
 import { userDataQueryKey } from "./useUserData";
 import { invalidateSpendrAnalysisCache } from "../services/ai/cache";
+import { trackTransactionAdded, trackTransactionDeleted } from "../services/analytics";
 
 export const transactionsQueryKey = (uid?: string) =>
   ["transactions", uid] as const;
@@ -34,6 +37,7 @@ export function useTransactions() {
   const user = useAuthStore((s) => s.user);
   const queryClient = useQueryClient();
   const uid = user?.uid;
+  const { logReward } = useRewards();
 
   const query = useQuery({
     queryKey: transactionsQueryKey(uid),
@@ -88,6 +92,7 @@ export function useTransactions() {
       }
     },
     onSuccess: (created) => {
+      trackTransactionAdded(created.type, created.categoryId);
       queryClient.setQueryData<Transaction[]>(
         transactionsQueryKey(uid),
         (old) => {
@@ -95,6 +100,21 @@ export function useTransactions() {
           return [created, ...list.filter((t) => !t.id.startsWith("temp-"))];
         }
       );
+      
+      if (uid) {
+        const lastLogged = localStorage.getItem(`last_tx_reward_${uid}`);
+        const now = Date.now();
+        if (!lastLogged || now - parseInt(lastLogged) > 60000) {
+          localStorage.setItem(`last_tx_reward_${uid}`, now.toString());
+          logReward({
+            type: "transaction",
+            title: "Transaction Logged",
+            subtitle: "Tracking your spending habits",
+            xp: XP_VALUES.TRANSACTION_LOGGED,
+            icon: REWARD_ICONS.transaction,
+          });
+        }
+      }
     },
     onSettled: () => void invalidateAll(),
   });
@@ -149,7 +169,10 @@ export function useTransactions() {
         syncBalance(context.previous);
       }
     },
-    onSettled: () => void invalidateAll(),
+    onSettled: () => {
+      trackTransactionDeleted();
+      void invalidateAll();
+    },
   });
 
   return {

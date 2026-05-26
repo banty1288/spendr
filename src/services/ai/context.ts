@@ -30,7 +30,7 @@ export function buildTransactionsSummary(
   for (const tx of transactions.slice(0, maxItems)) {
     const cat = getCategoryById(tx.categoryId);
     lines.push(
-      `- ${tx.date.slice(0, 10)} | ${tx.type} | ${tx.merchant} | $${tx.amount.toFixed(2)} | ${cat.label}${tx.notes ? ` | ${tx.notes}` : ""}`
+      `- ${tx.date.slice(0, 10)} | ${tx.type} | ${tx.merchant} | ${tx.amount.toFixed(2)} | ${cat.label}${tx.notes ? ` | ${tx.notes}` : ""}`
     );
   }
 
@@ -42,6 +42,7 @@ export function buildAiUserContext(
   transactions: Transaction[]
 ): AiUserContext {
   const profile = userData?.profile;
+  const currency = userData?.preferences?.currency || userData?.settings?.app?.currency || "USD";
 
   return {
     displayName: userData?.displayName ?? "User",
@@ -54,13 +55,15 @@ export function buildAiUserContext(
     savingsGoals: profile?.savingsGoals,
     emotionalTriggers: profile?.emotionalTriggers,
     transactionsSummary: buildTransactionsSummary(transactions),
+    currency,
   };
 }
 
 export function formatContextForPrompt(ctx: AiUserContext): string {
   return [
     `User: ${ctx.displayName}`,
-    `Balance: $${ctx.balance.toFixed(2)}`,
+    `Currency: ${ctx.currency}`,
+    `Balance: ${ctx.balance.toFixed(2)}`,
     `Transaction count: ${ctx.transactionCount}`,
     ctx.monthlyIncome ? `Stated income range: ${ctx.monthlyIncome}` : "",
     ctx.monthlySpending ? `Spending profile: ${ctx.monthlySpending}` : "",

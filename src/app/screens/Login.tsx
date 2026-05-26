@@ -7,10 +7,25 @@ import {
   signInWithPopup,
   createUserWithEmailAndPassword,
 } from "firebase/auth";
+import { FirebaseError } from "firebase/app";
 import { auth, googleProvider } from "../../lib/firebase";
 import { ensureUserDocument } from "../../lib/firebase/users";
 import { waitForAuthUser } from "../../store/authStore";
 import { toast } from "sonner";
+import { trackLogin, trackSignup, trackPasswordReset, identifyUser } from "../../services/analytics";
+
+function getAuthErrorMessage(error: unknown): string {
+  if (error instanceof FirebaseError && error.code === "auth/unauthorized-domain") {
+    const host =
+      typeof window !== "undefined" ? window.location.hostname : "localhost";
+    return (
+      `Firebase Auth is not authorized for "${host}". ` +
+      "Add this domain in Firebase Console > Authentication > Settings > Authorized domains."
+    );
+  }
+
+  return error instanceof Error ? error.message : "Authentication failed.";
+}
 
 export function Login() {
   const navigate = useNavigate();
@@ -37,17 +52,37 @@ export function Login() {
       let cred;
       if (isLogin) {
         cred = await signInWithEmailAndPassword(auth, email, password);
+        trackLogin("email");
         toast.success("Successfully logged in!");
       } else {
         cred = await createUserWithEmailAndPassword(auth, email, password);
+        trackSignup("email");
         toast.success("Account created successfully!");
       }
       await waitForAuthUser();
+      identifyUser(cred.user.uid);
       const dest = await resolveRedirect();
       navigate(dest, { replace: true });
     } catch (error: unknown) {
-      const message = error instanceof Error ? error.message : "Authentication failed.";
-      toast.error(message);
+      toast.error(getAuthErrorMessage(error));
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const handleForgotPassword = async () => {
+    if (!email) {
+      toast.error("Please enter your email address to reset your password.");
+      return;
+    }
+    
+    setIsLoading(true);
+    try {
+      await sendPasswordResetEmail(auth, email);
+      trackPasswordReset();
+      toast.success("Password reset email sent! Check your inbox.");
+    } catch (error: unknown) {
+      toast.error(getAuthErrorMessage(error));
     } finally {
       setIsLoading(false);
     }
@@ -57,14 +92,14 @@ export function Login() {
     setIsGoogleLoading(true);
     try {
       const cred = await signInWithPopup(auth, googleProvider);
+      trackLogin("google");
+      identifyUser(cred.user.uid);
       toast.success("Successfully logged in with Google!");
       await waitForAuthUser();
       const dest = await resolveRedirect();
       navigate(dest, { replace: true });
     } catch (error: unknown) {
-      const message =
-        error instanceof Error ? error.message : "Google authentication failed.";
-      toast.error(message);
+      toast.error(getAuthErrorMessage(error));
     } finally {
       setIsGoogleLoading(false);
     }
@@ -132,7 +167,12 @@ export function Login() {
 
             {isLogin && (
               <div className="flex justify-end">
-                <button type="button" className="text-[#00d9ff] text-sm mb-4">
+                <button 
+                  type="button" 
+                  onClick={handleForgotPassword}
+                  disabled={isLoading || isGoogleLoading}
+                  className="text-[#00d9ff] text-sm mb-4 hover:underline disabled:opacity-50"
+                >
                   Forgot password?
                 </button>
               </div>

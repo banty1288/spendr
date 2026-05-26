@@ -2,6 +2,7 @@ import { create } from "zustand";
 import { User, onAuthStateChanged } from "firebase/auth";
 import { auth, authReady } from "../lib/firebase";
 import { ensureUserDocument } from "../lib/firebase/users";
+import { identifyUser } from "../services/analytics";
 
 interface AuthState {
   user: User | null;
@@ -48,24 +49,38 @@ function startAuthListener() {
   authListenerStarted = true;
 
   void authReady.then(() => {
-    onAuthStateChanged(auth, async (user) => {
-      // Sync user immediately so route guards never see a stale null during sign-in.
-      useAuthStore.setState({ user, initialized: true });
+    try {
+      onAuthStateChanged(
+        auth, 
+        async (user) => {
+          // Sync user immediately so route guards never see a stale null during sign-in.
+          useAuthStore.setState({ user, initialized: true });
 
-      if (!user) {
-        useAuthStore.setState({ bootstrapping: false });
-        return;
-      }
+          if (!user) {
+            useAuthStore.setState({ bootstrapping: false });
+            return;
+          }
 
-      useAuthStore.setState({ bootstrapping: true });
-      try {
-        await ensureUserDocument(undefined, true);
-      } catch (err) {
-        console.error("Failed to bootstrap user document:", err);
-      } finally {
-        useAuthStore.setState({ bootstrapping: false });
-      }
-    });
+          identifyUser(user.uid);
+
+          useAuthStore.setState({ bootstrapping: true });
+          try {
+            await ensureUserDocument(undefined, true);
+          } catch (err) {
+            console.error("Failed to bootstrap user document:", err);
+          } finally {
+            useAuthStore.setState({ bootstrapping: false });
+          }
+        },
+        (error) => {
+          console.error("Firebase auth listener error (e.g., invalid API key):", error);
+          useAuthStore.setState({ user: null, initialized: true, bootstrapping: false });
+        }
+      );
+    } catch (err) {
+      console.error("Failed to start auth listener:", err);
+      useAuthStore.setState({ user: null, initialized: true, bootstrapping: false });
+    }
   });
 }
 

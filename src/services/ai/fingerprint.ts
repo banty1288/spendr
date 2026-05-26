@@ -21,5 +21,7 @@ export function buildAnalysisFingerprint(
       ].join(";")
     : "";
 
-  return `${transactions.length}::${txPart}::${userData?.balance ?? 0}::${profilePart}::${userData?.onboardingCompleted ? 1 : 0}`;
+  const prefPart = `${userData?.preferences?.currency || userData?.settings?.app?.currency || 'USD'}`;
+
+  return `${transactions.length}::${txPart}::${userData?.balance ?? 0}::${profilePart}::${userData?.onboardingCompleted ? 1 : 0}::${prefPart}`;
 }

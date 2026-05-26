@@ -23,7 +23,7 @@ export function OnboardingShell({
   children,
 }: OnboardingShellProps) {
   return (
-    <div className="min-h-screen flex flex-col relative overflow-hidden bg-black">
+    <div className="min-h-screen flex flex-col relative overflow-hidden bg-background">
       <div className="pointer-events-none absolute inset-0">
         <motion.div
           key={`glow-${currentStep}`}
@@ -39,7 +39,7 @@ export function OnboardingShell({
         <OnboardingProgress currentStep={currentStep} />
       </header>
 
-      <main className="relative z-10 flex-1 overflow-y-auto px-6 pb-40">
+      <main className="relative z-10 flex-1 overflow-y-auto px-6 pb-safe-nav">
         <AnimatePresence mode="wait" custom={direction}>
           <motion.div
             key={stepKey}

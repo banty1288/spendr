@@ -8,7 +8,7 @@ export function AuthLoadingScreen({
   message = "Loading…",
 }: AuthLoadingScreenProps) {
   return (
-    <div className="min-h-screen flex flex-col items-center justify-center gap-3 bg-black">
+    <div className="min-h-screen flex flex-col items-center justify-center gap-3 bg-background">
       <Loader2 className="w-8 h-8 text-[#00d9ff] animate-spin" />
       <p className="text-white/50 text-sm">{message}</p>
     </div>

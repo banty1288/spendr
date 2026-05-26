@@ -10,6 +10,7 @@ import { AiError, toSafeAiError } from "../services/ai/errors";
 import { useAuthStore } from "../store/authStore";
 import { useOnboardingCompleted } from "./useUserData";
 import { useTransactions } from "./useTransactions";
+import { trackAiInsightGenerated } from "../services/analytics";
 
 export const geminiInsightsQueryKey = (uid?: string) =>
   ["geminiInsights", uid] as const;
@@ -148,6 +149,7 @@ export function useGeminiInsights() {
         lastRunFingerprint.current = fingerprint;
         sessionStorage.setItem(fingerprintStorageKey(uid), fingerprint);
         setIsStale(false);
+        trackAiInsightGenerated();
         return result;
       } catch (err) {
         throw toSafeAiError(err);

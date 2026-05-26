@@ -57,6 +57,11 @@ export {
   getSpendrAnalysisFromCache,
 } from "./gateway";
 export {
+  runEmotionalSpendingInsights,
+  getStoredEmotionalSpendingInsights,
+  buildEmotionalInsightsPreview,
+} from "./emotionalGateway";
+export {
   generateSpendrAnalysis,
   generateSpendingAnalysis,
   detectEmotionalSpending,

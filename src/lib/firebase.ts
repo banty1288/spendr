@@ -6,6 +6,7 @@ import {
   browserLocalPersistence,
 } from "firebase/auth";
 import { getFirestore } from "firebase/firestore";
+import { getStorage } from "firebase/storage";
 import { sanitizeEnv } from "./firebase/env";
 
 // Your web app's Firebase configuration
@@ -32,10 +33,48 @@ const firebaseConfig = {
 
 const EXPECTED_FIREBASE_PROJECT = "spendr-app-85a7b";
 
-// Check if credentials actually exist, warn if they are using dummies
-if (firebaseConfig.apiKey === "dummy_api_key") {
+const isConfigValid =
+  firebaseConfig.apiKey && !firebaseConfig.apiKey.startsWith("dummy_");
+
+function warnAboutAuthDomainConfiguration() {
+  if (!import.meta.env.DEV) return;
+
+  const authDomain = firebaseConfig.authDomain;
+  const projectId = firebaseConfig.projectId;
+  const currentHost =
+    typeof window !== "undefined" ? window.location.hostname : "localhost";
+  const currentOrigin =
+    typeof window !== "undefined"
+      ? window.location.origin
+      : "http://localhost:5173";
+
+  if (
+    authDomain === "localhost" ||
+    authDomain === "127.0.0.1" ||
+    authDomain.includes("://") ||
+    authDomain.includes(":")
+  ) {
+    console.warn(
+      "FIREBASE WARNING: VITE_FIREBASE_AUTH_DOMAIN must be the Firebase Auth domain " +
+        `(usually "${projectId}.firebaseapp.com"), not the local dev URL. ` +
+        `Keep authDomain as "${projectId}.firebaseapp.com" and add "${currentHost}" ` +
+        "in Firebase Console > Authentication > Settings > Authorized domains."
+    );
+  }
+
+  if (currentHost === "localhost" || currentHost === "127.0.0.1") {
+    console.info(
+      `Firebase Auth dev origin: ${currentOrigin}. If Google sign-in fails with ` +
+        `"auth/unauthorized-domain", add "${currentHost}" in Firebase Console > ` +
+        "Authentication > Settings > Authorized domains. Firebase stores the domain only, not the port."
+    );
+  }
+}
+
+if (!isConfigValid) {
   console.error(
-    "FIREBASE ERROR: Environment variables are missing! Copy .env.example to .env.local with Firebase credentials."
+    "FIREBASE ERROR: Environment variables are missing or invalid! " +
+    "Copy .env.example to .env.local and add your real Firebase credentials to prevent app crashes."
   );
 } else if (
   import.meta.env.DEV &&
@@ -48,15 +87,19 @@ if (firebaseConfig.apiKey === "dummy_api_key") {
   );
 }
 
+warnAboutAuthDomainConfiguration();
+
 // Initialize Firebase
 export const app = initializeApp(firebaseConfig);
 export const auth = getAuth(app);
 export const db = getFirestore(app);
+export const storage = getStorage(app);
 export const googleProvider = new GoogleAuthProvider();
+googleProvider.setCustomParameters({ prompt: "select_account" });
 
 /** Persist sessions in local storage before any auth listeners run. */
-export const authReady = setPersistence(auth, browserLocalPersistence).catch(
-  (err) => {
-    console.warn("Firebase auth persistence could not be set:", err);
-  }
-);
+export const authReady = isConfigValid
+  ? setPersistence(auth, browserLocalPersistence).catch((err) => {
+      console.warn("Firebase auth persistence could not be set:", err);
+    })
+  : Promise.resolve();

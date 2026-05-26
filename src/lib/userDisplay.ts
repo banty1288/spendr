@@ -12,11 +12,16 @@ export function getInitials(name: string): string {
   return (parts[0][0] + parts[parts.length - 1][0]).toUpperCase();
 }
 
-export function formatCurrency(amount: number, currency = "USD"): string {
-  return new Intl.NumberFormat("en-US", {
+export function formatCurrency(amount: number, currency = "USD", locale = "en-US"): string {
+  let effectiveLocale = locale;
+  if (effectiveLocale === "hi") effectiveLocale = "hi-IN";
+  if (effectiveLocale === "en") effectiveLocale = "en-US";
+  if (currency === "INR") effectiveLocale = "en-IN"; // Enforce Indian numbering for INR
+  
+  return new Intl.NumberFormat(effectiveLocale, {
     style: "currency",
     currency,
-    minimumFractionDigits: 2,
+    minimumFractionDigits: 0,
     maximumFractionDigits: 2,
   }).format(amount);
 }

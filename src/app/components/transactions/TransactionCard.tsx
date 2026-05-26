@@ -2,8 +2,9 @@ import { motion } from "motion/react";
 import { Pencil, Trash2 } from "lucide-react";
 import type { Transaction } from "../../../types/transaction";
 import { getCategoryById } from "../../../lib/transactions/constants";
+import { useCurrency } from "../../../hooks/useCurrency";
 import { formatRelativeTime } from "../../../lib/transactions/format";
-import { formatCurrency } from "../../../lib/userDisplay";
+
 
 interface TransactionCardProps {
   transaction: Transaction;
@@ -20,6 +21,7 @@ export function TransactionCard({
 }: TransactionCardProps) {
   const category = getCategoryById(transaction.categoryId);
   const isIncome = transaction.type === "income";
+  const { convertAndFormat } = useCurrency();
 
   return (
     <motion.div
@@ -51,7 +53,7 @@ export function TransactionCard({
           }`}
         >
           {isIncome ? "+" : "-"}
-          {formatCurrency(transaction.amount)}
+          {convertAndFormat(transaction.amount)}
         </p>
       </div>
       <div className="flex flex-col gap-1 shrink-0">

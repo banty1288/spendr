@@ -20,7 +20,7 @@ export function AuthenticatedGate() {
 
   if (isError) {
     return (
-      <div className="min-h-screen flex flex-col items-center justify-center gap-4 bg-black px-8 text-center">
+      <div className="min-h-screen flex flex-col items-center justify-center gap-4 bg-background px-8 text-center">
         <p className="text-white/80 text-sm">
           Could not load your profile. Check your connection and try again.
         </p>

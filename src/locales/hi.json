@@ -1,0 +1,97 @@
+{
+  "nav": {
+    "home": "होम",
+    "analytics": "विश्लेषण",
+    "transactions": "लेन-देन",
+    "achievements": "बैज",
+    "profile": "प्रोफ़ाइल"
+  },
+  "home": {
+    "greeting": "नमस्ते",
+    "totalBalance": "कुल शेष",
+    "monthlySpending": "मासिक खर्च",
+    "recentTransactions": "हाल के लेन-देन",
+    "viewAll": "सभी देखें",
+    "addTransaction": "लेन-देन जोड़ें",
+    "aiInsights": "AI अंतर्दृष्टि",
+    "liveBalance": "आपके लेन-देन से लाइव शेष",
+    "income": "आय",
+    "expenses": "व्यय"
+  },
+  "analytics": {
+    "totalSpending": "कुल खर्च",
+    "netCashFlow": "शुद्ध नकदी प्रवाह",
+    "spendingBreakdown": "खर्च का विवरण",
+    "monthlyTrend": "मासिक प्रवृत्ति",
+    "noData": "इस अवधि के लिए कोई व्यय डेटा नहीं है",
+    "trackMoney": "ट्रैक करें कि आपका पैसा कहां जाता है"
+  },
+  "transactions": {
+    "title": "लेन-देन",
+    "search": "लेन-देन खोजें...",
+    "allCategories": "सभी श्रेणियां",
+    "allTypes": "सभी प्रकार",
+    "addIncome": "आय जोड़ें",
+    "addExpense": "व्यय जोड़ें",
+    "noTransactions": "कोई लेन-देन नहीं मिला",
+    "tryAdjusting": "आप जो खोज रहे हैं उसे खोजने के लिए अपने फ़िल्टर को समायोजित करने का प्रयास करें।",
+    "save": "लेन-देन सहेजें",
+    "cancel": "रद्द करें",
+    "merchant": "व्यापारी / विवरण",
+    "amount": "राशि",
+    "category": "श्रेणी",
+    "date": "तारीख",
+    "notes": "नोट्स (वैकल्पिक)"
+  },
+  "gamification": {
+    "title": "उपलब्धियां",
+    "levels": "स्तर और प्रगति",
+    "currentLevel": "वर्तमान स्तर",
+    "xpToNext": "अगले स्तर तक XP",
+    "badges": "आपके बैज",
+    "challenges": "सक्रिय चुनौतियां",
+    "locked": "बंद है",
+    "unlocked": "खुला है",
+    "streak": "दिन की बचत स्ट्रीक",
+    "keepItUp": "इसे जारी रखो!"
+  },
+  "badges": {
+    "first_transaction_title": "पहला कदम",
+    "first_transaction_desc": "अपना पहला लेन-देन जोड़ा",
+    "savings_starter_title": "बचत स्टार्टर",
+    "savings_starter_desc": "इस महीने आय का 10% बचाया",
+    "frugal_week_title": "मितव्ययी सप्ताह",
+    "frugal_week_desc": "7 दिनों के लिए बजट के तहत खर्च रखा"
+  },
+  "weeklyReport": {
+    "title": "साप्ताहिक रिपोर्ट",
+    "insights": "साप्ताहिक अंतर्दृष्टि",
+    "generating": "आपका विश्लेषण उत्पन्न कर रहा है...",
+    "generate": "साप्ताहिक रिपोर्ट उत्पन्न करें",
+    "summary": "सारांश",
+    "highlights": "मुख्य विशेषताएं",
+    "topCategories": "शीर्ष श्रेणियां",
+    "noData": "अभी तक रिपोर्ट के लिए पर्याप्त डेटा नहीं है।"
+  },
+  "settings": {
+    "title": "सेटिंग्स",
+    "personalInfo": "व्यक्तिगत जानकारी",
+    "notifications": "सूचनाएं",
+    "security": "सुरक्षा और गोपनीयता",
+    "linkedAccounts": "लिंक किए गए खाते",
+    "appSettings": "ऐप सेटिंग्स",
+    "helpSupport": "सहायता और समर्थन",
+    "theme": "थीम प्रकटन",
+    "language": "भाषा",
+    "currency": "मुद्रा",
+    "logout": "लॉग आउट"
+  },
+  "common": {
+    "loading": "लोड हो रहा है...",
+    "success": "सफलता",
+    "error": "त्रुटि",
+    "save": "सहेजें",
+    "cancel": "रद्द करें",
+    "delete": "हटाएं"
+  }
+}

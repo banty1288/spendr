@@ -1,22 +1,24 @@
 import { PieChart, Pie, Cell, ResponsiveContainer, Tooltip } from "recharts";
 import type { CategoryBreakdownItem } from "../../../lib/transactions/analytics";
-import { formatCurrency } from "../../../lib/userDisplay";
+import { useCurrency } from "../../../hooks/useCurrency";
 
 interface CategoryPieChartProps {
   data: CategoryBreakdownItem[];
 }
 
 export function CategoryPieChart({ data }: CategoryPieChartProps) {
-  if (data.length === 0) {
+  const { convertAndFormat } = useCurrency();
+  if (!data || data.length === 0) {
     return (
-      <div className="h-[200px] flex items-center justify-center text-white/40 text-sm">
+      <div className="h-[190px] min-[375px]:h-[200px] min-w-0 flex items-center justify-center text-white/40 text-sm text-center px-4">
         No expense data for this period
       </div>
     );
   }
 
   return (
-    <ResponsiveContainer width="100%" height={200}>
+    <div className="h-[190px] min-[375px]:h-[200px] w-full min-w-0 overflow-hidden">
+    <ResponsiveContainer width="100%" height="100%">
       <PieChart>
         <Pie
           data={data}
@@ -39,9 +41,10 @@ export function CategoryPieChart({ data }: CategoryPieChartProps) {
             borderRadius: 12,
             color: "#fff",
           }}
-          formatter={(value: number) => formatCurrency(value)}
+          formatter={(value: number) => convertAndFormat(value)}
         />
       </PieChart>
     </ResponsiveContainer>
+    </div>
   );
 }

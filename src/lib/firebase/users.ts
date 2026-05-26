@@ -1,4 +1,4 @@
-import { getDoc, setDoc, serverTimestamp } from "firebase/firestore";
+import { getDoc, setDoc, updateDoc, serverTimestamp } from "firebase/firestore";
 import type { User } from "firebase/auth";
 import { FirebaseError } from "firebase/app";
 import { waitForFirestoreAuth } from "./assertAuth";
@@ -79,4 +79,43 @@ export async function fetchUserDocument(): Promise<UserData> {
   }
 
   return snap.data() as UserData;
+}
+
+export async function updateUserDocument(
+  updates: Partial<UserData>
+): Promise<void> {
+  const authed = await waitForFirestoreAuth();
+  await updateDoc(userDocRef(authed.uid), {
+    ...updates,
+    updatedAt: serverTimestamp(),
+  });
+}
+
+export async function updateUserSettings(
+  settings: Partial<UserData["settings"]>
+): Promise<void> {
+  const authed = await waitForFirestoreAuth();
+  const userRef = userDocRef(authed.uid);
+  
+  const snap = await getDoc(userRef);
+  if (!snap.exists()) return;
+  const data = snap.data() as UserData;
+  const currentSettings = data.settings || {
+    notifications: { spendingAlerts: true, savingsReminders: true, streakReminders: true, weeklyReports: true, aiCoaching: true, quietHours: false },
+    privacy: { dataVisibility: "private", analyticsOptIn: true },
+    app: { theme: "dark", currency: "USD", language: "en" }
+  };
+  
+  const newSettings = {
+    ...currentSettings,
+    ...settings,
+    notifications: { ...currentSettings.notifications, ...settings.notifications },
+    privacy: { ...currentSettings.privacy, ...settings.privacy },
+    app: { ...currentSettings.app, ...settings.app },
+  };
+  
+  await updateDoc(userRef, {
+    settings: newSettings,
+    updatedAt: serverTimestamp(),
+  });
 }

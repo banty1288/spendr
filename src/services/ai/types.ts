@@ -66,6 +66,8 @@ export interface AiUserContext {
   savingsGoals?: string[];
   emotionalTriggers?: string[];
   transactionsSummary: string;
+  language: string;
+  currency: string;
 }
 
 export interface AiServiceError {
