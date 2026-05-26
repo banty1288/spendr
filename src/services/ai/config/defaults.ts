@@ -1,11 +1,11 @@
 /** Default Gemini model — must match a valid Google AI Studio model id */
-export const PRIMARY_GEMINI_MODEL = "gemini-1.5-flash-latest";
+export const PRIMARY_GEMINI_MODEL = "gemini-2.5-flash";
 
 /** Used when env does not specify fallbacks */
 export const DEFAULT_FALLBACK_MODELS = [
-  "gemini-1.5-flash-latest",
-  "gemini-1.5-flash",
-  "gemini-1.5-flash-8b",
+  "gemini-2.5-flash",
+  "gemini-2.0-flash",
+  "gemini-flash-latest",
 ] as const;
 
 /** Public alias — same list as {@link DEFAULT_FALLBACK_MODELS} */
