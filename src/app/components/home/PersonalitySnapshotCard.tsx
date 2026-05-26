@@ -68,18 +68,14 @@ export function PersonalitySnapshotCard({ personality, isLoading }: PersonalityS
       onClick={() => navigate("/personality")}
       className="bg-gradient-to-br from-card to-card  p-5 rounded-3xl border border-[#9d4edd]/30 mb-6 relative overflow-hidden cursor-pointer group"
     >
-      <motion.div
+      <div
         className="absolute top-0 right-0 w-32 h-32 bg-card rounded-full blur-3xl"
-        animate={{ scale: [1, 1.2, 1] }}
-        transition={{ duration: 4, repeat: Infinity }}
       />
       <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/5 to-transparent translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-1000" />
       
       <div className="relative flex items-start gap-4">
         <motion.div
           className={`bg-gradient-to-br ${config.bg} p-3 rounded-2xl shrink-0`}
-          animate={{ rotate: [0, 5, -5, 0] }}
-          transition={{ duration: 2, repeat: Infinity, repeatDelay: 5 }}
         >
           <Icon size={24} className="text-white" />
         </motion.div>

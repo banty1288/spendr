@@ -8,6 +8,7 @@ import {
   serverTimestamp,
   setDoc,
   updateDoc,
+  limit,
 } from "firebase/firestore";
 import type { Transaction, TransactionInput } from "../../types/transaction";
 import { waitForFirestoreAuth } from "./assertAuth";
@@ -29,7 +30,7 @@ function mapDoc(id: string, data: Record<string, unknown>): Transaction {
 
 export async function fetchTransactions(uid: string): Promise<Transaction[]> {
   await waitForFirestoreAuth(uid);
-  const q = query(userTransactionsRef(uid), orderBy("date", "desc"));
+  const q = query(userTransactionsRef(uid), orderBy("date", "desc"), limit(500));
   const snap = await getDocs(q);
   return snap.docs.map((d) => mapDoc(d.id, d.data()));
 }

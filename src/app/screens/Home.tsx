@@ -77,21 +77,9 @@ export function Home() {
     <div className="min-h-[100dvh] pb-safe-nav relative overflow-hidden bg-background">
       {/* Background Orbs */}
       <div className="absolute inset-0 opacity-20 pointer-events-none">
-        <motion.div
-          animate={{ x: [0, 50, 0], y: [0, -30, 0] }}
-          transition={{ duration: 20, repeat: Infinity, ease: "easeInOut" }}
-          className="absolute top-0 right-0 w-80 h-80 bg-card rounded-full hidden"
-        />
-        <motion.div
-          animate={{ x: [0, -30, 0], y: [0, 50, 0] }}
-          transition={{ duration: 25, repeat: Infinity, ease: "easeInOut" }}
-          className="absolute bottom-40 left-0 w-80 h-80 bg-card rounded-full hidden"
-        />
-        <motion.div
-          animate={{ scale: [1, 1.2, 1], opacity: [0.15, 0.25, 0.15] }}
-          transition={{ duration: 15, repeat: Infinity, ease: "easeInOut" }}
-          className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-card rounded-full hidden"
-        />
+        <div className="absolute top-0 right-0 w-80 h-80 bg-card rounded-full hidden" />
+        <div className="absolute bottom-40 left-0 w-80 h-80 bg-card rounded-full hidden" />
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-card rounded-full hidden" />
       </div>
 
       <div className="relative z-10 px-4 md:px-8 lg:px-12 pt-12 pb-6 max-w-7xl mx-auto">
@@ -114,12 +102,9 @@ export function Home() {
               onClick={() => navigate("/gamification")}
               className="flex items-center gap-1.5 bg-gradient-to-r from-card to-card px-3 py-2 rounded-full border border-[#ff6b35]/30 cursor-pointer"
             >
-              <motion.div
-                animate={{ rotate: [0, 5, -5, 0] }}
-                transition={{ duration: 0.5, repeat: Infinity, repeatDelay: 3 }}
-              >
+              <div>
                 <Flame size={16} className="text-[#ff6b35]" />
-              </motion.div>
+              </div>
               <span className="text-[#ff6b35] font-bold text-sm">
                 {userData?.streakDays ?? 0}
               </span>
@@ -137,21 +122,14 @@ export function Home() {
           className="bg-gradient-to-br from-card to-card  p-6 rounded-3xl border border-border mb-6 relative overflow-hidden cursor-pointer group"
           onClick={() => navigate("/transactions")}
         >
-          <motion.div
-            className="absolute inset-0 bg-gradient-to-br from-card to-card"
-            animate={{ opacity: [0.5, 0.8, 0.5] }}
-            transition={{ duration: 3, repeat: Infinity }}
-          />
+          <div className="absolute inset-0 bg-gradient-to-br from-card to-card opacity-65" />
           <div className="absolute top-0 right-0 w-40 h-40 bg-card rounded-full blur-3xl group-hover:bg-card transition-colors" />
           <div className="relative">
             <div className="flex items-center justify-between mb-2">
               <p className="text-white/60 mb-2">{t("home.totalBalance")}</p>
-              <motion.div
-                animate={{ opacity: [0.5, 1, 0.5] }}
-                transition={{ duration: 2, repeat: Infinity }}
-              >
+              <div>
                 <Eye size={16} className="text-white/40" />
-              </motion.div>
+              </div>
             </div>
             <motion.h2
               className="text-5xl font-black bg-gradient-to-r from-white via-[#00d9ff] to-[#00ff88] bg-clip-text text-transparent mb-1"

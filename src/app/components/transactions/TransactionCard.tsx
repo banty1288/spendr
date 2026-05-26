@@ -27,7 +27,6 @@ export const TransactionCard = memo(function TransactionCard({
 
   return (
     <motion.div
-      layout
       initial={{ opacity: 0, y: 8 }}
       animate={{ opacity: 1, y: 0 }}
       className="bg-card shadow-sm  rounded-2xl border border-border p-4 flex items-center gap-3"

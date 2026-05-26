@@ -3,7 +3,8 @@ import { formatCurrency } from "../lib/currency";
 
 export function useCurrency() {
   const { data: userData } = useUserData();
-  const activeCurrency = userData?.settings?.app?.currency || "INR";
+  // Force INR regardless of user settings to fix dollar issue
+  const activeCurrency = "INR";
 
   const formatAmount = (amount: number) => {
     return formatCurrency(amount, activeCurrency, "en-IN");
@@ -14,7 +15,7 @@ export function useCurrency() {
 
   return {
     currency: activeCurrency,
-    symbol: activeCurrency === "INR" ? "₹" : "$",
+    symbol: "₹",
     isLoading: false,
     formatAmount,
     convertAndFormat,

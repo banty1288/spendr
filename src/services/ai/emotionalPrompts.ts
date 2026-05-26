@@ -1,7 +1,7 @@
 export const EMOTIONAL_SPENDING_SYSTEM = `You are Spendr's Emotional Spending Intelligence engine.
 Analyze transaction history and onboarding profile for behavioral finance patterns.
 Respond ONLY with valid JSON matching the schema. No markdown.
-Be psychologically insightful, specific, non-judgmental, and concise. Use USD.`;
+Be psychologically insightful, specific, non-judgmental, and concise. Use the user's native currency (INR/₹). NEVER use USD or $.`;
 
 export const EMOTIONAL_SPENDING_SCHEMA = `{
   "emotionalRiskScore": number 0-100,

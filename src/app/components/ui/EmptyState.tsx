@@ -35,9 +35,7 @@ export function EmptyState({
       className="flex flex-col items-center text-center px-6 py-14"
     >
       {/* Icon orb */}
-      <motion.div
-        animate={{ y: [0, -6, 0] }}
-        transition={{ duration: 3.5, repeat: Infinity, ease: "easeInOut" }}
+      <div
         className="relative mb-6"
       >
         <div
@@ -53,7 +51,7 @@ export function EmptyState({
         >
           <div style={{ color: accentColor }}>{icon}</div>
         </div>
-      </motion.div>
+      </div>
 
       <h3 className="text-white font-bold text-lg mb-2">{title}</h3>
       <p className="text-white/50 text-sm leading-relaxed max-w-[260px] mb-6">{description}</p>

@@ -1,11 +1,11 @@
-import { initializeApp } from "firebase/app";
+import { initializeApp, getApps, getApp } from "firebase/app";
 import {
   getAuth,
   GoogleAuthProvider,
   setPersistence,
   browserLocalPersistence,
 } from "firebase/auth";
-import { getFirestore, enableMultiTabIndexedDbPersistence } from "firebase/firestore";
+import { getFirestore, initializeFirestore, persistentLocalCache, persistentMultipleTabManager } from "firebase/firestore";
 import { getStorage } from "firebase/storage";
 import { sanitizeEnv } from "./firebase/env";
 
@@ -89,24 +89,17 @@ if (!isConfigValid) {
 
 warnAboutAuthDomainConfiguration();
 
-// Initialize Firebase
-export const app = initializeApp(firebaseConfig);
+
+export const app = getApps().length ? getApp() : initializeApp(firebaseConfig);
 export const auth = getAuth(app);
-export const db = getFirestore(app);
+export const db = getApps().length && !import.meta.env.PROD
+  ? getFirestore(app) 
+  : initializeFirestore(app, {
+      localCache: persistentLocalCache({ tabManager: persistentMultipleTabManager() })
+    });
 export const storage = getStorage(app);
 export const googleProvider = new GoogleAuthProvider();
 googleProvider.setCustomParameters({ prompt: "select_account" });
-
-// Enable offline persistence for Firestore to fix UI hangs & data loss on refresh
-if (typeof window !== "undefined") {
-  enableMultiTabIndexedDbPersistence(db).catch((err) => {
-    if (err.code === "failed-precondition") {
-      console.warn("Multiple tabs open, persistence can only be enabled in one tab at a a time.");
-    } else if (err.code === "unimplemented") {
-      console.warn("The current browser does not support all of the features required to enable persistence");
-    }
-  });
-}
 
 /** Persist sessions in local storage before any auth listeners run. */
 export const authReady = isConfigValid

@@ -39,6 +39,7 @@ export function Transactions() {
   const [filters, setFilters] = useState<TransactionFilters>(DEFAULT_TRANSACTION_FILTERS);
   const [formOpen, setFormOpen] = useState(false);
   const [editing, setEditing] = useState<Transaction | null>(null);
+  const [visibleCount, setVisibleCount] = useState(20);
 
   const {
     addTransaction,
@@ -130,7 +131,10 @@ export function Transactions() {
           <TransactionFiltersBar
             filters={filters}
             availableMonths={availableMonths}
-            onChange={(patch) => setFilters((f) => ({ ...f, ...patch }))}
+            onChange={(patch) => {
+              setFilters((f) => ({ ...f, ...patch }));
+              setVisibleCount(20);
+            }}
           />
         </motion.div>
 
@@ -168,7 +172,7 @@ export function Transactions() {
         )}
 
         <div className="space-y-2.5 pb-4">
-          {transactions.map((tx, i) => (
+          {transactions.slice(0, visibleCount).map((tx, i) => (
             <motion.div
               key={tx.id}
               initial={{ opacity: 0, y: 6 }}
@@ -184,6 +188,17 @@ export function Transactions() {
             </motion.div>
           ))}
         </div>
+        
+        {visibleCount < transactions.length && (
+          <div className="flex justify-center pb-8 pt-4">
+            <button
+              onClick={() => setVisibleCount((prev) => prev + 20)}
+              className="bg-card border border-white/10 hover:bg-white/5 text-white/70 px-6 py-2.5 rounded-xl text-sm font-medium transition-colors"
+            >
+              Load More
+            </button>
+          </div>
+        )}
       </div>
 
       <TransactionFormSheet

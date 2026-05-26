@@ -53,7 +53,7 @@ export function useFinancialLevels(
     if (shouldPersist) {
       mutation.mutate(summary);
     }
-  }, [uid, query.isLoading, query.data, summary, mutation]);
+  }, [uid, query.isLoading, query.data, summary, mutation.mutate]);
 
   return {
     financialLevel: summary,

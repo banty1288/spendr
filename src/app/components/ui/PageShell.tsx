@@ -8,6 +8,7 @@
  *  - smooth page enter animation
  */
 import { motion } from "motion/react";
+import { memo } from "react";
 import type { ReactNode } from "react";
 
 interface OrbConfig {
@@ -31,7 +32,7 @@ const orbClasses: Record<OrbConfig["position"], string> = {
   "center": "absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2",
 };
 
-export function PageShell({ children, orbs, className = "", extraPad = false }: PageShellProps) {
+export const PageShell = memo(function PageShell({ children, orbs, className = "", extraPad = false }: PageShellProps) {
   const defaultOrbs: OrbConfig[] = orbs ?? [
     { color: "#00d9ff", position: "top-right" },
     { color: "#9d4edd", position: "bottom-left" },
@@ -39,29 +40,22 @@ export function PageShell({ children, orbs, className = "", extraPad = false }: 
 
   return (
     <div className={`min-h-[100dvh] ${extraPad ? "pb-safe-nav" : "pb-safe-nav"} relative overflow-x-clip bg-background ${className}`}>
-      {/* Ambient background */}
+      {/* Ambient background — static divs (no animation for performance) */}
       <div className="absolute inset-0 pointer-events-none overflow-hidden" aria-hidden>
         {defaultOrbs.map((orb, i) => (
-          <motion.div
+          <div
             key={i}
-            animate={{ scale: [1, 1.12, 1], opacity: [0.18, 0.25, 0.18] }}
-            transition={{ duration: 14 + i * 4, repeat: Infinity, ease: "easeInOut" }}
-            className={`${orbClasses[orb.position]} w-72 h-72 sm:w-96 sm:h-96 rounded-full hidden`}
+            className={`${orbClasses[orb.position]} w-72 h-72 sm:w-96 sm:h-96 rounded-full hidden opacity-20`}
             style={{ backgroundColor: orb.color }}
           />
         ))}
         <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,rgba(255,255,255,0.04),transparent_60%)]" />
       </div>
 
-      {/* Page enter animation */}
-      <motion.div
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ duration: 0.25, ease: "easeOut" }}
-        className="relative z-10 w-full min-w-0 max-w-7xl mx-auto"
-      >
+      {/* Page content */}
+      <div className="relative z-10 w-full min-w-0 max-w-7xl mx-auto">
         {children}
-      </motion.div>
+      </div>
     </div>
   );
-}
+});

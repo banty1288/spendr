@@ -14,7 +14,15 @@ export const COACHING_SCHEMA = `{
 }`;
 
 export function buildCoachingPrompt(contextBlock: string): string {
+  const currencyStr = contextBlock.match(/Currency: (.*)/)?.[1] || "INR";
+
   return `${COACHING_SYSTEM_PROMPT}
+
+CRITICAL FINANCIAL INSTRUCTION: 
+All financial values in the transaction data provided below are already in the user's native currency: ${currencyStr}.
+DO NOT perform any exchange rate conversions. Use the exact numeric values provided. 
+For large numbers, use the correct Indian numbering system (e.g., Lakhs and Crores) and use the correct symbol for ${currencyStr}.
+NEVER use words like "dollars", "USD", or "$".
 
 USER CONTEXT:
 ${contextBlock}

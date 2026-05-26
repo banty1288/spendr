@@ -19,7 +19,7 @@ export function buildWeeklyReportPrompt(context: WeeklyReportPromptContext): str
   const transactionDetails = context.transactions
     .map(
       (t) =>
-        `- ${t.merchant}: $${t.amount.toFixed(2)} (${t.type}, ${t.categoryId}, ${new Date(t.date).toLocaleDateString()})`
+        `- ${t.merchant}: ₹${t.amount.toFixed(2)} (${t.type}, ${t.categoryId}, ${new Date(t.date).toLocaleDateString()})`
     )
     .join("\n");
 
@@ -33,7 +33,7 @@ USER CONTEXT:
 - Spending Profile: ${context.spendingProfile || "General user"}
 - Known Emotional Triggers: ${context.emotionalTriggers?.join(", ") || "Not specified"}
 - Savings Goals: ${context.savingsGoals?.join(", ") || "Not specified"}
-- Previous Week Expenses: $${context.previousWeekExpenses.toFixed(2)}
+- Previous Week Expenses: ₹${context.previousWeekExpenses.toFixed(2)}
 
 TRANSACTIONS THIS WEEK:
 ${transactionDetails}
@@ -135,6 +135,6 @@ GUIDELINES:
 - Celebrate wins even if they're small
 - Use emotional intelligence to understand underlying spending drivers
 - Keep language conversational and supportive
-- Provide specific dollar amounts in recommendations
+- Provide specific amounts in Rupees (₹) in recommendations
 - Consider the user's savings goals when available`;
 }

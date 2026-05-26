@@ -62,11 +62,7 @@ export function HealthScoreCard({ financialLevel, isLoading }: HealthScoreCardPr
             transition={{ delay: 0.2, duration: 1.2, ease: "easeOut" }}
             className="absolute inset-y-0 left-0 bg-gradient-to-r from-[#00d9ff] via-[#00ff88] to-[#00d9a5] rounded-full"
           >
-            <motion.div
-              className="absolute inset-0 bg-gradient-to-r from-transparent via-white/30 to-transparent"
-              animate={{ x: ["-100%", "100%"] }}
-              transition={{ duration: 2, repeat: Infinity, ease: "linear" }}
-            />
+
           </motion.div>
         </div>
         

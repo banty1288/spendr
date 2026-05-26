@@ -78,31 +78,15 @@ export function Gamification() {
           whileHover={{ scale: 1.01 }}
           className="bg-gradient-to-br from-card to-card  p-6 rounded-3xl border border-[#ffd60a]/30 mb-6 relative overflow-hidden group"
         >
-          <motion.div
-            className="absolute inset-0 bg-gradient-to-br from-card to-transparent"
-            animate={{ opacity: [0.5, 0.8, 0.5] }}
-            transition={{ duration: 3, repeat: Infinity }}
-          />
-          <motion.div
-            className="absolute -right-10 -top-10 w-40 h-40 bg-card rounded-full blur-3xl"
-            animate={{ scale: [1, 1.3, 1], rotate: [0, 180, 360] }}
-            transition={{ duration: 15, repeat: Infinity }}
-          />
+          <div className="absolute inset-0 bg-gradient-to-br from-card to-transparent opacity-65" />
+          <div className="absolute -right-10 -top-10 w-40 h-40 bg-card rounded-full blur-3xl" />
           <div className="relative">
             <div className="flex items-center justify-between mb-4">
               <div className="flex items-center gap-3">
-                <motion.div
-                  className="bg-gradient-to-br from-[#ffd60a] to-[#ff9500] p-3 rounded-2xl relative"
-                  animate={{ rotate: [0, -10, 10, 0] }}
-                  transition={{ duration: 4, repeat: Infinity, repeatDelay: 2 }}
-                >
+                <div className="bg-gradient-to-br from-[#ffd60a] to-[#ff9500] p-3 rounded-2xl relative">
                   <Trophy size={32} className="text-black" />
-                  <motion.div
-                    className="absolute -top-1 -right-1 w-3 h-3 bg-[#00ff88] rounded-full border-2 border-black"
-                    animate={{ scale: [1, 1.3, 1] }}
-                    transition={{ duration: 1.5, repeat: Infinity }}
-                  />
-                </motion.div>
+                  <div className="absolute -top-1 -right-1 w-3 h-3 bg-[#00ff88] rounded-full border-2 border-black" />
+                </div>
                 <div>
                   <p className="text-white/60 text-xs mb-1">{t("gamification.currentLevel", "Current Level")}</p>
                   <div className="flex items-baseline gap-2">
@@ -129,10 +113,9 @@ export function Gamification() {
                   transition={{ delay: 0.2, duration: 1.2, ease: "easeOut" }}
                   className="absolute inset-y-0 left-0 bg-gradient-to-r from-[#ffd60a] via-[#ff9500] to-[#ffd60a] rounded-full relative"
                 >
-                  <motion.div
-                    className="absolute inset-0 bg-gradient-to-r from-transparent via-white/40 to-transparent"
-                    animate={{ x: ["-100%", "100%"] }}
-                    transition={{ duration: 2, repeat: Infinity, ease: "linear" }}
+                  <div
+                    className="absolute inset-0 bg-gradient-to-r from-transparent via-white/40 to-transparent animate-[shimmer_2s_linear_infinite]"
+                    style={{ "--tw-translate-x": "-100%" } as React.CSSProperties}
                   />
                 </motion.div>
                 <div className="absolute right-2 top-1/2 -translate-y-1/2 text-black text-xs font-bold">

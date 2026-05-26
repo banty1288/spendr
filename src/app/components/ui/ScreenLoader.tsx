@@ -6,10 +6,8 @@ import { motion } from "motion/react";
 
 function Pulse({ className }: { className?: string }) {
   return (
-    <motion.div
-      animate={{ opacity: [0.4, 0.7, 0.4] }}
-      transition={{ duration: 1.6, repeat: Infinity, ease: "easeInOut" }}
-      className={`bg-white/8 rounded-2xl ${className ?? ""}`}
+    <div
+      className={`bg-white/8 rounded-2xl animate-pulse ${className ?? ""}`}
     />
   );
 }

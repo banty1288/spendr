@@ -71,16 +71,8 @@ export function Savings() {
           whileHover={{ scale: 1.01 }}
           className="bg-gradient-to-br from-card to-card  p-6 rounded-3xl border border-[#00ff88]/30 mb-6 relative overflow-hidden group"
         >
-          <motion.div
-            className="absolute inset-0 bg-gradient-to-br from-card to-transparent"
-            animate={{ opacity: [0.5, 0.8, 0.5] }}
-            transition={{ duration: 3, repeat: Infinity }}
-          />
-          <motion.div
-            className="absolute -left-10 -bottom-10 w-48 h-48 bg-card rounded-full blur-3xl"
-            animate={{ scale: [1, 1.3, 1] }}
-            transition={{ duration: 5, repeat: Infinity }}
-          />
+          <div className="absolute inset-0 bg-gradient-to-br from-card to-transparent opacity-65" />
+          <div className="absolute -left-10 -bottom-10 w-48 h-48 bg-card rounded-full blur-3xl" />
           <div className="relative">
             <p className="text-white/60 text-sm mb-2">Total Saved Across Goals</p>
             <div className="flex items-baseline gap-3 mb-1">
@@ -103,10 +95,9 @@ export function Savings() {
                 transition={{ delay: 0.3, duration: 1.2 }}
                 className="h-full bg-gradient-to-r from-[#00ff88] to-[#00d9ff] relative"
               >
-                <motion.div
-                  className="absolute inset-0 bg-gradient-to-r from-transparent via-white/40 to-transparent"
-                  animate={{ x: ["-100%", "100%"] }}
-                  transition={{ duration: 2, repeat: Infinity, ease: "linear" }}
+                <div
+                  className="absolute inset-0 bg-gradient-to-r from-transparent via-white/40 to-transparent animate-[shimmer_2s_linear_infinite]"
+                  style={{ "--tw-translate-x": "-100%" } as React.CSSProperties}
                 />
               </motion.div>
             </div>
@@ -140,11 +131,9 @@ export function Savings() {
                   transition={{ delay: 0.2 + index * 0.1 }}
                   className="bg-card shadow-sm  p-5 rounded-3xl border border-border relative overflow-hidden group cursor-pointer"
                 >
-                  <motion.div
+                  <div
                     className="absolute top-0 right-0 w-32 h-32 rounded-full blur-3xl opacity-10"
                     style={{ backgroundColor: goal.color }}
-                    animate={{ scale: [1, 1.2, 1] }}
-                    transition={{ duration: 4, repeat: Infinity, delay: index * 0.5 }}
                   />
                   <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/5 to-transparent translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-1000" />
                   <div className="relative">
@@ -188,10 +177,9 @@ export function Savings() {
                           background: `linear-gradient(90deg, ${goal.color}, ${goal.color}dd)`,
                         }}
                       >
-                        <motion.div
-                          className="absolute inset-0 bg-gradient-to-r from-transparent via-white/40 to-transparent"
-                          animate={{ x: ["-100%", "100%"] }}
-                          transition={{ duration: 2, repeat: Infinity, ease: "linear" }}
+                        <div
+                          className="absolute inset-0 bg-gradient-to-r from-transparent via-white/40 to-transparent animate-[shimmer_2s_linear_infinite]"
+                          style={{ "--tw-translate-x": "-100%" } as React.CSSProperties}
                         />
                       </motion.div>
                     </div>
