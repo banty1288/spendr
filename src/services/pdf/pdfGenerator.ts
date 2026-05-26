@@ -1,4 +1,4 @@
-import html2canvas from "html2canvas";
+import { toPng } from "html-to-image";
 import jsPDF from "jspdf";
 
 export async function generatePdfFromDom(
@@ -16,19 +16,15 @@ export async function generatePdfFromDom(
       (el as HTMLElement).style.display = "none";
     });
 
-    const canvas = await html2canvas(elementRef.current, {
-      scale: 2, // High resolution for PDF
-      useCORS: true,
+    const imgData = await toPng(elementRef.current, {
+      pixelRatio: 2, // High resolution for PDF
       backgroundColor: "#0a0a14",
-      logging: false,
     });
 
     // Restore hidden elements
     elementsToHide.forEach((el) => {
       (el as HTMLElement).style.display = "";
     });
-
-    const imgData = canvas.toDataURL("image/png");
     
     // A4 paper dimensions
     const pdf = new jsPDF({
@@ -40,8 +36,8 @@ export async function generatePdfFromDom(
     const pdfWidth = pdf.internal.pageSize.getWidth();
     const pdfHeight = pdf.internal.pageSize.getHeight();
     
-    const imgWidth = canvas.width;
-    const imgHeight = canvas.height;
+    const imgWidth = elementRef.current.offsetWidth * 2; // * 2 for pixelRatio
+    const imgHeight = elementRef.current.offsetHeight * 2;
     
     // Calculate the ratio to fit the width perfectly
     const ratio = pdfWidth / imgWidth;
