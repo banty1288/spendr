@@ -19,6 +19,8 @@ import { getInitials } from "../../lib/userDisplay";
 import { useCurrency } from "../../hooks/useCurrency";
 import { PageShell } from "../components/ui/PageShell";
 import { BackButton } from "../components/ui/BackButton";
+import { useTransactions } from "../../hooks/useTransactions";
+import { computeBalanceFromTransactions } from "../../lib/transactions/analytics";
 
 export function Profile() {
   const navigate = useNavigate();
@@ -32,7 +34,8 @@ export function Profile() {
     userData?.displayName ?? authUser?.displayName ?? "Spendr User";
   const email = userData?.email ?? authUser?.email ?? "";
   const initials = getInitials(displayName);
-  const balance = userData?.balance ?? 0;
+  const { transactions: allTx } = useTransactions();
+  const balance = allTx.length > 0 ? computeBalanceFromTransactions(allTx) : (userData?.balance ?? 0);
 
   const stats = [
     { label: t("home.totalBalance", "Balance"), value: isProfileLoading ? "—" : convertAndFormat(balance) },
