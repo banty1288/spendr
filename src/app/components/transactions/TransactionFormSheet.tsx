@@ -31,6 +31,7 @@ export function TransactionFormSheet({
   isSubmitting,
 }: TransactionFormSheetProps) {
   const [form, setForm] = useState<TransactionInput>(defaultForm);
+  const [internalLoading, setInternalLoading] = useState(false);
 
   useEffect(() => {
     if (!open) return;
@@ -53,12 +54,23 @@ export function TransactionFormSheet({
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!form.merchant.trim() || form.amount <= 0) return;
-    await onSubmit({
-      ...form,
-      date: new Date(form.date).toISOString(),
-    });
-    onClose();
+    
+    setInternalLoading(true);
+    try {
+      await onSubmit({
+        ...form,
+        date: new Date(form.date).toISOString(),
+      });
+      setForm(defaultForm());
+      onClose();
+    } catch (error) {
+      // Error is handled by parent
+    } finally {
+      setInternalLoading(false);
+    }
   };
+
+  const loading = isSubmitting || internalLoading;
 
   return (
     <AnimatePresence>
@@ -176,10 +188,10 @@ export function TransactionFormSheet({
 
                 <button
                   type="submit"
-                  disabled={isSubmitting || !form.merchant.trim() || form.amount <= 0}
+                  disabled={loading || !form.merchant.trim() || form.amount <= 0}
                   className="w-full bg-gradient-to-r from-[#00d9ff] to-[#00ff88] text-black py-4 rounded-2xl font-semibold disabled:opacity-60 flex items-center justify-center gap-2"
                 >
-                  {isSubmitting ? (
+                  {loading ? (
                     <Loader2 className="w-5 h-5 animate-spin" />
                   ) : mode === "add" ? (
                     "Add transaction"

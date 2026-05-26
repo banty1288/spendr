@@ -198,11 +198,13 @@ export function Transactions() {
             };
             if (editing) {
               await updateTransaction({ id: editing.id, input: enrichedInput });
-              toast.success("Transaction updated");
+              toast.success("Transaction updated successfully");
             } else {
               await addTransaction(enrichedInput);
-              toast.success("Transaction added");
+              toast.success("Transaction added successfully");
             }
+            setFormOpen(false);
+            setEditing(null);
           } catch {
             toast.error("Failed to save transaction");
             throw new Error("save failed");
