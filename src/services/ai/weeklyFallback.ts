@@ -26,11 +26,11 @@ export function generateFallbackWeeklyReport(
   // Calculate basic metrics
   const totalIncome = weekTransactions
     .filter((tx) => tx.type === "income")
-    .reduce((sum, tx) => sum + tx.amount, 0);
+    .reduce((sum, tx) => sum + (tx.baseAmountUsd ?? tx.amount), 0);
 
   const totalExpenses = weekTransactions
     .filter((tx) => tx.type === "expense")
-    .reduce((sum, tx) => sum + tx.amount, 0);
+    .reduce((sum, tx) => sum + (tx.baseAmountUsd ?? tx.amount), 0);
 
   const netCashFlow = totalIncome - totalExpenses;
 
@@ -43,7 +43,7 @@ export function generateFallbackWeeklyReport(
   });
   const previousWeekExpenses = prevWeekTransactions
     .filter((tx) => tx.type === "expense")
-    .reduce((sum, tx) => sum + tx.amount, 0);
+    .reduce((sum, tx) => sum + (tx.baseAmountUsd ?? tx.amount), 0);
 
   const expenseChange = previousWeekExpenses > 0 
     ? ((totalExpenses - previousWeekExpenses) / previousWeekExpenses) * 100
@@ -55,7 +55,7 @@ export function generateFallbackWeeklyReport(
     .filter((tx) => tx.type === "expense")
     .forEach((tx) => {
       const current = categoryMap.get(tx.categoryId) || 0;
-      categoryMap.set(tx.categoryId, current + tx.amount);
+      categoryMap.set(tx.categoryId, current + (tx.baseAmountUsd ?? tx.amount));
     });
 
   const categoryBreakdown = Array.from(categoryMap.entries())

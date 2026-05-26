@@ -254,14 +254,12 @@ export function Home() {
                       {cat.label} · {formatRelativeTime(tx.date)}
                     </p>
                   </div>
-                  <p
-                    className={`font-bold text-lg shrink-0 ${
-                      isIncome ? "text-[#00ff88]" : "text-white"
-                    }`}
-                  >
-                    {isIncome ? "+" : "-"}
-                    {convertAndFormat(tx.amount)}
-                  </p>
+                  <div className="text-right shrink-0">
+                    <p className={`font-bold text-sm ${isIncome ? "text-[#00ff88]" : "text-white"}`}>
+                      {isIncome ? "+" : "-"}
+                      {convertAndFormat(tx.baseAmountUsd ?? tx.amount)}
+                    </p>
+                  </div>
                 </motion.button>
               );
             })}

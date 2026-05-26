@@ -30,7 +30,7 @@ export function buildTransactionsSummary(
   for (const tx of transactions.slice(0, maxItems)) {
     const cat = getCategoryById(tx.categoryId);
     lines.push(
-      `- ${tx.date.slice(0, 10)} | ${tx.type} | ${tx.merchant} | ${tx.amount.toFixed(2)} | ${cat.label}${tx.notes ? ` | ${tx.notes}` : ""}`
+      `- ${tx.date.slice(0, 10)} | ${tx.type} | ${tx.merchant} | ${(tx.baseAmountUsd ?? tx.amount).toFixed(2)} | ${cat.label}${tx.notes ? ` | ${tx.notes}` : ""}`
     );
   }
 
