@@ -192,23 +192,18 @@ export function Transactions() {
         initial={editing}
         onClose={() => { setFormOpen(false); setEditing(null); }}
         onSubmit={async (input) => {
-          try {
-            const enrichedInput = {
-              ...input,
-            };
-            if (editing) {
-              await updateTransaction({ id: editing.id, input: enrichedInput });
-              toast.success("Transaction updated successfully");
-            } else {
-              await addTransaction(enrichedInput);
-              toast.success("Transaction added successfully");
-            }
-            setFormOpen(false);
-            setEditing(null);
-          } catch {
-            toast.error("Failed to save transaction");
-            throw new Error("save failed");
+          const enrichedInput = { ...input };
+          if (editing) {
+            updateTransaction({ id: editing.id, input: enrichedInput })
+              .then(() => toast.success("Transaction updated successfully"))
+              .catch(() => toast.error("Failed to save transaction"));
+          } else {
+            addTransaction(enrichedInput)
+              .then(() => toast.success("Transaction added successfully"))
+              .catch(() => toast.error("Failed to save transaction"));
           }
+          setFormOpen(false);
+          setEditing(null);
         }}
         isSubmitting={isAdding || isUpdating}
       />
