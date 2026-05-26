@@ -43,7 +43,7 @@ export async function generatePersonalizedChallenges({
       },
       {
         title: "Coffee Break",
-        description: "Save $20 on dining out this week.",
+        description: "Save ₹1500 on dining out this week.",
         category: "category_reduction",
         difficulty: "easy",
         targetAmount: 20,

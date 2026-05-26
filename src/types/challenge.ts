@@ -17,7 +17,7 @@ export interface SavingsChallenge {
   category: ChallengeCategory;
   difficulty: ChallengeDifficulty;
   
-  /** The target metric (e.g., $500 savings, 5 days no-spend) */
+  /** The target metric (e.g., ₹5000 savings, 5 days no-spend) */
   targetAmount: number;
   
   /** The current progress toward the target */

@@ -35,7 +35,7 @@ import { TransactionListSkeleton } from "../components/ui/ScreenLoader";
 export function Transactions() {
   const navigate = useNavigate();
   const { t } = useTranslation();
-  const { currencyCode, toUsd } = useCurrency();
+  const { convertAndFormat } = useCurrency();
   const [filters, setFilters] = useState<TransactionFilters>(DEFAULT_TRANSACTION_FILTERS);
   const [formOpen, setFormOpen] = useState(false);
   const [editing, setEditing] = useState<Transaction | null>(null);
@@ -195,8 +195,6 @@ export function Transactions() {
           try {
             const enrichedInput = {
               ...input,
-              currency: currencyCode,
-              baseAmountUsd: toUsd(input.amount),
             };
             if (editing) {
               await updateTransaction({ id: editing.id, input: enrichedInput });

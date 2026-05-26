@@ -19,18 +19,18 @@ export function buildTransactionsSummary(
 
   const lines = [
     `Total transactions: ${transactions.length}`,
-    `This month income: $${totals.income.toFixed(2)}`,
-    `This month expenses: $${totals.expenses.toFixed(2)}`,
-    `Net: $${totals.net.toFixed(2)}`,
+    `This month income: ₹${totals.income.toFixed(2)}`,
+    `This month expenses: ₹${totals.expenses.toFixed(2)}`,
+    `Net: ₹${totals.net.toFixed(2)}`,
     "Category breakdown: " +
-      breakdown.map((b) => `${b.name} $${b.value.toFixed(2)}`).join(", "),
+      breakdown.map((b) => `${b.name} ₹${b.value.toFixed(2)}`).join(", "),
     "Recent transactions:",
   ];
 
   for (const tx of transactions.slice(0, maxItems)) {
     const cat = getCategoryById(tx.categoryId);
     lines.push(
-      `- ${tx.date.slice(0, 10)} | ${tx.type} | ${tx.merchant} | ${(tx.baseAmountUsd ?? tx.amount).toFixed(2)} | ${cat.label}${tx.notes ? ` | ${tx.notes}` : ""}`
+      `- ${tx.date.slice(0, 10)} | ${tx.type} | ${tx.merchant} | ${tx.amount.toFixed(2)} | ${cat.label}${tx.notes ? ` | ${tx.notes}` : ""}`
     );
   }
 
@@ -42,7 +42,7 @@ export function buildAiUserContext(
   transactions: Transaction[]
 ): AiUserContext {
   const profile = userData?.profile;
-  const currency = userData?.preferences?.currency || userData?.settings?.app?.currency || "USD";
+  const currency = "INR";
 
   return {
     displayName: userData?.displayName ?? "User",

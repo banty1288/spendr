@@ -38,7 +38,7 @@ export function Savings() {
   ];
 
   const achievements = [
-    { name: "First $1K Saved", earned: true, icon: "🎯" },
+    { name: "First ₹10K Saved", earned: true, icon: "🎯" },
     { name: "30-Day Streak", earned: true, icon: "🔥" },
     { name: "Budget Master", earned: true, icon: "👑" },
     { name: "Savings Champion", earned: false, icon: "🏆" },

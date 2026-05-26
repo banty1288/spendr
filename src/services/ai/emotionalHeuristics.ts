@@ -36,7 +36,7 @@ function confidence(count: number, total: number): number {
 }
 
 function sum(transactions: Transaction[]) {
-  return transactions.reduce((total, tx) => total + (tx.baseAmountUsd ?? tx.amount), 0);
+  return transactions.reduce((total, tx) => total + tx.amount, 0);
 }
 
 function expenseTransactions(transactions: Transaction[]) {
@@ -225,7 +225,7 @@ export function generateEmotionalHeuristicInsights(
   );
   const topCategory = expenses
     .reduce((map, tx) => {
-      map.set(tx.categoryId, (map.get(tx.categoryId) ?? 0) + (tx.baseAmountUsd ?? tx.amount));
+      map.set(tx.categoryId, (map.get(tx.categoryId) ?? 0) + tx.amount);
       return map;
     }, new Map<string, number>());
   const topCategoryId = [...topCategory.entries()].sort((a, b) => b[1] - a[1])[0]?.[0];

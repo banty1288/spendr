@@ -18,8 +18,6 @@ function mapDoc(id: string, data: Record<string, unknown>): Transaction {
     id,
     merchant: String(data.merchant ?? ""),
     amount: Number(data.amount ?? 0),
-    currency: data.currency ? String(data.currency) : undefined,
-    baseAmountUsd: data.baseAmountUsd ? Number(data.baseAmountUsd) : undefined,
     type: data.type === "income" ? "income" : "expense",
     categoryId: String(data.categoryId ?? "other"),
     notes: String(data.notes ?? ""),
@@ -54,17 +52,12 @@ export async function createTransaction(
     updatedAt: now,
   };
   
-  if (input.currency) docData.currency = input.currency;
-  if (input.baseAmountUsd !== undefined) docData.baseAmountUsd = input.baseAmountUsd;
-
   const ref = await addDoc(userTransactionsRef(uid), docData);
 
   return {
     id: ref.id,
     merchant: input.merchant.trim(),
     amount: Math.abs(input.amount),
-    currency: input.currency,
-    baseAmountUsd: input.baseAmountUsd,
     type: input.type,
     categoryId: input.categoryId,
     notes: (input.notes ?? "").trim(),
@@ -93,9 +86,6 @@ export async function updateTransaction(
     updatedAt: now,
   };
   
-  if (input.currency) updateData.currency = input.currency;
-  if (input.baseAmountUsd !== undefined) updateData.baseAmountUsd = input.baseAmountUsd;
-
   await updateDoc(ref, updateData);
 
   const existing = await getDoc(userTransactionRef(uid, id));
@@ -107,8 +97,6 @@ export async function updateTransaction(
     id,
     merchant: input.merchant.trim(),
     amount: Math.abs(input.amount),
-    currency: input.currency,
-    baseAmountUsd: input.baseAmountUsd,
     type: input.type,
     categoryId: input.categoryId,
     notes: (input.notes ?? "").trim(),

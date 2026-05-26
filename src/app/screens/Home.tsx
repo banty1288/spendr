@@ -257,7 +257,7 @@ export function Home() {
                   <div className="text-right shrink-0">
                     <p className={`font-bold text-sm ${isIncome ? "text-[#00ff88]" : "text-white"}`}>
                       {isIncome ? "+" : "-"}
-                      {convertAndFormat(tx.baseAmountUsd ?? tx.amount)}
+                      {convertAndFormat(tx.amount)}
                     </p>
                   </div>
                 </motion.button>

@@ -119,7 +119,7 @@ export function useWeeklyReport() {
         });
         const previousWeekExpenses = prevWeekTransactions
           .filter((tx) => tx.type === "expense")
-          .reduce((sum, tx) => sum + (tx.baseAmountUsd ?? tx.amount), 0);
+          .reduce((sum, tx) => sum + tx.amount, 0);
 
         let report: WeeklyReport;
 

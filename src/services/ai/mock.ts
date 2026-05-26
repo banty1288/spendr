@@ -21,10 +21,10 @@ export function getDevMockAnalysis(context: AiUserContext): SpendrAIAnalysis {
       headline: "Three quick wins for your savings",
       recommendations: [
         "Automate a small transfer on payday before discretionary spending.",
-        "Set a 24-hour rule for non-essential purchases over $50.",
+        "Set a 24-hour rule for non-essential purchases over ₹4000.",
         "Review subscriptions and cancel one unused service this week.",
       ],
-      projectedAnnualSavings: "Up to $1,200/year with consistent habits",
+      projectedAnnualSavings: "Up to ₹100,000/year with consistent habits",
     },
     financialInsights: {
       summary: `Hi ${name} — you're building good awareness. Focus on one habit this week: pause before impulse buys.`,
@@ -53,7 +53,7 @@ export function getDevMockAnalysis(context: AiUserContext): SpendrAIAnalysis {
           type: "suggestion",
           title: "Pay Yourself First",
           description: "Move a fixed amount to savings immediately after income deposits.",
-          metric: "$50–100 / pay cycle",
+          metric: "₹4000–8000 / pay cycle",
         },
       ],
     },
@@ -71,7 +71,7 @@ export function getDevMockAnalysis(context: AiUserContext): SpendrAIAnalysis {
       title: "Your coach says",
       message:
         "Pick one spending trigger to watch this week. Awareness beats perfection.",
-      actionStep: "Set a $40 weekend fun budget in Spendr.",
+      actionStep: "Set a ₹3000 weekend fun budget in Spendr.",
     },
   };
 }

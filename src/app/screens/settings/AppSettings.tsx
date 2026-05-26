@@ -8,7 +8,7 @@ import { toast } from "sonner";
 import { invalidateSpendrAnalysisCache } from "../../../services/ai/gateway";
 import { useAuthStore } from "../../../store/authStore";
 import i18next from "../../../lib/i18n";
-import { trackThemeChanged, trackCurrencyChanged } from "../../../services/analytics";
+import { trackThemeChanged } from "../../../services/analytics";
 
 export function AppSettings() {
   const navigate = useNavigate();
@@ -18,7 +18,6 @@ export function AppSettings() {
   const { t, i18n } = useTranslation();
 
   const [theme, setTheme] = useState(userData?.settings?.app?.theme || "dark");
-  const [currency, setCurrency] = useState(userData?.preferences?.currency || userData?.settings?.app?.currency || "USD");
   const [language, setLanguage] = useState(userData?.preferences?.language || userData?.settings?.app?.language || "en");
 
   const saveSetting = async (key: string, value: string) => {
@@ -28,7 +27,6 @@ export function AppSettings() {
         trackThemeChanged(value);
       } else {
         updatePreferences({ [key]: value });
-        if (key === "currency") trackCurrencyChanged(value);
         if (user) {
           invalidateSpendrAnalysisCache(user.uid);
         }
@@ -72,24 +70,6 @@ export function AppSettings() {
                     <option value="dark">Dark Mode (Premium)</option>
                     <option value="light">Light Mode</option>
                     <option value="system">System Default</option>
-                  </select>
-                </div>
-              </div>
-
-              <div className="flex items-center gap-4 border-b border-border pb-4">
-                <div className="p-2.5 rounded-xl bg-card">
-                  <Globe size={20} className="text-[#ff3366]" />
-                </div>
-                <div className="flex-1">
-                  <h3 className="text-white font-medium">Default Currency</h3>
-                  <select 
-                    value={currency} 
-                    onChange={(e) => { setCurrency(e.target.value); saveSetting("currency", e.target.value); }}
-                    className="mt-2 w-full bg-background/50 border border-border rounded-xl px-4 py-3 text-white appearance-none focus:outline-none focus:border-[#ff3366]"
-                  >
-                    <option value="USD">USD ($)</option>
-                    <option value="EUR">EUR (€)</option>
-                    <option value="INR">INR (₹)</option>
                   </select>
                 </div>
               </div>

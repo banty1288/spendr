@@ -4,8 +4,6 @@ export interface Transaction {
   id: string;
   merchant: string;
   amount: number;
-  currency?: string;
-  baseAmountUsd?: number;
   type: TransactionType;
   categoryId: string;
   notes: string;
@@ -18,8 +16,6 @@ export interface Transaction {
 export interface TransactionInput {
   merchant: string;
   amount: number;
-  currency?: string;
-  baseAmountUsd?: number;
   type: TransactionType;
   categoryId: string;
   notes?: string;

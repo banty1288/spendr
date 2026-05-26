@@ -14,7 +14,7 @@ import type {
 import { getCategoryById } from "./constants";
 
 export function signedAmount(tx: Transaction): number {
-  const amt = tx.baseAmountUsd ?? tx.amount;
+  const amt = tx.amount;
   return tx.type === "income" ? amt : -amt;
 }
 
@@ -86,7 +86,7 @@ export function getCategoryBreakdown(
   for (const tx of expenses) {
     const cat = getCategoryById(tx.categoryId);
     const existing = map.get(tx.categoryId);
-    const amt = tx.baseAmountUsd ?? tx.amount;
+    const amt = tx.amount;
     if (existing) {
       existing.value += amt;
       existing.count += 1;
@@ -132,7 +132,7 @@ export function getMonthlySummaries(
     for (const tx of transactions) {
       const txDate = parseISO(tx.date);
       if (!isWithinInterval(txDate, { start, end })) continue;
-      const amt = tx.baseAmountUsd ?? tx.amount;
+      const amt = tx.amount;
       if (tx.type === "income") income += amt;
       else expenses += amt;
     }
@@ -155,7 +155,7 @@ export function getMonthTotals(transactions: Transaction[], month: string) {
 
   for (const tx of transactions) {
     if (format(parseISO(tx.date), "yyyy-MM") !== month) continue;
-    const amt = tx.baseAmountUsd ?? tx.amount;
+    const amt = tx.amount;
     if (tx.type === "income") income += amt;
     else expenses += amt;
   }

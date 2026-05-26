@@ -53,7 +53,7 @@ export function TransactionCard({
           }`}
         >
           {isIncome ? "+" : "-"}
-          {convertAndFormat(transaction.baseAmountUsd ?? transaction.amount)}
+          {convertAndFormat(transaction.amount)}
         </p>
       </div>
       <div className="flex flex-col gap-1 shrink-0">
