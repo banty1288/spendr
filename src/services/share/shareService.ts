@@ -1,4 +1,4 @@
-import html2canvas from "html2canvas";
+import { toBlob } from "html-to-image";
 
 export interface ShareOptions {
   title?: string;
@@ -32,15 +32,10 @@ export async function shareDomElement(
   }
 
   try {
-    const canvas = await html2canvas(elementRef.current, {
-      scale: 2, // High resolution
-      useCORS: true, // Allow external images
+    const blob = await toBlob(elementRef.current, {
+      pixelRatio: 2, // High resolution
       backgroundColor: "#0a0a14", // Fallback Spendr background
-      logging: false,
-    });
-
-    const blob = await new Promise<Blob | null>((resolve) => {
-      canvas.toBlob((b) => resolve(b), "image/png", 1.0);
+      style: { margin: "0" },
     });
 
     if (!blob) {
