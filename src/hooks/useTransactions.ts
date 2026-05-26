@@ -77,6 +77,8 @@ export function useTransactions() {
         categoryId: input.categoryId,
         notes: input.notes ?? "",
         date: input.date,
+        currency: input.currency,
+        baseAmountUsd: input.baseAmountUsd,
         createdAt: new Date().toISOString(),
         updatedAt: new Date().toISOString(),
       };
