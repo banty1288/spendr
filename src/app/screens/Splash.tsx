@@ -37,7 +37,7 @@ export function Splash() {
           transition={{ duration: 7, repeat: Infinity, ease: "easeInOut" }}
         />
         <motion.div
-          className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-[#9d4edd]/15 rounded-full blur-[120px]"
+          className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-[#9d4edd]/15 rounded-full blur-[64px] will-change-transform"
           animate={{
             rotate: [0, 360],
             scale: [1, 1.2, 1],

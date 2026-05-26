@@ -23,7 +23,31 @@ export const useUpdateUser = () => {
     mutationFn: async (settings: Partial<UserData["settings"]>) => {
       await updateUserSettings(settings);
     },
-    onSuccess: () => {
+    onMutate: async (newSettings) => {
+      await queryClient.cancelQueries({ queryKey: userDataQueryKey(user?.uid) });
+      const previousUserData = queryClient.getQueryData<UserData>(userDataQueryKey(user?.uid));
+      
+      if (previousUserData) {
+        queryClient.setQueryData<UserData>(userDataQueryKey(user?.uid), {
+          ...previousUserData,
+          settings: {
+            ...previousUserData.settings,
+            ...newSettings,
+            app: {
+              ...(previousUserData.settings?.app || {}),
+              ...(newSettings.app || {})
+            }
+          }
+        });
+      }
+      return { previousUserData };
+    },
+    onError: (err, newSettings, context) => {
+      if (context?.previousUserData) {
+        queryClient.setQueryData(userDataQueryKey(user?.uid), context.previousUserData);
+      }
+    },
+    onSettled: () => {
       queryClient.invalidateQueries({ queryKey: userDataQueryKey(user?.uid) });
     },
   });
@@ -37,7 +61,27 @@ export const useUpdateUser = () => {
         updatedAt: new Date().toISOString(),
       }, { merge: true });
     },
-    onSuccess: () => {
+    onMutate: async (newPreferences) => {
+      await queryClient.cancelQueries({ queryKey: userDataQueryKey(user?.uid) });
+      const previousUserData = queryClient.getQueryData<UserData>(userDataQueryKey(user?.uid));
+      
+      if (previousUserData) {
+        queryClient.setQueryData<UserData>(userDataQueryKey(user?.uid), {
+          ...previousUserData,
+          preferences: {
+            ...previousUserData.preferences,
+            ...newPreferences
+          }
+        });
+      }
+      return { previousUserData };
+    },
+    onError: (err, newPreferences, context) => {
+      if (context?.previousUserData) {
+        queryClient.setQueryData(userDataQueryKey(user?.uid), context.previousUserData);
+      }
+    },
+    onSettled: () => {
       queryClient.invalidateQueries({ queryKey: userDataQueryKey(user?.uid) });
     },
   });

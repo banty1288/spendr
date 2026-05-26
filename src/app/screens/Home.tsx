@@ -80,17 +80,17 @@ export function Home() {
         <motion.div
           animate={{ x: [0, 50, 0], y: [0, -30, 0] }}
           transition={{ duration: 20, repeat: Infinity, ease: "easeInOut" }}
-          className="absolute top-0 right-0 w-80 h-80 bg-[#00d9ff]/30 rounded-full blur-[120px]"
+          className="absolute top-0 right-0 w-80 h-80 bg-[#00d9ff]/30 rounded-full blur-[64px] will-change-transform"
         />
         <motion.div
           animate={{ x: [0, -30, 0], y: [0, 50, 0] }}
           transition={{ duration: 25, repeat: Infinity, ease: "easeInOut" }}
-          className="absolute bottom-40 left-0 w-80 h-80 bg-[#00ff88]/30 rounded-full blur-[120px]"
+          className="absolute bottom-40 left-0 w-80 h-80 bg-[#00ff88]/30 rounded-full blur-[64px] will-change-transform"
         />
         <motion.div
           animate={{ scale: [1, 1.2, 1], opacity: [0.15, 0.25, 0.15] }}
           transition={{ duration: 15, repeat: Infinity, ease: "easeInOut" }}
-          className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-[#9d4edd]/20 rounded-full blur-[150px]"
+          className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-[#9d4edd]/20 rounded-full blur-[80px] will-change-transform"
         />
       </div>
 
