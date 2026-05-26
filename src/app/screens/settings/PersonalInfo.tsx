@@ -30,17 +30,15 @@ export function PersonalInfo() {
     }
   }, [userData, user]);
 
-  const handleSave = async () => {
-    try {
-      await updateUser({ 
-        displayName, 
-        profile: { ...userData?.profile, avatarUrl: photoUrl } as any 
-      });
-      toast.success("Profile updated successfully");
-      navigate("/profile");
-    } catch (error) {
-      toast.error("Failed to update profile");
-    }
+  const handleSave = () => {
+    updateUser({ 
+      displayName, 
+      profile: { ...userData?.profile, avatarUrl: photoUrl } as any 
+    })
+      .then(() => toast.success("Profile updated successfully"))
+      .catch(() => toast.error("Failed to update profile"));
+      
+    navigate("/profile");
   };
 
   const handleImageChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -101,13 +99,14 @@ export function PersonalInfo() {
 
       // 3. Save to state & trigger save
       setPhotoUrl(downloadUrl);
-      await updateUser({ profile: { ...userData?.profile, avatarUrl: downloadUrl } as any });
+      updateUser({ profile: { ...userData?.profile, avatarUrl: downloadUrl } as any })
+        .then(() => toast.success("Avatar updated successfully!"))
+        .catch(() => toast.error("Failed to sync avatar with database."));
       
-      toast.success("Avatar updated!");
+      setIsUploading(false);
     } catch (err) {
       console.error("Image upload failed:", err);
       toast.error("Failed to upload image. Please try a different image.");
-    } finally {
       setIsUploading(false);
     }
   };
