@@ -56,12 +56,19 @@ export function PersonalInfo() {
     try {
       // 1. Create a canvas to compress the image
       const reader = new FileReader();
-      reader.readAsDataURL(file);
-      await new Promise((resolve) => (reader.onload = resolve));
+      
+      const fileData = await new Promise<string>((resolve, reject) => {
+        reader.onload = () => resolve(reader.result as string);
+        reader.onerror = () => reject(new Error("Failed to read file"));
+        reader.readAsDataURL(file);
+      });
       
       const img = new Image();
-      img.src = reader.result as string;
-      await new Promise((resolve) => (img.onload = resolve));
+      await new Promise<void>((resolve, reject) => {
+        img.onload = () => resolve();
+        img.onerror = () => reject(new Error("Failed to load image"));
+        img.src = fileData;
+      });
 
       const canvas = document.createElement("canvas");
       const MAX_SIZE = 400;
@@ -85,10 +92,10 @@ export function PersonalInfo() {
       const ctx = canvas.getContext("2d");
       ctx?.drawImage(img, 0, 0, width, height);
       
-      const compressedDataUrl = canvas.toDataURL("image/jpeg", 0.7);
+      const compressedDataUrl = canvas.toDataURL("image/webp", 0.7);
 
       // 2. Upload to Firebase Storage
-      const storageRef = ref(storage, `users/${user.uid}/profile_pic.jpg`);
+      const storageRef = ref(storage, `users/${user.uid}/profile_pic.webp`);
       await uploadString(storageRef, compressedDataUrl, "data_url");
       const downloadUrl = await getDownloadURL(storageRef);
 
@@ -98,8 +105,8 @@ export function PersonalInfo() {
       
       toast.success("Avatar updated!");
     } catch (err) {
-      console.error(err);
-      toast.error("Failed to upload image");
+      console.error("Image upload failed:", err);
+      toast.error("Failed to upload image. Please try a different image.");
     } finally {
       setIsUploading(false);
     }

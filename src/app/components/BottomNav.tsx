@@ -25,8 +25,8 @@ export function BottomNav() {
         initial={{ y: 100, opacity: 0 }}
         animate={{ y: 0, opacity: 1 }}
         transition={{ type: "spring", stiffness: 260, damping: 28, delay: 0.1 }}
-        className="w-full max-w-[430px] md:max-w-2xl bg-card backdrop-blur-3xl border border-border border-b-0 rounded-t-3xl relative overflow-hidden pointer-events-auto shadow-2xl"
-        style={{ paddingBottom: "max(env(safe-area-inset-bottom), 12px)" }}
+        className="w-full max-w-[430px] md:max-w-2xl bg-[#09090b]/95 border border-border border-b-0 rounded-t-3xl relative overflow-hidden pointer-events-auto shadow-2xl"
+        style={{ paddingBottom: "max(env(safe-area-inset-bottom), 12px)", willChange: "transform" }}
       >
         {/* Top shimmer line */}
         <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-white/20 to-transparent" />

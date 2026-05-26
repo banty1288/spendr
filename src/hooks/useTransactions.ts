@@ -43,7 +43,7 @@ export function useTransactions() {
     queryKey: transactionsQueryKey(uid),
     queryFn: () => fetchTransactions(uid!),
     enabled: !!uid,
-    staleTime: 1000 * 30,
+    staleTime: 1000 * 60 * 5, // 5 minutes
   });
 
   const invalidateAll = async () => {

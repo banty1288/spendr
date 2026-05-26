@@ -6,6 +6,8 @@ import { useCurrency } from "../../../hooks/useCurrency";
 import { formatRelativeTime } from "../../../lib/transactions/format";
 
 
+import { memo } from "react";
+
 interface TransactionCardProps {
   transaction: Transaction;
   onEdit: () => void;
@@ -13,7 +15,7 @@ interface TransactionCardProps {
   isDeleting?: boolean;
 }
 
-export function TransactionCard({
+export const TransactionCard = memo(function TransactionCard({
   transaction,
   onEdit,
   onDelete,
@@ -78,3 +80,4 @@ export function TransactionCard({
     </motion.div>
   );
 }
+);

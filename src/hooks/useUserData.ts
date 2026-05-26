@@ -17,7 +17,7 @@ export const useUserData = () => {
       return fetchUserDocument();
     },
     enabled: !!user,
-    staleTime: 1000 * 60 * 2,
+    staleTime: 1000 * 60 * 5, // 5 minutes
   });
 };
 
