@@ -11,11 +11,11 @@ export function LinkedAccounts() {
   return (
     <div className="min-h-screen bg-background pb-safe-nav relative overflow-hidden">
       <div className="relative z-10">
-        <div className="px-6 pt-12 pb-6 sticky top-0 z-50 backdrop-blur-md bg-background/30 border-b border-white/10">
+        <div className="px-6 pt-12 pb-6 sticky top-0 z-50  bg-background/30 border-b border-border">
           <div className="flex items-center gap-4">
             <button
               onClick={() => navigate("/profile")}
-              className="bg-white/5 p-3 rounded-full border border-white/10 hover:bg-white/10 transition-colors"
+              className="bg-card shadow-sm p-3 rounded-full border border-border hover:bg-white/10 transition-colors"
             >
               <ArrowLeft size={20} className="text-white" />
             </button>
@@ -27,7 +27,7 @@ export function LinkedAccounts() {
           <div className="space-y-3">
             <h2 className="text-white/80 font-semibold px-2">Authentication</h2>
             
-            <div className="flex items-center justify-between p-5 bg-white/5 border border-white/10 rounded-2xl">
+            <div className="flex items-center justify-between p-5 bg-card shadow-sm border border-border rounded-2xl">
               <div className="flex items-center gap-4">
                 <div className="w-10 h-10 rounded-xl bg-white flex items-center justify-center p-2">
                   <svg viewBox="0 0 24 24" className="w-full h-full">
@@ -72,9 +72,9 @@ export function LinkedAccounts() {
           <div className="space-y-3">
             <h2 className="text-white/80 font-semibold px-2 mt-4">Financial Institutions</h2>
             
-            <button className="w-full flex items-center justify-between p-5 bg-white/5 border border-white/10 border-dashed rounded-2xl hover:bg-white/10 transition-colors group">
+            <button className="w-full flex items-center justify-between p-5 bg-card shadow-sm border border-border border-dashed rounded-2xl hover:bg-white/10 transition-colors group">
               <div className="flex items-center gap-4">
-                <div className="p-2.5 rounded-xl bg-white/10 group-hover:bg-[#00d9ff]/20 transition-colors">
+                <div className="p-2.5 rounded-xl bg-white/10 group-hover:bg-card transition-colors">
                   <Plus size={20} className="text-white group-hover:text-[#00d9ff]" />
                 </div>
                 <div className="text-left">

@@ -39,11 +39,11 @@ export function HelpSupport() {
   return (
     <div className="min-h-screen bg-background pb-safe-nav relative overflow-hidden">
       <div className="relative z-10">
-        <div className="px-6 pt-12 pb-6 sticky top-0 z-50 backdrop-blur-md bg-background/30 border-b border-white/10">
+        <div className="px-6 pt-12 pb-6 sticky top-0 z-50  bg-background/30 border-b border-border">
           <div className="flex items-center gap-4">
             <button
               onClick={() => navigate("/profile")}
-              className="bg-white/5 p-3 rounded-full border border-white/10 hover:bg-white/10 transition-colors"
+              className="bg-card shadow-sm p-3 rounded-full border border-border hover:bg-white/10 transition-colors"
             >
               <ArrowLeft size={20} className="text-white" />
             </button>
@@ -55,7 +55,7 @@ export function HelpSupport() {
           
           <div className="space-y-4">
             <h2 className="text-white/80 font-semibold px-2">Frequently Asked Questions</h2>
-            <div className="bg-white/5 border border-white/10 rounded-2xl overflow-hidden divide-y divide-white/10">
+            <div className="bg-card shadow-sm border border-border rounded-2xl overflow-hidden divide-y divide-white/10">
               <div className="p-4">
                 <h3 className="text-white font-medium">How is my data used by Gemini?</h3>
                 <p className="text-white/60 text-sm mt-1">Your transaction data is anonymized before being sent to the AI model. No personal identifiers are shared.</p>
@@ -73,12 +73,12 @@ export function HelpSupport() {
               <h2 className="text-white/80 font-semibold">Contact Support</h2>
             </div>
             
-            <form onSubmit={handleSubmit} className="bg-white/5 border border-white/10 rounded-2xl p-5 space-y-4">
+            <form onSubmit={handleSubmit} className="bg-card shadow-sm border border-border rounded-2xl p-5 space-y-4">
               <textarea
                 value={message}
                 onChange={(e) => setMessage(e.target.value)}
                 placeholder="Describe your issue or provide feedback..."
-                className="w-full bg-background/50 border border-white/10 rounded-xl p-4 text-white placeholder:text-white/30 focus:outline-none focus:border-[#00d9ff] min-h-[120px] resize-none"
+                className="w-full bg-background/50 border border-border rounded-xl p-4 text-white placeholder:text-white/30 focus:outline-none focus:border-[#00d9ff] min-h-[120px] resize-none"
                 required
               />
               <button

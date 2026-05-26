@@ -13,7 +13,7 @@ export function WeeklySummaryCard({ report, isLoading }: WeeklySummaryCardProps)
 
   if (isLoading) {
     return (
-      <div className="bg-white/5 backdrop-blur-sm p-5 rounded-3xl border border-white/10 mb-6 animate-pulse">
+      <div className="bg-card shadow-sm  p-5 rounded-3xl border border-border mb-6 animate-pulse">
         <div className="flex items-center gap-2 mb-3">
           <div className="w-5 h-5 bg-white/10 rounded" />
           <div className="h-4 w-32 bg-white/10 rounded-full" />
@@ -34,7 +34,7 @@ export function WeeklySummaryCard({ report, isLoading }: WeeklySummaryCardProps)
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       whileHover={{ scale: 1.01 }}
-      className="bg-white/5 backdrop-blur-sm p-5 rounded-3xl border border-white/10 mb-6 cursor-pointer group"
+      className="bg-card shadow-sm  p-5 rounded-3xl border border-border mb-6 cursor-pointer group"
       onClick={() => navigate("/analytics")} // Or /insights
     >
       <div className="flex items-center justify-between mb-3">
@@ -53,7 +53,7 @@ export function WeeklySummaryCard({ report, isLoading }: WeeklySummaryCardProps)
       {report.highlights && report.highlights.length > 0 && (
         <div className="flex flex-wrap gap-2">
           {report.highlights.slice(0, 2).map((highlight, idx) => (
-            <span key={idx} className="bg-[#00d9ff]/10 text-[#00d9ff] px-2.5 py-1 rounded-full text-[10px] font-medium border border-[#00d9ff]/20">
+            <span key={idx} className="bg-card text-[#00d9ff] px-2.5 py-1 rounded-full text-[10px] font-medium border border-[#00d9ff]/20">
               {highlight}
             </span>
           ))}

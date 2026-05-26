@@ -53,7 +53,7 @@ export function TransactionListSkeleton({ count = 5 }: { count?: number }) {
           initial={{ opacity: 0, x: -8 }}
           animate={{ opacity: 1, x: 0 }}
           transition={{ delay: i * 0.05 }}
-          className="bg-white/5 rounded-2xl border border-white/8 p-4 flex items-center gap-4"
+          className="bg-card shadow-sm rounded-2xl border border-white/8 p-4 flex items-center gap-4"
         >
           <Pulse className="w-12 h-12 rounded-2xl shrink-0" />
           <div className="flex-1 space-y-2">
@@ -76,7 +76,7 @@ export function AnalyticsSkeleton() {
       <SkeletonCard className="h-44 rounded-3xl" />
       <div className="space-y-3">
         {Array.from({ length: 4 }).map((_, i) => (
-          <div key={i} className="bg-white/5 rounded-2xl border border-white/8 p-4 flex items-center gap-4">
+          <div key={i} className="bg-card shadow-sm rounded-2xl border border-white/8 p-4 flex items-center gap-4">
             <Pulse className="w-10 h-10 rounded-2xl shrink-0" />
             <div className="flex-1 space-y-2">
               <Pulse className="h-4 w-28" />

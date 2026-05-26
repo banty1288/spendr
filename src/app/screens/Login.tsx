@@ -110,8 +110,8 @@ export function Login() {
       <div className="absolute inset-0 bg-gradient-to-b from-black via-[#0a0a14] to-black" />
 
       <div className="absolute inset-0 opacity-20 pointer-events-none">
-        <div className="absolute top-20 left-10 w-72 h-72 bg-[#00d9ff]/30 rounded-full blur-[100px]" />
-        <div className="absolute bottom-20 right-10 w-72 h-72 bg-[#00ff88]/30 rounded-full blur-[100px]" />
+        <div className="absolute top-20 left-10 w-72 h-72 bg-card rounded-full hidden" />
+        <div className="absolute bottom-20 right-10 w-72 h-72 bg-card rounded-full hidden" />
       </div>
 
       <div className="relative z-10 flex-1 flex flex-col px-8 py-16">
@@ -150,7 +150,7 @@ export function Login() {
                 placeholder="Email address"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                className="w-full bg-white/5 border border-white/10 rounded-2xl py-4 pl-12 pr-4 text-white placeholder:text-white/40 focus:border-[#00d9ff] focus:outline-none transition-colors"
+                className="w-full bg-card shadow-sm border border-border rounded-2xl py-4 pl-12 pr-4 text-white placeholder:text-white/40 focus:border-[#00d9ff] focus:outline-none transition-colors"
               />
             </div>
 
@@ -161,7 +161,7 @@ export function Login() {
                 placeholder="Password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                className="w-full bg-white/5 border border-white/10 rounded-2xl py-4 pl-12 pr-4 text-white placeholder:text-white/40 focus:border-[#00d9ff] focus:outline-none transition-colors"
+                className="w-full bg-card shadow-sm border border-border rounded-2xl py-4 pl-12 pr-4 text-white placeholder:text-white/40 focus:border-[#00d9ff] focus:outline-none transition-colors"
               />
             </div>
 
@@ -196,7 +196,7 @@ export function Login() {
           <button
             onClick={handleGoogleAuth}
             disabled={isLoading || isGoogleLoading}
-            className="w-full bg-white/5 border border-white/10 py-4 rounded-2xl flex items-center justify-center gap-3 hover:bg-white/10 transition-colors disabled:opacity-70 disabled:cursor-not-allowed"
+            className="w-full bg-card shadow-sm border border-border py-4 rounded-2xl flex items-center justify-center gap-3 hover:bg-white/10 transition-colors disabled:opacity-70 disabled:cursor-not-allowed"
           >
             {isGoogleLoading ? (
                <Loader2 className="w-5 h-5 animate-spin text-white" />

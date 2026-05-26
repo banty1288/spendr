@@ -34,10 +34,10 @@ export function LowDataEmptyState({
     <motion.div
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
-      className="rounded-3xl border border-white/10 bg-gradient-to-br from-white/5 to-white/[0.02] p-6 backdrop-blur-xl"
+      className="rounded-3xl border border-border bg-gradient-to-br from-white/5 to-white/[0.02] p-6 "
     >
       <div className="flex items-center gap-3 mb-5">
-        <div className="rounded-2xl bg-[#00d9ff]/10 p-3 text-[#00d9ff]">
+        <div className="rounded-2xl bg-card p-3 text-[#00d9ff]">
           <Sparkles size={22} />
         </div>
         <div>
@@ -53,11 +53,11 @@ export function LowDataEmptyState({
       </p>
 
       <div className="grid gap-3 sm:grid-cols-2 mb-5">
-        <div className="rounded-3xl border border-white/10 bg-background/20 p-4">
+        <div className="rounded-3xl border border-border bg-background/20 p-4">
           <p className="text-white/50 text-xs uppercase tracking-[0.18em]">Transactions so far</p>
           <p className="text-white text-3xl font-semibold mt-3">{transactionsCount}</p>
         </div>
-        <div className="rounded-3xl border border-white/10 bg-background/20 p-4">
+        <div className="rounded-3xl border border-border bg-background/20 p-4">
           <p className="text-white/50 text-xs uppercase tracking-[0.18em]">AI unlock progress</p>
           <p className="text-white text-3xl font-semibold mt-3">{progress}%</p>
         </div>
@@ -73,17 +73,17 @@ export function LowDataEmptyState({
       </div>
 
       <div className="grid gap-3 sm:grid-cols-3 mb-4">
-        <div className="rounded-3xl bg-[#00d9ff]/10 border border-white/10 p-4">
+        <div className="rounded-3xl bg-card border border-border p-4">
           <p className="text-white/60 text-xs">Next milestone</p>
           <p className="text-white font-semibold text-lg mt-2">
             {remaining} more transaction{remaining === 1 ? "" : "s"}
           </p>
         </div>
-        <div className="rounded-3xl bg-[#9d4edd]/10 border border-white/10 p-4">
+        <div className="rounded-3xl bg-card border border-border p-4">
           <p className="text-white/60 text-xs">Personality</p>
           <p className="text-white font-semibold text-lg mt-2">Still forming</p>
         </div>
-        <div className="rounded-3xl bg-[#ffd60a]/10 border border-white/10 p-4">
+        <div className="rounded-3xl bg-card border border-border p-4">
           <p className="text-white/60 text-xs">Emotional patterns</p>
           <p className="text-white font-semibold text-lg mt-2">Pending</p>
         </div>
@@ -93,7 +93,7 @@ export function LowDataEmptyState({
         <button
           type="button"
           onClick={onAddTransaction}
-          className="rounded-3xl bg-[#00d9ff]/20 px-4 py-3 text-sm font-semibold text-white hover:bg-[#00d9ff]/30 transition-colors"
+          className="rounded-3xl bg-card px-4 py-3 text-sm font-semibold text-white hover:bg-card transition-colors"
         >
           <Wallet size={16} className="inline mr-2" />
           Add transaction
@@ -101,7 +101,7 @@ export function LowDataEmptyState({
         <button
           type="button"
           onClick={onRunAi}
-          className="rounded-3xl bg-[#00ff88]/10 border border-white/10 px-4 py-3 text-sm font-semibold text-white hover:bg-[#00ff88]/15 transition-colors"
+          className="rounded-3xl bg-card border border-border px-4 py-3 text-sm font-semibold text-white hover:bg-card transition-colors"
         >
           <Sparkles size={16} className="inline mr-2" />
           Run starter AI
@@ -109,7 +109,7 @@ export function LowDataEmptyState({
         <button
           type="button"
           onClick={onViewReport}
-          className="rounded-3xl bg-white/5 border border-white/10 px-4 py-3 text-sm font-semibold text-white hover:bg-white/10 transition-colors"
+          className="rounded-3xl bg-card shadow-sm border border-border px-4 py-3 text-sm font-semibold text-white hover:bg-white/10 transition-colors"
         >
           <ArrowRight size={16} className="inline mr-2" />
           View report
@@ -128,10 +128,10 @@ export function FinancialSetupChecklist({ items }: FinancialSetupChecklistProps)
     <motion.div
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
-      className="rounded-3xl border border-white/10 bg-gradient-to-br from-white/5 to-white/[0.02] p-5 backdrop-blur-xl"
+      className="rounded-3xl border border-border bg-gradient-to-br from-white/5 to-white/[0.02] p-5 "
     >
       <div className="flex items-center gap-3 mb-5">
-        <div className="rounded-2xl bg-[#ffd60a]/10 p-3 text-[#ffd60a]">
+        <div className="rounded-2xl bg-card p-3 text-[#ffd60a]">
           <Target size={22} />
         </div>
         <div>
@@ -144,7 +144,7 @@ export function FinancialSetupChecklist({ items }: FinancialSetupChecklistProps)
         {items.map((item) => (
           <div
             key={item.title}
-            className="rounded-3xl border border-white/10 bg-background/10 p-4"
+            className="rounded-3xl border border-border bg-background/10 p-4"
           >
             <div className="flex items-center justify-between gap-3">
               <div className="min-w-0">
@@ -153,7 +153,7 @@ export function FinancialSetupChecklist({ items }: FinancialSetupChecklistProps)
               </div>
               <div
                 className={`rounded-full px-3 py-1 text-xs font-semibold ${
-                  item.completed ? "bg-[#00ff88]/15 text-[#00ff88]" : "bg-white/10 text-white/70"
+                  item.completed ? "bg-card text-[#00ff88]" : "bg-white/10 text-white/70"
                 }`}
               >
                 {item.completed ? "Done" : "Pending"}

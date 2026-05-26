@@ -47,11 +47,11 @@ export function HealthScoreWidget({
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
-        className="relative overflow-hidden rounded-2xl border border-white/10 bg-gradient-to-br from-white/5 to-white/[0.02] p-6 backdrop-blur-xl"
+        className="relative overflow-hidden rounded-2xl border border-border bg-gradient-to-br from-white/5 to-white/[0.02] p-6 "
       >
         <div className="absolute inset-0 opacity-30">
-          <div className="absolute top-0 right-0 w-40 h-40 bg-[#00d9ff]/20 rounded-full blur-3xl" />
-          <div className="absolute bottom-0 left-0 w-40 h-40 bg-[#9d4edd]/20 rounded-full blur-3xl" />
+          <div className="absolute top-0 right-0 w-40 h-40 bg-card rounded-full blur-3xl" />
+          <div className="absolute bottom-0 left-0 w-40 h-40 bg-card rounded-full blur-3xl" />
         </div>
 
         <div className="relative z-10">
@@ -118,7 +118,7 @@ export function HealthScoreWidget({
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: idx * 0.1 }}
-            className={`relative overflow-hidden rounded-xl border border-white/10 bg-gradient-to-br ${metric.color} bg-opacity-10 p-4 backdrop-blur-sm`}
+            className={`relative overflow-hidden rounded-xl border border-border bg-gradient-to-br ${metric.color} bg-opacity-10 p-4 `}
           >
             <div className="absolute inset-0 opacity-20 blur-2xl" />
             <div className="relative z-10">

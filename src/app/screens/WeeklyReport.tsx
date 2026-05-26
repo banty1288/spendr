@@ -96,8 +96,8 @@ export function WeeklyReport() {
     return (
       <div className="min-h-screen pb-safe-nav relative overflow-hidden">
         <div className="absolute inset-0 opacity-20">
-          <div className="absolute top-0 left-0 w-96 h-96 bg-[#9d4edd]/30 rounded-full blur-[64px] will-change-transform" />
-          <div className="absolute bottom-0 right-0 w-96 h-96 bg-[#00d9ff]/30 rounded-full blur-[64px] will-change-transform" />
+
+
         </div>
         <div className="relative z-10">
           <WeeklyReportSkeleton />
@@ -111,8 +111,8 @@ export function WeeklyReport() {
     return (
       <div className="min-h-screen pb-safe-nav relative overflow-hidden">
         <div className="absolute inset-0 opacity-20">
-          <div className="absolute top-0 left-0 w-96 h-96 bg-[#9d4edd]/30 rounded-full blur-[64px] will-change-transform" />
-          <div className="absolute bottom-0 right-0 w-96 h-96 bg-[#00d9ff]/30 rounded-full blur-[64px] will-change-transform" />
+
+
         </div>
 
         <div className="relative z-10">
@@ -121,7 +121,7 @@ export function WeeklyReport() {
               <button
                 type="button"
                 onClick={() => navigate("/home")}
-                className="bg-white/5 backdrop-blur-sm p-3 rounded-full border border-white/10"
+                className="bg-card shadow-sm  p-3 rounded-full border border-border"
               >
                 <ArrowLeft size={20} className="text-white" />
               </button>
@@ -133,7 +133,7 @@ export function WeeklyReport() {
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
-              className="rounded-2xl border border-[#ff3366]/20 bg-gradient-to-br from-[#ff3366]/5 to-white/[0.02] p-6 backdrop-blur-xl"
+              className="rounded-2xl border border-[#ff3366]/20 bg-gradient-to-br from-card to-white/[0.02] p-6 "
             >
               <div className="flex items-start gap-4">
                 <AlertCircle size={24} className="text-[#ff3366] flex-shrink-0" />
@@ -142,7 +142,7 @@ export function WeeklyReport() {
                   <p className="text-sm text-white/80 mb-4">{errorMessage}</p>
                   
                   {isBlockedByOnboarding && (
-                    <div className="mb-4 p-3 rounded-lg bg-white/5 border border-white/10">
+                    <div className="mb-4 p-3 rounded-lg bg-card shadow-sm border border-border">
                       <p className="text-xs text-white/70">
                         ✨ Complete your onboarding profile to unlock AI-powered financial insights.
                       </p>
@@ -150,7 +150,7 @@ export function WeeklyReport() {
                   )}
                   
                   {isBlockedByTransactions && (
-                    <div className="mb-4 p-3 rounded-lg bg-white/5 border border-white/10">
+                    <div className="mb-4 p-3 rounded-lg bg-card shadow-sm border border-border">
                       <p className="text-xs text-white/70 mb-2">
                         📝 Add your first transaction to get started with weekly reports.
                       </p>
@@ -172,7 +172,7 @@ export function WeeklyReport() {
                       <button
                         type="button"
                         onClick={() => handleGenerate(true)}
-                        className="px-4 py-2 rounded-lg bg-[#00d9ff]/20 hover:bg-[#00d9ff]/30 transition-colors text-white text-sm font-medium flex items-center gap-2"
+                        className="px-4 py-2 rounded-lg bg-card hover:bg-card transition-colors text-white text-sm font-medium flex items-center gap-2"
                       >
                         <RefreshCw size={16} />
                         Try Again
@@ -193,8 +193,8 @@ export function WeeklyReport() {
     return (
       <div className="min-h-screen pb-safe-nav relative overflow-hidden">
         <div className="absolute inset-0 opacity-20">
-          <div className="absolute top-0 left-0 w-96 h-96 bg-[#9d4edd]/30 rounded-full blur-[64px] will-change-transform" />
-          <div className="absolute bottom-0 right-0 w-96 h-96 bg-[#00d9ff]/30 rounded-full blur-[64px] will-change-transform" />
+
+
         </div>
 
         <div className="relative z-10">
@@ -203,7 +203,7 @@ export function WeeklyReport() {
               <button
                 type="button"
                 onClick={() => navigate("/home")}
-                className="bg-white/5 backdrop-blur-sm p-3 rounded-full border border-white/10"
+                className="bg-card shadow-sm  p-3 rounded-full border border-border"
               >
                 <ArrowLeft size={20} className="text-white" />
               </button>
@@ -215,7 +215,7 @@ export function WeeklyReport() {
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
-              className="rounded-2xl border border-white/10 bg-gradient-to-br from-white/5 to-white/[0.02] p-8 backdrop-blur-xl text-center space-y-6"
+              className="rounded-2xl border border-border bg-gradient-to-br from-white/5 to-white/[0.02] p-8  text-center space-y-6"
             >
               <div className="text-5xl">📊</div>
               <div>
@@ -233,13 +233,13 @@ export function WeeklyReport() {
 
               {hasMinimalData && (
                 <div className="space-y-3">
-                  <div className="p-3 rounded-lg bg-[#9d4edd]/10 border border-[#9d4edd]/20">
+                  <div className="p-3 rounded-lg bg-card border border-[#9d4edd]/20">
                     <p className="text-xs text-white/80">
                       💡 <span className="font-semibold">Getting Started:</span> You have {transactions.length} transaction{transactions.length === 1 ? "" : "s"}
                     </p>
                   </div>
                   {!hasGoodData && (
-                    <div className="p-3 rounded-lg bg-[#00d9ff]/10 border border-[#00d9ff]/20">
+                    <div className="p-3 rounded-lg bg-card border border-[#00d9ff]/20">
                       <p className="text-xs text-white/80">
                         📝 <span className="font-semibold">Tip:</span> Add {5 - transactions.length} more transactions to unlock full AI analysis
                       </p>
@@ -293,19 +293,19 @@ export function WeeklyReport() {
   return (
     <div className="min-h-screen pb-safe-nav relative overflow-hidden" ref={reportRef}>
       <div className="absolute inset-0 opacity-20">
-        <div className="absolute top-0 left-0 w-96 h-96 bg-[#9d4edd]/30 rounded-full blur-[64px] will-change-transform" />
-        <div className="absolute bottom-0 right-0 w-96 h-96 bg-[#00d9ff]/30 rounded-full blur-[64px] will-change-transform" />
+
+
       </div>
 
       <div className="relative z-10">
         {/* Header */}
-        <div className="px-6 pt-12 pb-6 sticky top-0 z-50 backdrop-blur-md bg-background/30 border-b border-white/10">
+        <div className="px-6 pt-12 pb-6 sticky top-0 z-50  bg-background/30 border-b border-border">
           <div className="flex items-center justify-between mb-2">
             <div className="flex items-center gap-4">
               <button
                 type="button"
                 onClick={() => navigate("/home")}
-                className="bg-white/5 backdrop-blur-sm p-3 rounded-full border border-white/10 hover:bg-white/10 transition-colors no-print"
+                className="bg-card shadow-sm  p-3 rounded-full border border-border hover:bg-white/10 transition-colors no-print"
               >
                 <ArrowLeft size={20} className="text-white" />
               </button>
@@ -319,7 +319,7 @@ export function WeeklyReport() {
                 type="button"
                 onClick={handleExportPdf}
                 disabled={isExporting || isGenerating}
-                className="bg-white/5 backdrop-blur-sm p-3 rounded-full border border-white/10 hover:bg-white/10 transition-colors disabled:opacity-50"
+                className="bg-card shadow-sm  p-3 rounded-full border border-border hover:bg-white/10 transition-colors disabled:opacity-50"
               >
                 {isExporting ? (
                   <Loader2 size={20} className="text-white animate-spin" />
@@ -331,7 +331,7 @@ export function WeeklyReport() {
                 type="button"
                 onClick={() => handleGenerate(true)}
                 disabled={isGenerating || isExporting}
-                className="bg-white/5 backdrop-blur-sm p-3 rounded-full border border-white/10 hover:bg-white/10 transition-colors disabled:opacity-50"
+                className="bg-card shadow-sm  p-3 rounded-full border border-border hover:bg-white/10 transition-colors disabled:opacity-50"
               >
                 {isGenerating ? (
                   <Loader2 size={20} className="text-white animate-spin" />
@@ -347,7 +347,7 @@ export function WeeklyReport() {
             <motion.div
               initial={{ opacity: 0, x: -20 }}
               animate={{ opacity: 1, x: 0 }}
-              className="rounded-lg bg-white/5 p-3 border border-white/10"
+              className="rounded-lg bg-card shadow-sm p-3 border border-border"
             >
               <p className="text-xs text-white/60">Income</p>
               <p className="text-lg font-bold text-[#00ff88]">
@@ -358,7 +358,7 @@ export function WeeklyReport() {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.1 }}
-              className="rounded-lg bg-white/5 p-3 border border-white/10"
+              className="rounded-lg bg-card shadow-sm p-3 border border-border"
             >
               <p className="text-xs text-white/60">Expenses</p>
               <p className="text-lg font-bold text-white">{convertAndFormat(latestReport.totalExpenses)}</p>
@@ -367,7 +367,7 @@ export function WeeklyReport() {
               initial={{ opacity: 0, x: 20 }}
               animate={{ opacity: 1, x: 0 }}
               transition={{ delay: 0.2 }}
-              className="rounded-lg bg-white/5 p-3 border border-white/10"
+              className="rounded-lg bg-card shadow-sm p-3 border border-border"
             >
               <p className="text-xs text-white/60">Net Flow</p>
               <p className={`text-lg font-bold ${latestReport.netCashFlow >= 0 ? "text-[#00ff88]" : "text-[#ff3366]"}`}>

@@ -31,13 +31,13 @@ export function RewardTimeline({ rewards }: RewardTimelineProps) {
             <span className="text-sm">{reward.icon || "✨"}</span>
           </div>
 
-          <div className="bg-white/5 backdrop-blur-sm p-4 rounded-2xl border border-white/10 flex items-center gap-4 w-full ml-4 hover:bg-white/10 transition-colors">
+          <div className="bg-card shadow-sm  p-4 rounded-2xl border border-border flex items-center gap-4 w-full ml-4 hover:bg-white/10 transition-colors">
             <div className="flex-1 min-w-0">
               <p className="text-white font-semibold text-sm truncate">{reward.title}</p>
               <p className="text-white/40 text-xs truncate">{reward.subtitle}</p>
             </div>
             <div className="flex flex-col items-end gap-1 shrink-0">
-              <div className="flex items-center gap-1.5 bg-gradient-to-r from-[#00d9ff]/20 to-[#00ff88]/20 px-3 py-1 rounded-full">
+              <div className="flex items-center gap-1.5 bg-gradient-to-r from-card to-card px-3 py-1 rounded-full">
                 <Zap size={14} className="text-[#00ff88]" />
                 <span className="text-[#00ff88] font-bold text-sm">+{reward.xp}</span>
               </div>

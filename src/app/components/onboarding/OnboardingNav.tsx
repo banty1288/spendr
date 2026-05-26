@@ -35,7 +35,7 @@ export function OnboardingNav({
               animate={{ opacity: 1, x: 0 }}
               onClick={onBack}
               disabled={isPending}
-              className="w-14 h-14 rounded-2xl border border-white/10 bg-white/5 flex items-center justify-center hover:bg-white/10 transition-colors shrink-0 disabled:opacity-50"
+              className="w-14 h-14 rounded-2xl border border-border bg-card shadow-sm flex items-center justify-center hover:bg-white/10 transition-colors shrink-0 disabled:opacity-50"
               aria-label="Previous step"
             >
               <ChevronLeft size={20} className="text-white" />

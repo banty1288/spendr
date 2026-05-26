@@ -20,7 +20,7 @@ export function SavingsProgressCard({
     <motion.div
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
-      className={`rounded-2xl border border-white/10 bg-gradient-to-br from-white/5 to-white/[0.02] p-6 backdrop-blur-xl ${className}`}
+      className={`rounded-2xl border border-border bg-gradient-to-br from-white/5 to-white/[0.02] p-6  ${className}`}
     >
       <div className="flex items-center justify-between mb-6">
         <div className="flex items-center gap-2">

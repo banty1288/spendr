@@ -19,7 +19,7 @@ export function ChallengeRecommendations({
 }: ChallengeRecommendationsProps) {
   if (isGenerating) {
     return (
-      <div className="bg-white/5 backdrop-blur-sm p-6 rounded-3xl border border-white/10 text-center">
+      <div className="bg-card shadow-sm  p-6 rounded-3xl border border-border text-center">
         <Loader2 size={32} className="text-[#00d9ff] animate-spin mx-auto mb-4" />
         <h3 className="text-white font-semibold mb-2">Analyzing your spending...</h3>
         <p className="text-white/60 text-sm">
@@ -31,7 +31,7 @@ export function ChallengeRecommendations({
 
   if (recommendations.length === 0) {
     return (
-      <div className="bg-gradient-to-br from-[#00d9ff]/10 to-[#00ff88]/10 backdrop-blur-sm p-6 rounded-3xl border border-[#00d9ff]/20 flex flex-col items-center text-center">
+      <div className="bg-gradient-to-br from-card to-card  p-6 rounded-3xl border border-[#00d9ff]/20 flex flex-col items-center text-center">
         <div className="bg-gradient-to-br from-[#00d9ff] to-[#00ff88] p-4 rounded-full mb-4">
           <Sparkles size={28} className="text-black" />
         </div>
@@ -75,9 +75,9 @@ export function ChallengeRecommendations({
               animate={{ opacity: 1, scale: 1 }}
               exit={{ opacity: 0, scale: 0.9 }}
               transition={{ delay: i * 0.1 }}
-              className="bg-white/5 backdrop-blur-sm p-5 rounded-3xl border border-[#00d9ff]/30 relative overflow-hidden"
+              className="bg-card shadow-sm  p-5 rounded-3xl border border-[#00d9ff]/30 relative overflow-hidden"
             >
-              <div className="absolute top-0 right-0 w-32 h-32 bg-[#00d9ff]/10 rounded-full blur-3xl" />
+              <div className="absolute top-0 right-0 w-32 h-32 bg-card rounded-full blur-3xl" />
               
               <div className="relative">
                 <div className="flex items-start justify-between gap-4 mb-3">
@@ -87,7 +87,7 @@ export function ChallengeRecommendations({
                       {rec.difficulty}
                     </span>
                   </div>
-                  <div className="flex items-center gap-1 bg-[#ffd60a]/20 px-2 py-1 rounded-full shrink-0">
+                  <div className="flex items-center gap-1 bg-card px-2 py-1 rounded-full shrink-0">
                     <Zap size={14} className="text-[#ffd60a]" />
                     <span className="text-[#ffd60a] text-xs font-bold">+{rec.rewardXp}</span>
                   </div>

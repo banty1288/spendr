@@ -19,7 +19,7 @@ export function AIInsightsCarousel({ analysis, emotionalInsights, isLoading }: A
         <h3 className="text-white font-semibold mb-4 px-1">AI Insights</h3>
         <div className="flex gap-4 overflow-x-hidden">
           {[1, 2].map(i => (
-            <div key={i} className="min-w-[280px] bg-white/5 backdrop-blur-sm p-5 rounded-3xl border border-white/10 animate-pulse">
+            <div key={i} className="min-w-[280px] bg-card shadow-sm  p-5 rounded-3xl border border-border animate-pulse">
               <div className="flex items-center gap-2 mb-3">
                 <div className="w-8 h-8 rounded-full bg-white/10" />
                 <div className="h-4 w-24 bg-white/10 rounded-full" />
@@ -40,7 +40,7 @@ export function AIInsightsCarousel({ analysis, emotionalInsights, isLoading }: A
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         onClick={() => navigate("/insights")}
-        className="bg-white/5 backdrop-blur-sm p-6 rounded-3xl border border-dashed border-white/20 mb-6 cursor-pointer text-center group"
+        className="bg-card shadow-sm  p-6 rounded-3xl border border-dashed border-white/20 mb-6 cursor-pointer text-center group"
       >
         <Brain className="mx-auto text-[#00ff88] mb-3 opacity-50 group-hover:scale-110 transition-transform" size={32} />
         <h3 className="text-white font-medium mb-1">Unlock AI Insights</h3>
@@ -59,7 +59,7 @@ export function AIInsightsCarousel({ analysis, emotionalInsights, isLoading }: A
       title: "Emotional Spending",
       color: "#ff3366",
       content: emotionalInsights.warnings[0],
-      bg: "from-[#ff3366]/20 to-transparent",
+      bg: "from-card to-transparent",
       borderColor: "border-[#ff3366]/30",
     });
   }
@@ -69,18 +69,18 @@ export function AIInsightsCarousel({ analysis, emotionalInsights, isLoading }: A
     analysis.financialInsights.cards.slice(0, 3).forEach((c, idx) => {
       let icon = <Sparkles className="text-[#00d9ff]" size={20} />;
       let color = "#00d9ff";
-      let bg = "from-[#00d9ff]/20 to-transparent";
+      let bg = "from-card to-transparent";
       let borderColor = "border-[#00d9ff]/30";
 
       if (c.type === "strength") {
         icon = <TrendingUp className="text-[#00ff88]" size={20} />;
         color = "#00ff88";
-        bg = "from-[#00ff88]/20 to-transparent";
+        bg = "from-card to-transparent";
         borderColor = "border-[#00ff88]/30";
       } else if (c.type === "weakness") {
         icon = <Zap className="text-[#ffd60a]" size={20} />;
         color = "#ffd60a";
-        bg = "from-[#ffd60a]/20 to-transparent";
+        bg = "from-card to-transparent";
         borderColor = "border-[#ffd60a]/30";
       }
 
@@ -118,11 +118,11 @@ export function AIInsightsCarousel({ analysis, emotionalInsights, isLoading }: A
             animate={{ opacity: 1, x: 0 }}
             transition={{ delay: 0.1 + idx * 0.1 }}
             onClick={() => navigate("/insights")}
-            className={`min-w-[280px] max-w-[280px] snap-center bg-gradient-to-br ${card.bg} backdrop-blur-sm p-5 rounded-3xl border ${card.borderColor} cursor-pointer group hover:bg-white/5 transition-colors relative overflow-hidden`}
+            className={`min-w-[280px] max-w-[280px] snap-center bg-gradient-to-br ${card.bg}  p-5 rounded-3xl border ${card.borderColor} cursor-pointer group hover:bg-card shadow-sm transition-colors relative overflow-hidden`}
           >
-            <div className="absolute top-0 right-0 w-24 h-24 bg-white/5 rounded-full blur-2xl group-hover:bg-white/10 transition-colors" />
+            <div className="absolute top-0 right-0 w-24 h-24 bg-card shadow-sm rounded-full blur-2xl group-hover:bg-white/10 transition-colors" />
             <div className="flex items-center gap-3 mb-3 relative">
-              <div className="bg-white/10 p-2 rounded-xl backdrop-blur-md border border-white/5">
+              <div className="bg-white/10 p-2 rounded-xl  border border-white/5">
                 {card.icon}
               </div>
               <h4 className="text-white font-medium text-sm">{card.title}</h4>

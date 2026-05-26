@@ -42,11 +42,11 @@ export function Security() {
   return (
     <div className="min-h-screen bg-background pb-safe-nav relative overflow-hidden">
       <div className="relative z-10">
-        <div className="px-6 pt-12 pb-6 sticky top-0 z-50 backdrop-blur-md bg-background/30 border-b border-white/10">
+        <div className="px-6 pt-12 pb-6 sticky top-0 z-50  bg-background/30 border-b border-border">
           <div className="flex items-center gap-4">
             <button
               onClick={() => navigate("/profile")}
-              className="bg-white/5 p-3 rounded-full border border-white/10 hover:bg-white/10 transition-colors"
+              className="bg-card shadow-sm p-3 rounded-full border border-border hover:bg-white/10 transition-colors"
             >
               <ArrowLeft size={20} className="text-white" />
             </button>
@@ -61,10 +61,10 @@ export function Security() {
             <button 
               onClick={handlePasswordReset}
               disabled={isResetting}
-              className="w-full flex items-center justify-between p-5 bg-white/5 border border-white/10 rounded-2xl hover:bg-white/10 transition-colors disabled:opacity-50"
+              className="w-full flex items-center justify-between p-5 bg-card shadow-sm border border-border rounded-2xl hover:bg-white/10 transition-colors disabled:opacity-50"
             >
               <div className="flex items-center gap-4">
-                <div className="p-2.5 rounded-xl bg-[#00d9ff]/20">
+                <div className="p-2.5 rounded-xl bg-card">
                   <Key size={20} className="text-[#00d9ff]" />
                 </div>
                 <div className="text-left">
@@ -80,9 +80,9 @@ export function Security() {
           <div className="space-y-3">
             <h2 className="text-white/80 font-semibold px-2 mt-4">Privacy Preferences</h2>
             
-            <div className="flex items-center justify-between p-5 bg-white/5 border border-white/10 rounded-2xl">
+            <div className="flex items-center justify-between p-5 bg-card shadow-sm border border-border rounded-2xl">
               <div className="flex items-center gap-4">
-                <div className="p-2.5 rounded-xl bg-[#00ff88]/20">
+                <div className="p-2.5 rounded-xl bg-card">
                   <Shield size={20} className="text-[#00ff88]" />
                 </div>
                 <div>
@@ -100,9 +100,9 @@ export function Security() {
           <div className="space-y-3">
             <h2 className="text-[#ff3366]/80 font-semibold px-2 mt-8">Danger Zone</h2>
             
-            <button className="w-full flex items-center justify-between p-5 bg-[#ff3366]/10 border border-[#ff3366]/30 rounded-2xl hover:bg-[#ff3366]/20 transition-colors">
+            <button className="w-full flex items-center justify-between p-5 bg-card border border-[#ff3366]/30 rounded-2xl hover:bg-card transition-colors">
               <div className="flex items-center gap-4">
-                <div className="p-2.5 rounded-xl bg-[#ff3366]/20">
+                <div className="p-2.5 rounded-xl bg-card">
                   <LogOut size={20} className="text-[#ff3366]" />
                 </div>
                 <div className="text-left">
@@ -112,9 +112,9 @@ export function Security() {
               </div>
             </button>
 
-            <button className="w-full flex items-center justify-between p-5 bg-transparent border border-[#ff3366]/30 rounded-2xl hover:bg-[#ff3366]/10 transition-colors">
+            <button className="w-full flex items-center justify-between p-5 bg-transparent border border-[#ff3366]/30 rounded-2xl hover:bg-card transition-colors">
               <div className="flex items-center gap-4">
-                <div className="p-2.5 rounded-xl bg-[#ff3366]/20">
+                <div className="p-2.5 rounded-xl bg-card">
                   <Trash2 size={20} className="text-[#ff3366]" />
                 </div>
                 <div className="text-left">

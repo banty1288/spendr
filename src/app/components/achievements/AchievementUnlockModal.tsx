@@ -18,7 +18,7 @@ export function AchievementUnlockModal({ achievements, onClose }: AchievementUnl
           exit={{ opacity: 0 }}
         >
           <motion.div
-            className="w-full max-w-xl rounded-[2rem] border border-white/10 bg-[#09090d]/95 p-6 shadow-2xl shadow-black/60"
+            className="w-full max-w-xl rounded-[2rem] border border-border bg-card p-6 shadow-2xl shadow-black/60"
             initial={{ opacity: 0, y: 40, scale: 0.96 }}
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: 20, scale: 0.98 }}
@@ -26,7 +26,7 @@ export function AchievementUnlockModal({ achievements, onClose }: AchievementUnl
           >
             <div className="flex items-start justify-between gap-3 mb-5">
               <div>
-                <div className="inline-flex items-center gap-2 rounded-full bg-[#ffd60a]/10 px-3 py-2 text-sm font-semibold text-[#ffd60a]">
+                <div className="inline-flex items-center gap-2 rounded-full bg-card px-3 py-2 text-sm font-semibold text-[#ffd60a]">
                   <Sparkles size={16} /> Achievement unlocked
                 </div>
                 <h2 className="mt-3 text-2xl font-bold text-white">New badge unlocked!</h2>
@@ -37,7 +37,7 @@ export function AchievementUnlockModal({ achievements, onClose }: AchievementUnl
               <button
                 type="button"
                 onClick={onClose}
-                className="rounded-full bg-white/5 p-2 text-white/80 hover:bg-white/10"
+                className="rounded-full bg-card shadow-sm p-2 text-white/80 hover:bg-white/10"
               >
                 <X size={18} />
               </button>
@@ -45,7 +45,7 @@ export function AchievementUnlockModal({ achievements, onClose }: AchievementUnl
 
             <div className="grid gap-4 md:grid-cols-2">
               {achievements.map((achievement) => (
-                <div key={achievement.id} className="rounded-3xl border border-white/10 bg-white/5 p-4">
+                <div key={achievement.id} className="rounded-3xl border border-border bg-card shadow-sm p-4">
                   <div className="flex items-center gap-3 mb-3">
                     <div className="grid h-14 w-14 place-items-center rounded-3xl bg-white/10 text-2xl">
                       {achievement.icon}
@@ -72,7 +72,7 @@ export function AchievementUnlockModal({ achievements, onClose }: AchievementUnl
               <button
                 type="button"
                 onClick={onClose}
-                className="rounded-3xl bg-[#00d9ff]/15 px-5 py-3 text-sm font-semibold text-white transition hover:bg-[#00d9ff]/20"
+                className="rounded-3xl bg-card px-5 py-3 text-sm font-semibold text-white transition hover:bg-card"
               >
                 Keep going
               </button>

@@ -108,7 +108,7 @@ export function Transactions() {
           initial={{ opacity: 0, y: 8 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.08 }}
-          className="bg-white/5 backdrop-blur-sm rounded-3xl border border-white/10 p-5 mb-5"
+          className="bg-card shadow-sm  rounded-3xl border border-border p-5 mb-5"
         >
           <p className="text-white/50 text-xs font-semibold uppercase tracking-wider mb-3">{t("transactions.spendingByCategory", "Spending by Category")}</p>
           <CategoryPieChart data={breakdown} />
@@ -118,7 +118,7 @@ export function Transactions() {
           initial={{ opacity: 0, y: 8 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.11 }}
-          className="bg-white/5 backdrop-blur-sm rounded-3xl border border-white/10 p-5 mb-5"
+          className="bg-card shadow-sm  rounded-3xl border border-border p-5 mb-5"
         >
           <p className="text-white/50 text-xs font-semibold uppercase tracking-wider mb-3">Monthly Expenses</p>
           <MonthlyBarChart data={monthlyChart} />

@@ -116,17 +116,17 @@ export function PersonalInfo() {
   return (
     <div className="min-h-screen bg-background pb-safe-nav relative overflow-hidden">
       <div className="absolute inset-0 opacity-20 pointer-events-none">
-        <div className="absolute top-0 left-0 w-96 h-96 bg-[#9d4edd]/30 rounded-full blur-[64px] will-change-transform" />
+
       </div>
 
       <div className="relative z-10">
-        <div className="px-6 pt-12 pb-6 sticky top-0 z-50 backdrop-blur-md bg-background/30 border-b border-white/10">
+        <div className="px-6 pt-12 pb-6 sticky top-0 z-50  bg-background/30 border-b border-border">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-4">
               <button
                 type="button"
                 onClick={() => navigate("/profile")}
-                className="bg-white/5 p-3 rounded-full border border-white/10 hover:bg-white/10 transition-colors"
+                className="bg-card shadow-sm p-3 rounded-full border border-border hover:bg-white/10 transition-colors"
               >
                 <ArrowLeft size={20} className="text-white" />
               </button>
@@ -175,7 +175,7 @@ export function PersonalInfo() {
                   type="text"
                   value={displayName}
                   onChange={(e) => setDisplayName(e.target.value)}
-                  className="w-full bg-white/5 border border-white/10 rounded-2xl py-4 pl-12 pr-4 text-white placeholder:text-white/30 focus:outline-none focus:border-[#00d9ff] transition-colors"
+                  className="w-full bg-card shadow-sm border border-border rounded-2xl py-4 pl-12 pr-4 text-white placeholder:text-white/30 focus:outline-none focus:border-[#00d9ff] transition-colors"
                   placeholder="Enter your full name"
                 />
               </div>
@@ -191,7 +191,7 @@ export function PersonalInfo() {
                   type="email"
                   value={email}
                   disabled
-                  className="w-full bg-white/5 border border-white/10 rounded-2xl py-4 pl-12 pr-4 text-white/50 cursor-not-allowed"
+                  className="w-full bg-card shadow-sm border border-border rounded-2xl py-4 pl-12 pr-4 text-white/50 cursor-not-allowed"
                 />
               </div>
             </div>
@@ -206,7 +206,7 @@ export function PersonalInfo() {
                   type="tel"
                   value={phone}
                   onChange={(e) => setPhone(e.target.value)}
-                  className="w-full bg-white/5 border border-white/10 rounded-2xl py-4 pl-12 pr-4 text-white placeholder:text-white/30 focus:outline-none focus:border-[#00d9ff] transition-colors"
+                  className="w-full bg-card shadow-sm border border-border rounded-2xl py-4 pl-12 pr-4 text-white placeholder:text-white/30 focus:outline-none focus:border-[#00d9ff] transition-colors"
                   placeholder="Add phone number"
                 />
               </div>

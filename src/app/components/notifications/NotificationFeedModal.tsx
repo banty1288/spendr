@@ -49,16 +49,16 @@ export function NotificationFeedModal({
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             onClick={onClose}
-            className="fixed inset-0 bg-background/60 backdrop-blur-sm z-50"
+            className="fixed inset-0 bg-background/60  z-50"
           />
           <motion.div
             initial={{ x: "100%" }}
             animate={{ x: 0 }}
             exit={{ x: "100%" }}
             transition={{ type: "spring", damping: 25, stiffness: 200 }}
-            className="fixed inset-y-0 right-0 w-full max-w-md bg-zinc-900 border-l border-white/10 z-50 flex flex-col shadow-2xl"
+            className="fixed inset-y-0 right-0 w-full max-w-md bg-zinc-900 border-l border-border z-50 flex flex-col shadow-2xl"
           >
-            <div className="p-4 border-b border-white/10 flex items-center justify-between">
+            <div className="p-4 border-b border-border flex items-center justify-between">
               <div>
                 <h2 className="text-lg font-bold text-white">Notifications</h2>
                 <div className="flex items-center gap-3 mt-1">
@@ -76,7 +76,7 @@ export function NotificationFeedModal({
               </div>
               <button
                 onClick={onClose}
-                className="p-2 bg-white/5 hover:bg-white/10 rounded-full transition-colors text-white/60"
+                className="p-2 bg-card shadow-sm hover:bg-white/10 rounded-full transition-colors text-white/60"
               >
                 <X size={20} />
               </button>
@@ -95,7 +95,7 @@ export function NotificationFeedModal({
                     layout
                     initial={{ opacity: 0, y: 10 }}
                     animate={{ opacity: 1, y: 0 }}
-                    className={`p-4 rounded-2xl border ${notif.status === 'unread' ? 'bg-white/10 border-white/20' : 'bg-white/5 border-white/5'} cursor-pointer transition-colors`}
+                    className={`p-4 rounded-2xl border ${notif.status === 'unread' ? 'bg-white/10 border-white/20' : 'bg-card shadow-sm border-white/5'} cursor-pointer transition-colors`}
                     onClick={() => {
                       if (notif.status === 'unread') onMarkAsRead(notif.id);
                     }}

@@ -25,7 +25,7 @@ export function BottomNav() {
         initial={{ y: 100, opacity: 0 }}
         animate={{ y: 0, opacity: 1 }}
         transition={{ type: "spring", stiffness: 260, damping: 28, delay: 0.1 }}
-        className="w-full max-w-[430px] md:max-w-2xl bg-[#0a0a14]/96 backdrop-blur-3xl border border-white/10 border-b-0 rounded-t-3xl relative overflow-hidden pointer-events-auto shadow-2xl"
+        className="w-full max-w-[430px] md:max-w-2xl bg-card backdrop-blur-3xl border border-border border-b-0 rounded-t-3xl relative overflow-hidden pointer-events-auto shadow-2xl"
         style={{ paddingBottom: "max(env(safe-area-inset-bottom), 12px)" }}
       >
         {/* Top shimmer line */}

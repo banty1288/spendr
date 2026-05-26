@@ -78,7 +78,7 @@ export function TransactionFormSheet({
             transition={{ type: "spring", damping: 28, stiffness: 320 }}
             className="fixed bottom-0 left-0 right-0 z-[70] flex justify-center"
           >
-            <div className="w-full max-w-[430px] bg-[#0a0a14] border-t border-white/10 rounded-t-3xl px-6 pt-6 pb-10 max-h-[90vh] overflow-y-auto">
+            <div className="w-full max-w-[430px] bg-[#0a0a14] border-t border-border rounded-t-3xl px-6 pt-6 pb-10 max-h-[90vh] overflow-y-auto">
               <div className="flex items-center justify-between mb-6">
                 <h2 className="text-xl font-bold text-white">
                   {mode === "add" ? "Add transaction" : "Edit transaction"}
@@ -86,7 +86,7 @@ export function TransactionFormSheet({
                 <button
                   type="button"
                   onClick={onClose}
-                  className="p-2 rounded-full bg-white/5 border border-white/10"
+                  className="p-2 rounded-full bg-card shadow-sm border border-border"
                 >
                   <X size={20} className="text-white/70" />
                 </button>
@@ -108,9 +108,9 @@ export function TransactionFormSheet({
                       className={`flex-1 py-3 rounded-2xl font-medium text-sm capitalize transition-colors ${
                         form.type === t
                           ? t === "income"
-                            ? "bg-[#00ff88]/20 text-[#00ff88] border border-[#00ff88]/40"
-                            : "bg-[#ff3366]/20 text-[#ff3366] border border-[#ff3366]/40"
-                          : "bg-white/5 text-white/50 border border-white/10"
+                            ? "bg-card text-[#00ff88] border border-[#00ff88]/40"
+                            : "bg-card text-[#ff3366] border border-[#ff3366]/40"
+                          : "bg-card shadow-sm text-white/50 border border-border"
                       }`}
                     >
                       {t}
@@ -123,7 +123,7 @@ export function TransactionFormSheet({
                   placeholder="Merchant name"
                   value={form.merchant}
                   onChange={(e) => setForm((f) => ({ ...f, merchant: e.target.value }))}
-                  className="w-full bg-white/5 border border-white/10 rounded-2xl py-4 px-4 text-white placeholder:text-white/40 focus:border-[#00d9ff] focus:outline-none"
+                  className="w-full bg-card shadow-sm border border-border rounded-2xl py-4 px-4 text-white placeholder:text-white/40 focus:border-[#00d9ff] focus:outline-none"
                 />
 
                 <input
@@ -136,7 +136,7 @@ export function TransactionFormSheet({
                   onChange={(e) =>
                     setForm((f) => ({ ...f, amount: parseFloat(e.target.value) || 0 }))
                   }
-                  className="w-full bg-white/5 border border-white/10 rounded-2xl py-4 px-4 text-white placeholder:text-white/40 focus:border-[#00d9ff] focus:outline-none"
+                  className="w-full bg-card shadow-sm border border-border rounded-2xl py-4 px-4 text-white placeholder:text-white/40 focus:border-[#00d9ff] focus:outline-none"
                 />
 
                 <div>
@@ -150,7 +150,7 @@ export function TransactionFormSheet({
                         className={`px-3 py-2 rounded-xl text-sm border transition-colors ${
                           form.categoryId === cat.id
                             ? "border-white/30 bg-white/10 text-white"
-                            : "border-white/10 bg-white/5 text-white/50"
+                            : "border-border bg-card shadow-sm text-white/50"
                         }`}
                       >
                         {cat.icon} {cat.label}
@@ -163,7 +163,7 @@ export function TransactionFormSheet({
                   type="datetime-local"
                   value={form.date}
                   onChange={(e) => setForm((f) => ({ ...f, date: e.target.value }))}
-                  className="w-full bg-white/5 border border-white/10 rounded-2xl py-4 px-4 text-white focus:border-[#00d9ff] focus:outline-none"
+                  className="w-full bg-card shadow-sm border border-border rounded-2xl py-4 px-4 text-white focus:border-[#00d9ff] focus:outline-none"
                 />
 
                 <textarea
@@ -171,7 +171,7 @@ export function TransactionFormSheet({
                   value={form.notes}
                   onChange={(e) => setForm((f) => ({ ...f, notes: e.target.value }))}
                   rows={2}
-                  className="w-full bg-white/5 border border-white/10 rounded-2xl py-3 px-4 text-white placeholder:text-white/40 focus:border-[#00d9ff] focus:outline-none resize-none"
+                  className="w-full bg-card shadow-sm border border-border rounded-2xl py-3 px-4 text-white placeholder:text-white/40 focus:border-[#00d9ff] focus:outline-none resize-none"
                 />
 
                 <button

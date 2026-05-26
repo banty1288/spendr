@@ -45,7 +45,7 @@ export function WinsCard({ wins, className = "" }: WinsCardProps) {
       ref={cardRef}
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
-      className={`rounded-2xl border border-white/10 bg-gradient-to-br from-white/5 to-white/[0.02] p-6 backdrop-blur-xl relative ${className}`}
+      className={`rounded-2xl border border-border bg-gradient-to-br from-white/5 to-white/[0.02] p-6  relative ${className}`}
     >
       <div className="flex items-center justify-between mb-6">
         <div className="flex items-center gap-2">
@@ -55,7 +55,7 @@ export function WinsCard({ wins, className = "" }: WinsCardProps) {
         <button
           onClick={handleShare}
           disabled={isSharing}
-          className="bg-white/5 p-2 rounded-full border border-white/10 hover:bg-white/10 transition-colors disabled:opacity-50 no-print"
+          className="bg-card shadow-sm p-2 rounded-full border border-border hover:bg-white/10 transition-colors disabled:opacity-50 no-print"
           title="Share Wins"
         >
           {isSharing ? <Loader2 size={16} className="text-[#ffd60a] animate-spin" /> : <Share2 size={16} className="text-[#ffd60a]" />}
@@ -69,7 +69,7 @@ export function WinsCard({ wins, className = "" }: WinsCardProps) {
             initial={{ opacity: 0, x: -20 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ delay: idx * 0.05 }}
-            className="rounded-lg border border-white/10 bg-white/[0.03] p-4 backdrop-blur-sm hover:border-white/20 transition-colors"
+            className="rounded-lg border border-border bg-white/[0.03] p-4  hover:border-white/20 transition-colors"
           >
             <div className="flex items-start gap-3">
               <div className="flex-shrink-0 mt-1">

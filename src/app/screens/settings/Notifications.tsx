@@ -42,7 +42,7 @@ export function Notifications() {
   };
 
   const NotificationItem = ({ icon: Icon, title, description, id, color }: any) => (
-    <div className="flex items-center justify-between p-5 bg-white/5 border border-white/10 rounded-2xl">
+    <div className="flex items-center justify-between p-5 bg-card shadow-sm border border-border rounded-2xl">
       <div className="flex items-center gap-4">
         <div className={`p-2.5 rounded-xl`} style={{ backgroundColor: `${color}20` }}>
           <Icon size={20} style={{ color }} />
@@ -62,15 +62,15 @@ export function Notifications() {
   return (
     <div className="min-h-screen bg-background pb-safe-nav relative overflow-hidden">
       <div className="absolute inset-0 opacity-20 pointer-events-none">
-        <div className="absolute bottom-0 right-0 w-96 h-96 bg-[#00d9ff]/30 rounded-full blur-[64px] will-change-transform" />
+
       </div>
 
       <div className="relative z-10">
-        <div className="px-6 pt-12 pb-6 sticky top-0 z-50 backdrop-blur-md bg-background/30 border-b border-white/10">
+        <div className="px-6 pt-12 pb-6 sticky top-0 z-50  bg-background/30 border-b border-border">
           <div className="flex items-center gap-4">
             <button
               onClick={() => navigate("/profile")}
-              className="bg-white/5 p-3 rounded-full border border-white/10 hover:bg-white/10 transition-colors"
+              className="bg-card shadow-sm p-3 rounded-full border border-border hover:bg-white/10 transition-colors"
             >
               <ArrowLeft size={20} className="text-white" />
             </button>

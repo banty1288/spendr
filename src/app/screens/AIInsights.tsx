@@ -95,7 +95,7 @@ export function AIInsights() {
                 whileTap={{ scale: 0.9 }}
                 onClick={() => handleGenerate(true)}
                 disabled={isLoading || !canRun}
-                className="bg-white/5 backdrop-blur-sm p-3 rounded-full border border-white/10 disabled:opacity-50 shrink-0"
+                className="bg-card shadow-sm  p-3 rounded-full border border-border disabled:opacity-50 shrink-0"
                 aria-label="Refresh insights"
               >
                 <RefreshCw
@@ -107,7 +107,7 @@ export function AIInsights() {
           </motion.div>
 
           {isStale && hasAnalysis && !isLoading && (
-            <div className="bg-[#ffd60a]/10 border border-[#ffd60a]/30 rounded-2xl px-4 py-3 mb-4 flex items-center justify-between gap-3">
+            <div className="bg-card border border-[#ffd60a]/30 rounded-2xl px-4 py-3 mb-4 flex items-center justify-between gap-3">
               <p className="text-white/80 text-xs flex-1">
                 Transactions changed — refresh analysis for updated insights.
               </p>
@@ -155,12 +155,12 @@ export function AIInsights() {
                 <motion.div
                   initial={{ opacity: 0, scale: 0.97 }}
                   animate={{ opacity: 1, scale: 1 }}
-                  className="bg-gradient-to-br from-[#9d4edd]/15 to-[#00d9ff]/10 border border-[#9d4edd]/30 rounded-3xl p-8 mb-4 text-center"
+                  className="bg-gradient-to-br from-card to-card border border-[#9d4edd]/30 rounded-3xl p-8 mb-4 text-center"
                 >
                   <motion.div
                     animate={{ y: [0, -6, 0] }}
                     transition={{ duration: 3, repeat: Infinity }}
-                    className="inline-flex p-4 bg-[#9d4edd]/20 rounded-3xl mb-5"
+                    className="inline-flex p-4 bg-card rounded-3xl mb-5"
                   >
                     <Brain size={40} className="text-[#9d4edd]" />
                   </motion.div>
@@ -208,9 +208,9 @@ export function AIInsights() {
             <motion.div
               initial={{ opacity: 0, scale: 0.97 }}
               animate={{ opacity: 1, scale: 1 }}
-              className="bg-[#ff3366]/10 border border-[#ff3366]/30 rounded-3xl p-6 mb-4 text-center"
+              className="bg-card border border-[#ff3366]/30 rounded-3xl p-6 mb-4 text-center"
             >
-              <div className="inline-flex p-3 bg-[#ff3366]/20 rounded-2xl mb-3">
+              <div className="inline-flex p-3 bg-card rounded-2xl mb-3">
                 <AlertCircle size={24} className="text-[#ff3366]" />
               </div>
               <p className="text-white/80 text-sm mb-4 leading-relaxed">{errorMessage}</p>
@@ -240,7 +240,7 @@ export function AIInsights() {
             <motion.div
               initial={{ opacity: 0, scale: 0.95 }}
               animate={{ opacity: 1, scale: 1 }}
-              className="bg-gradient-to-br from-[#9d4edd]/20 to-[#c77dff]/20 backdrop-blur-sm p-6 rounded-3xl border border-[#9d4edd]/30 mb-6 relative overflow-hidden"
+              className="bg-gradient-to-br from-card to-card  p-6 rounded-3xl border border-[#9d4edd]/30 mb-6 relative overflow-hidden"
             >
               <div className="relative">
                 <div className="flex items-center gap-3 mb-4">
@@ -259,7 +259,7 @@ export function AIInsights() {
                 <p className="text-white/90 leading-relaxed mb-3 text-sm">
                   {hero?.summary}
                 </p>
-                <div className="flex items-center gap-4 pt-3 border-t border-white/10">
+                <div className="flex items-center gap-4 pt-3 border-t border-border">
                   <div>
                     <p className="text-white/50 text-xs">Financial Health</p>
                     <p className="text-[#00ff88] font-black text-2xl">
@@ -300,7 +300,7 @@ export function AIInsights() {
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ delay: index * 0.08 }}
-                    className="bg-white/5 backdrop-blur-sm p-5 rounded-3xl border border-white/10"
+                    className="bg-card shadow-sm  p-5 rounded-3xl border border-border"
                   >
                     <div className="flex items-start gap-4">
                       <div
@@ -362,7 +362,7 @@ export function AIInsights() {
                   {analysis!.emotionalSpending.triggers.map((t) => (
                     <span
                       key={t}
-                      className="px-3 py-1 rounded-full bg-[#9d4edd]/20 text-[#c77dff] text-xs"
+                      className="px-3 py-1 rounded-full bg-card text-[#c77dff] text-xs"
                     >
                       {t}
                     </span>
@@ -431,7 +431,7 @@ export function AIInsights() {
                 type="button"
                 onClick={() => handleGenerate(true)}
                 disabled={isLoading || !canRun}
-                className="w-full bg-white/5 border border-white/10 text-white py-3 rounded-2xl font-medium text-sm disabled:opacity-50"
+                className="w-full bg-card shadow-sm border border-border text-white py-3 rounded-2xl font-medium text-sm disabled:opacity-50"
               >
                 Regenerate analysis
               </button>

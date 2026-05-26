@@ -9,9 +9,9 @@ interface ImprovementGoalsCardProps {
 }
 
 const priorityColors: Record<string, string> = {
-  high: "from-[#ff3366]/20 to-transparent border-[#ff3366]/30",
-  medium: "from-[#ffd60a]/20 to-transparent border-[#ffd60a]/30",
-  low: "from-[#00ff88]/20 to-transparent border-[#00ff88]/30",
+  high: "from-card to-transparent border-[#ff3366]/30",
+  medium: "from-card to-transparent border-[#ffd60a]/30",
+  low: "from-card to-transparent border-[#00ff88]/30",
 };
 
 const priorityIcons: Record<string, React.ReactNode> = {
@@ -31,7 +31,7 @@ export function ImprovementGoalsCard({ goals, className = "" }: ImprovementGoals
     <motion.div
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
-      className={`rounded-2xl border border-white/10 bg-gradient-to-br from-white/5 to-white/[0.02] p-6 backdrop-blur-xl ${className}`}
+      className={`rounded-2xl border border-border bg-gradient-to-br from-white/5 to-white/[0.02] p-6  ${className}`}
     >
       <div className="flex items-center gap-2 mb-6">
         <Target size={20} className="text-[#00d9ff]" />
@@ -45,7 +45,7 @@ export function ImprovementGoalsCard({ goals, className = "" }: ImprovementGoals
             initial={{ opacity: 0, x: -20 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ delay: idx * 0.05 }}
-            className={`rounded-lg border bg-gradient-to-r ${priorityColors[goal.priority]} p-4 backdrop-blur-sm`}
+            className={`rounded-lg border bg-gradient-to-r ${priorityColors[goal.priority]} p-4 `}
           >
             <div className="flex items-start gap-3">
               <div className="flex-shrink-0 mt-1">

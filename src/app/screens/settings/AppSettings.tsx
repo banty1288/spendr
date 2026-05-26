@@ -42,11 +42,11 @@ export function AppSettings() {
   return (
     <div className="min-h-screen bg-background pb-safe-nav relative overflow-hidden">
       <div className="relative z-10">
-        <div className="px-6 pt-12 pb-6 sticky top-0 z-50 backdrop-blur-md bg-background/30 border-b border-white/10">
+        <div className="px-6 pt-12 pb-6 sticky top-0 z-50  bg-background/30 border-b border-border">
           <div className="flex items-center gap-4">
             <button
               onClick={() => navigate("/profile")}
-              className="bg-white/5 p-3 rounded-full border border-white/10 hover:bg-white/10 transition-colors"
+              className="bg-card shadow-sm p-3 rounded-full border border-border hover:bg-white/10 transition-colors"
             >
               <ArrowLeft size={20} className="text-white" />
             </button>
@@ -57,9 +57,9 @@ export function AppSettings() {
         <div className="px-6 mt-6 max-w-2xl mx-auto space-y-6">
           <div className="space-y-4">
             
-            <div className="p-5 bg-white/5 border border-white/10 rounded-2xl space-y-4">
-              <div className="flex items-center gap-4 border-b border-white/10 pb-4">
-                <div className="p-2.5 rounded-xl bg-[#9d4edd]/20">
+            <div className="p-5 bg-card shadow-sm border border-border rounded-2xl space-y-4">
+              <div className="flex items-center gap-4 border-b border-border pb-4">
+                <div className="p-2.5 rounded-xl bg-card">
                   <Palette size={20} className="text-[#9d4edd]" />
                 </div>
                 <div className="flex-1">
@@ -67,7 +67,7 @@ export function AppSettings() {
                   <select 
                     value={theme} 
                     onChange={(e) => { setTheme(e.target.value); saveSetting("theme", e.target.value); }}
-                    className="mt-2 w-full bg-background/50 border border-white/10 rounded-xl px-4 py-3 text-white appearance-none focus:outline-none focus:border-[#9d4edd]"
+                    className="mt-2 w-full bg-background/50 border border-border rounded-xl px-4 py-3 text-white appearance-none focus:outline-none focus:border-[#9d4edd]"
                   >
                     <option value="dark">Dark Mode (Premium)</option>
                     <option value="light">Light Mode</option>
@@ -76,8 +76,8 @@ export function AppSettings() {
                 </div>
               </div>
 
-              <div className="flex items-center gap-4 border-b border-white/10 pb-4">
-                <div className="p-2.5 rounded-xl bg-[#ff3366]/20">
+              <div className="flex items-center gap-4 border-b border-border pb-4">
+                <div className="p-2.5 rounded-xl bg-card">
                   <Globe size={20} className="text-[#ff3366]" />
                 </div>
                 <div className="flex-1">
@@ -85,7 +85,7 @@ export function AppSettings() {
                   <select 
                     value={currency} 
                     onChange={(e) => { setCurrency(e.target.value); saveSetting("currency", e.target.value); }}
-                    className="mt-2 w-full bg-background/50 border border-white/10 rounded-xl px-4 py-3 text-white appearance-none focus:outline-none focus:border-[#ff3366]"
+                    className="mt-2 w-full bg-background/50 border border-border rounded-xl px-4 py-3 text-white appearance-none focus:outline-none focus:border-[#ff3366]"
                   >
                     <option value="USD">USD ($)</option>
                     <option value="EUR">EUR (€)</option>

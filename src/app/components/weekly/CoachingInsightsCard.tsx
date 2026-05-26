@@ -20,7 +20,7 @@ export function CoachingInsightsCard({
       className={`space-y-6 ${className}`}
     >
       {/* Main Coaching Message */}
-      <div className="rounded-2xl border border-[#9d4edd]/20 bg-gradient-to-br from-[#9d4edd]/10 to-white/[0.02] p-6 backdrop-blur-xl">
+      <div className="rounded-2xl border border-[#9d4edd]/20 bg-gradient-to-br from-card to-white/[0.02] p-6 ">
         <div className="flex items-start gap-3">
           <MessageCircle size={20} className="text-[#9d4edd] flex-shrink-0 mt-1" />
           <div>
@@ -39,7 +39,7 @@ export function CoachingInsightsCard({
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: idx * 0.05 }}
-              className="rounded-xl border border-white/10 bg-white/[0.03] p-4 backdrop-blur-sm hover:border-white/20 transition-colors"
+              className="rounded-xl border border-border bg-white/[0.03] p-4  hover:border-white/20 transition-colors"
             >
               <div className="flex items-start gap-3">
                 <span className="text-xl flex-shrink-0">{insight.emoji || "💡"}</span>

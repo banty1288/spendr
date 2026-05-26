@@ -15,11 +15,11 @@ export function Splash() {
 
   return (
     <div className="h-screen flex items-center justify-center relative overflow-hidden">
-      <div className="absolute inset-0 bg-gradient-to-br from-[#00d9ff]/10 via-black to-[#00ff88]/10" />
+      <div className="absolute inset-0 bg-gradient-to-br from-card via-black to-card" />
 
       <div className="absolute inset-0 opacity-30">
         <motion.div
-          className="absolute top-20 left-10 w-64 h-64 bg-[#00d9ff]/20 rounded-full blur-[100px]"
+          className="absolute top-20 left-10 w-64 h-64 bg-card rounded-full hidden"
           animate={{
             scale: [1, 1.3, 1],
             x: [0, 30, 0],
@@ -28,7 +28,7 @@ export function Splash() {
           transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }}
         />
         <motion.div
-          className="absolute bottom-20 right-10 w-64 h-64 bg-[#00ff88]/20 rounded-full blur-[100px]"
+          className="absolute bottom-20 right-10 w-64 h-64 bg-card rounded-full hidden"
           animate={{
             scale: [1, 1.4, 1],
             x: [0, -30, 0],
@@ -37,7 +37,7 @@ export function Splash() {
           transition={{ duration: 7, repeat: Infinity, ease: "easeInOut" }}
         />
         <motion.div
-          className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-[#9d4edd]/15 rounded-full blur-[64px] will-change-transform"
+          className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-card rounded-full hidden"
           animate={{
             rotate: [0, 360],
             scale: [1, 1.2, 1],

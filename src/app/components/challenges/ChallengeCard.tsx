@@ -44,7 +44,7 @@ export function ChallengeCard({ challenge, onUpdateProgress }: ChallengeCardProp
       initial={{ opacity: 0, y: 15 }}
       animate={{ opacity: 1, y: 0 }}
       exit={{ opacity: 0, scale: 0.95 }}
-      className={`bg-white/5 backdrop-blur-sm p-5 rounded-3xl border border-white/10 relative overflow-hidden group ${isCompleted ? 'opacity-50' : ''}`}
+      className={`bg-card shadow-sm  p-5 rounded-3xl border border-border relative overflow-hidden group ${isCompleted ? 'opacity-50' : ''}`}
     >
       <div
         className="absolute top-0 right-0 w-32 h-32 rounded-full blur-3xl opacity-10 transition-transform duration-1000 group-hover:scale-150"
@@ -52,7 +52,7 @@ export function ChallengeCard({ challenge, onUpdateProgress }: ChallengeCardProp
       />
       
       {isCompleted && (
-        <div className="absolute inset-0 bg-gradient-to-br from-[#00ff88]/10 to-transparent z-10 flex items-center justify-center backdrop-blur-[2px]">
+        <div className="absolute inset-0 bg-gradient-to-br from-card to-transparent z-10 flex items-center justify-center ">
           <motion.div
             initial={{ scale: 0 }}
             animate={{ scale: 1 }}
@@ -76,7 +76,7 @@ export function ChallengeCard({ challenge, onUpdateProgress }: ChallengeCardProp
             <p className="text-white/60 text-sm line-clamp-2">{t(`challenges.${challenge.id}_desc`, challenge.description)}</p>
           </div>
           <div className="text-right shrink-0">
-            <div className="flex items-center gap-1 bg-[#ffd60a]/20 px-2 py-1 rounded-full">
+            <div className="flex items-center gap-1 bg-card px-2 py-1 rounded-full">
               <Zap size={12} className="text-[#ffd60a]" />
               <span className="text-[#ffd60a] text-xs font-bold">+{challenge.rewardXp}</span>
             </div>
@@ -96,7 +96,7 @@ export function ChallengeCard({ challenge, onUpdateProgress }: ChallengeCardProp
             </span>
           </div>
           
-          <div className="relative h-2 bg-white/5 rounded-full overflow-hidden">
+          <div className="relative h-2 bg-card shadow-sm rounded-full overflow-hidden">
             <motion.div
               initial={{ width: 0 }}
               animate={{ width: `${progressPercent}%` }}

@@ -46,7 +46,7 @@ export function PageShell({ children, orbs, className = "", extraPad = false }: 
             key={i}
             animate={{ scale: [1, 1.12, 1], opacity: [0.18, 0.25, 0.18] }}
             transition={{ duration: 14 + i * 4, repeat: Infinity, ease: "easeInOut" }}
-            className={`${orbClasses[orb.position]} w-72 h-72 sm:w-96 sm:h-96 rounded-full blur-[110px]`}
+            className={`${orbClasses[orb.position]} w-72 h-72 sm:w-96 sm:h-96 rounded-full hidden`}
             style={{ backgroundColor: orb.color }}
           />
         ))}

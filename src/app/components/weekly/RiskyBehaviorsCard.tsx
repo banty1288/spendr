@@ -26,7 +26,7 @@ export function RiskyBehaviorsCard({ behaviors, className = "" }: RiskyBehaviors
     <motion.div
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
-      className={`rounded-2xl border border-[#ff3366]/20 bg-gradient-to-br from-[#ff3366]/5 to-white/[0.02] p-6 backdrop-blur-xl ${className}`}
+      className={`rounded-2xl border border-[#ff3366]/20 bg-gradient-to-br from-card to-white/[0.02] p-6  ${className}`}
     >
       <div className="flex items-center gap-2 mb-6">
         <AlertTriangle size={20} className="text-[#ff3366]" />
@@ -40,7 +40,7 @@ export function RiskyBehaviorsCard({ behaviors, className = "" }: RiskyBehaviors
             initial={{ opacity: 0, x: -20 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ delay: idx * 0.05 }}
-            className="rounded-lg border border-[#ff3366]/20 bg-[#ff3366]/[0.05] p-4 backdrop-blur-sm"
+            className="rounded-lg border border-[#ff3366]/20 bg-[#ff3366]/[0.05] p-4 "
           >
             <div className="flex items-start gap-3">
               <div className="flex-shrink-0 mt-1">

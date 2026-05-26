@@ -24,14 +24,13 @@ export function ErrorFallback({
   return (
     <div className="min-h-screen flex items-center justify-center bg-background p-6">
       <div className="max-w-[430px] w-full min-h-screen flex flex-col items-center justify-center relative overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-br from-[#00d9ff]/10 via-black to-[#00ff88]/10" />
-        <div className="absolute top-16 left-4 w-48 h-48 bg-[#00d9ff]/15 rounded-full blur-[80px]" />
-        <div className="absolute bottom-24 right-4 w-48 h-48 bg-[#00ff88]/15 rounded-full blur-[80px]" />
+        <div className="absolute inset-0 bg-gradient-to-br from-card via-black to-card" />
+
 
         <div className="relative z-10 w-full flex flex-col items-center text-center px-4">
           <div className="relative mb-6">
             <div className="absolute inset-0 bg-gradient-to-br from-[#00d9ff] to-[#00ff88] rounded-2xl blur-lg opacity-40" />
-            <div className="relative bg-gradient-to-br from-[#00d9ff]/20 to-[#00ff88]/20 border border-white/10 p-5 rounded-2xl">
+            <div className="relative bg-gradient-to-br from-card to-card border border-border p-5 rounded-2xl">
               {aiError ? (
                 <Brain size={40} className="text-[#00d9ff] mx-auto" />
               ) : (
@@ -64,7 +63,7 @@ export function ErrorFallback({
             <button
               type="button"
               onClick={onReload}
-              className="w-full px-6 py-3 rounded-xl border border-white/15 text-white/80 text-sm hover:bg-white/5 transition-colors"
+              className="w-full px-6 py-3 rounded-xl border border-white/15 text-white/80 text-sm hover:bg-card shadow-sm transition-colors"
             >
               Reload app
             </button>
@@ -75,7 +74,7 @@ export function ErrorFallback({
               <summary className="text-white/40 text-xs cursor-pointer hover:text-white/60">
                 Developer details
               </summary>
-              <div className="mt-3 p-3 rounded-lg bg-white/5 border border-white/10 overflow-auto max-h-48">
+              <div className="mt-3 p-3 rounded-lg bg-card shadow-sm border border-border overflow-auto max-h-48">
                 <p className="text-[#00d9ff] text-xs font-mono mb-2">
                   {error.name}: {error.message}
                 </p>
@@ -85,7 +84,7 @@ export function ErrorFallback({
                   </pre>
                 )}
                 {componentStack && (
-                  <pre className="text-white/40 text-[10px] font-mono whitespace-pre-wrap break-words mt-3 pt-3 border-t border-white/10">
+                  <pre className="text-white/40 text-[10px] font-mono whitespace-pre-wrap break-words mt-3 pt-3 border-t border-border">
                     {componentStack}
                   </pre>
                 )}

@@ -17,7 +17,7 @@ export function TrendsSummaryCard({
     <motion.div
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
-      className={`rounded-2xl border border-white/10 bg-gradient-to-br from-white/5 to-white/[0.02] p-6 backdrop-blur-xl ${className}`}
+      className={`rounded-2xl border border-border bg-gradient-to-br from-white/5 to-white/[0.02] p-6  ${className}`}
     >
       <h3 className="text-lg font-semibold text-white mb-4">Weekly Trends</h3>
 
@@ -43,7 +43,7 @@ export function TrendsSummaryCard({
                 initial={{ opacity: 0, x: -20 }}
                 animate={{ opacity: 1, x: 0 }}
                 transition={{ delay: idx * 0.05 }}
-                className="flex items-center justify-between p-3 rounded-lg border border-white/10 bg-white/[0.03] hover:border-white/20 transition-colors"
+                className="flex items-center justify-between p-3 rounded-lg border border-border bg-white/[0.03] hover:border-white/20 transition-colors"
               >
                 <div className="flex items-center gap-3">
                   {icon}

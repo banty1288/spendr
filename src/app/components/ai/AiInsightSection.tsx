@@ -18,7 +18,7 @@ export function AiInsightSection({
       initial={{ opacity: 0, y: 16 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ delay }}
-      className="bg-white/5 backdrop-blur-sm p-5 rounded-3xl border border-white/10 mb-4"
+      className="bg-card shadow-sm  p-5 rounded-3xl border border-border mb-4"
     >
       <h3
         className="text-white font-bold mb-3 text-sm uppercase tracking-wide"

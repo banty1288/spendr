@@ -16,7 +16,7 @@ export function SpendingTrendWidget({ monthlyData, totalSpending, isLoading }: S
 
   if (isLoading) {
     return (
-      <div className="bg-white/5 backdrop-blur-sm p-5 rounded-3xl border border-white/10 mb-6 animate-pulse">
+      <div className="bg-card shadow-sm  p-5 rounded-3xl border border-border mb-6 animate-pulse">
         <div className="flex justify-between mb-4">
           <div className="h-4 w-24 bg-white/10 rounded-full" />
           <div className="h-4 w-12 bg-white/10 rounded-full" />
@@ -32,7 +32,7 @@ export function SpendingTrendWidget({ monthlyData, totalSpending, isLoading }: S
     <motion.div
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
-      className="bg-white/5 backdrop-blur-sm p-5 rounded-3xl border border-white/10 mb-6"
+      className="bg-card shadow-sm  p-5 rounded-3xl border border-border mb-6"
     >
       <div className="flex items-center justify-between mb-4">
         <div>
@@ -44,7 +44,7 @@ export function SpendingTrendWidget({ monthlyData, totalSpending, isLoading }: S
         </div>
         <button 
           onClick={() => navigate("/analytics")}
-          className="bg-white/5 hover:bg-white/10 text-white/70 p-2 rounded-full transition-colors"
+          className="bg-card shadow-sm hover:bg-white/10 text-white/70 p-2 rounded-full transition-colors"
         >
           <ArrowRight size={16} />
         </button>

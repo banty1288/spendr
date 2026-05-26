@@ -13,7 +13,7 @@ export function HealthScoreCard({ financialLevel, isLoading }: HealthScoreCardPr
 
   if (isLoading || !financialLevel) {
     return (
-      <div className="bg-white/5 backdrop-blur-sm p-5 rounded-3xl border border-white/10 mb-6 relative overflow-hidden animate-pulse">
+      <div className="bg-card shadow-sm  p-5 rounded-3xl border border-border mb-6 relative overflow-hidden animate-pulse">
         <div className="h-6 w-32 bg-white/10 rounded-full mb-4" />
         <div className="h-4 w-full bg-white/10 rounded-full mb-3" />
         <div className="flex justify-between">
@@ -36,9 +36,9 @@ export function HealthScoreCard({ financialLevel, isLoading }: HealthScoreCardPr
       whileHover={{ scale: 1.02 }}
       transition={{ delay: 0.1 }}
       onClick={() => navigate("/gamification")}
-      className="bg-white/5 backdrop-blur-sm p-5 rounded-3xl border border-white/10 mb-6 cursor-pointer group relative overflow-hidden"
+      className="bg-card shadow-sm  p-5 rounded-3xl border border-border mb-6 cursor-pointer group relative overflow-hidden"
     >
-      <div className="absolute -right-4 -top-4 w-24 h-24 bg-[#00ff88]/10 rounded-full blur-2xl" />
+      <div className="absolute -right-4 -top-4 w-24 h-24 bg-card rounded-full blur-2xl" />
       <div className="relative">
         <div className="flex items-center justify-between mb-4">
           <div className="flex items-center gap-2">
@@ -55,7 +55,7 @@ export function HealthScoreCard({ financialLevel, isLoading }: HealthScoreCardPr
           </div>
         </div>
         
-        <div className="relative h-4 bg-white/5 rounded-full overflow-hidden mb-3">
+        <div className="relative h-4 bg-card shadow-sm rounded-full overflow-hidden mb-3">
           <motion.div
             initial={{ width: 0 }}
             animate={{ width: `${progressPercent}%` }}

@@ -74,9 +74,9 @@ export function Profile() {
         <motion.div
           initial={{ opacity: 0, scale: 0.95 }}
           animate={{ opacity: 1, scale: 1 }}
-          className="bg-gradient-to-br from-[#00d9ff]/10 to-[#00ff88]/10 backdrop-blur-sm p-6 rounded-3xl border border-white/10 mb-6 relative overflow-hidden"
+          className="bg-gradient-to-br from-card to-card  p-6 rounded-3xl border border-border mb-6 relative overflow-hidden"
         >
-          <div className="absolute inset-0 bg-gradient-to-br from-[#00d9ff]/5 to-transparent" />
+          <div className="absolute inset-0 bg-gradient-to-br from-card to-transparent" />
           <div className="relative flex items-center gap-4 mb-6">
             <div className="flex flex-col items-center mt-6">
               <div className="relative">
@@ -121,7 +121,7 @@ export function Profile() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.1 + sectionIndex * 0.1 }}
-            className="bg-white/5 backdrop-blur-sm rounded-3xl border border-white/10 mb-4 overflow-hidden"
+            className="bg-card shadow-sm  rounded-3xl border border-border mb-4 overflow-hidden"
           >
             {section.items.map((item, index) => {
               const Icon = item.icon;
@@ -133,8 +133,8 @@ export function Profile() {
                   transition={{ delay: 0.2 + sectionIndex * 0.1 + index * 0.05 }}
                   onClick={() => item.path && navigate(item.path)}
                   className={`w-full flex items-center gap-4 p-5 transition-colors ${
-                    index !== section.items.length - 1 ? "border-b border-white/10" : ""
-                  } hover:bg-white/5`}
+                    index !== section.items.length - 1 ? "border-b border-border" : ""
+                  } hover:bg-card shadow-sm`}
                 >
                   <div className="p-2.5 rounded-xl bg-white/10">
                     <Icon size={20} className="text-white/80" />
@@ -156,9 +156,9 @@ export function Profile() {
           transition={{ delay: 0.4 }}
           onClick={() => logout()}
           disabled={isLoggingOut}
-          className="w-full bg-white/5 backdrop-blur-sm rounded-3xl border border-white/10 p-5 flex items-center gap-4 hover:bg-white/10 transition-colors disabled:opacity-60 disabled:cursor-not-allowed"
+          className="w-full bg-card shadow-sm  rounded-3xl border border-border p-5 flex items-center gap-4 hover:bg-white/10 transition-colors disabled:opacity-60 disabled:cursor-not-allowed"
         >
-          <div className="p-2.5 rounded-xl bg-[#ff3366]/20">
+          <div className="p-2.5 rounded-xl bg-card">
             {isLoggingOut ? (
               <Loader2 size={20} className="text-[#ff3366] animate-spin" />
             ) : (

@@ -28,7 +28,7 @@ export function TransactionCard({
       layout
       initial={{ opacity: 0, y: 8 }}
       animate={{ opacity: 1, y: 0 }}
-      className="bg-white/5 backdrop-blur-sm rounded-2xl border border-white/10 p-4 flex items-center gap-3"
+      className="bg-card shadow-sm  rounded-2xl border border-border p-4 flex items-center gap-3"
     >
       <div
         className="w-12 h-12 rounded-2xl flex items-center justify-center text-xl shrink-0"
@@ -60,7 +60,7 @@ export function TransactionCard({
         <button
           type="button"
           onClick={onEdit}
-          className="p-2 rounded-xl bg-white/5 border border-white/10 hover:bg-white/10 transition-colors"
+          className="p-2 rounded-xl bg-card shadow-sm border border-border hover:bg-white/10 transition-colors"
           aria-label="Edit transaction"
         >
           <Pencil size={14} className="text-white/70" />
@@ -69,7 +69,7 @@ export function TransactionCard({
           type="button"
           onClick={onDelete}
           disabled={isDeleting}
-          className="p-2 rounded-xl bg-[#ff3366]/10 border border-[#ff3366]/20 hover:bg-[#ff3366]/20 transition-colors disabled:opacity-50"
+          className="p-2 rounded-xl bg-card border border-[#ff3366]/20 hover:bg-card transition-colors disabled:opacity-50"
           aria-label="Delete transaction"
         >
           <Trash2 size={14} className="text-[#ff3366]" />

@@ -23,7 +23,7 @@ export function TransactionFiltersBar({
           placeholder="Search merchant or notes…"
           value={filters.search}
           onChange={(e) => onChange({ search: e.target.value })}
-          className="w-full bg-white/5 border border-white/10 rounded-2xl py-3 pl-11 pr-4 text-white text-sm placeholder:text-white/40 focus:border-[#00d9ff] focus:outline-none"
+          className="w-full bg-card shadow-sm border border-border rounded-2xl py-3 pl-11 pr-4 text-white text-sm placeholder:text-white/40 focus:border-[#00d9ff] focus:outline-none"
         />
       </div>
 
@@ -35,8 +35,8 @@ export function TransactionFiltersBar({
             onClick={() => onChange({ type: t })}
             className={`shrink-0 px-4 py-2 rounded-full text-xs font-medium capitalize ${
               filters.type === t
-                ? "bg-[#00d9ff]/20 text-[#00d9ff] border border-[#00d9ff]/40"
-                : "bg-white/5 text-white/50 border border-white/10"
+                ? "bg-card text-[#00d9ff] border border-[#00d9ff]/40"
+                : "bg-card shadow-sm text-white/50 border border-border"
             }`}
           >
             {t}
@@ -51,7 +51,7 @@ export function TransactionFiltersBar({
           className={`shrink-0 px-3 py-1.5 rounded-full text-xs ${
             filters.categoryId === "all"
               ? "bg-white/15 text-white border border-white/20"
-              : "bg-white/5 text-white/50 border border-white/10"
+              : "bg-card shadow-sm text-white/50 border border-border"
           }`}
         >
           All categories
@@ -64,7 +64,7 @@ export function TransactionFiltersBar({
             className={`shrink-0 px-3 py-1.5 rounded-full text-xs ${
               filters.categoryId === cat.id
                 ? "bg-white/15 text-white border border-white/20"
-                : "bg-white/5 text-white/50 border border-white/10"
+                : "bg-card shadow-sm text-white/50 border border-border"
             }`}
           >
             {cat.icon} {cat.label}
@@ -75,7 +75,7 @@ export function TransactionFiltersBar({
       <select
         value={filters.month}
         onChange={(e) => onChange({ month: e.target.value })}
-        className="w-full bg-white/5 border border-white/10 rounded-2xl py-3 px-4 text-white text-sm focus:border-[#00d9ff] focus:outline-none"
+        className="w-full bg-card shadow-sm border border-border rounded-2xl py-3 px-4 text-white text-sm focus:border-[#00d9ff] focus:outline-none"
       >
         <option value="all" className="bg-[#0a0a14]">
           All months

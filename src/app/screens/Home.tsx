@@ -80,17 +80,17 @@ export function Home() {
         <motion.div
           animate={{ x: [0, 50, 0], y: [0, -30, 0] }}
           transition={{ duration: 20, repeat: Infinity, ease: "easeInOut" }}
-          className="absolute top-0 right-0 w-80 h-80 bg-[#00d9ff]/30 rounded-full blur-[64px] will-change-transform"
+          className="absolute top-0 right-0 w-80 h-80 bg-card rounded-full hidden"
         />
         <motion.div
           animate={{ x: [0, -30, 0], y: [0, 50, 0] }}
           transition={{ duration: 25, repeat: Infinity, ease: "easeInOut" }}
-          className="absolute bottom-40 left-0 w-80 h-80 bg-[#00ff88]/30 rounded-full blur-[64px] will-change-transform"
+          className="absolute bottom-40 left-0 w-80 h-80 bg-card rounded-full hidden"
         />
         <motion.div
           animate={{ scale: [1, 1.2, 1], opacity: [0.15, 0.25, 0.15] }}
           transition={{ duration: 15, repeat: Infinity, ease: "easeInOut" }}
-          className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-[#9d4edd]/20 rounded-full blur-[80px] will-change-transform"
+          className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-card rounded-full hidden"
         />
       </div>
 
@@ -112,7 +112,7 @@ export function Home() {
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
               onClick={() => navigate("/gamification")}
-              className="flex items-center gap-1.5 bg-gradient-to-r from-[#ff6b35]/20 to-[#f7931e]/20 px-3 py-2 rounded-full border border-[#ff6b35]/30 cursor-pointer"
+              className="flex items-center gap-1.5 bg-gradient-to-r from-card to-card px-3 py-2 rounded-full border border-[#ff6b35]/30 cursor-pointer"
             >
               <motion.div
                 animate={{ rotate: [0, 5, -5, 0] }}
@@ -134,15 +134,15 @@ export function Home() {
           animate={{ opacity: 1, scale: 1 }}
           whileHover={{ scale: 1.02 }}
           transition={{ delay: 0.1 }}
-          className="bg-gradient-to-br from-[#00d9ff]/10 to-[#00ff88]/10 backdrop-blur-sm p-6 rounded-3xl border border-white/10 mb-6 relative overflow-hidden cursor-pointer group"
+          className="bg-gradient-to-br from-card to-card  p-6 rounded-3xl border border-border mb-6 relative overflow-hidden cursor-pointer group"
           onClick={() => navigate("/transactions")}
         >
           <motion.div
-            className="absolute inset-0 bg-gradient-to-br from-[#00d9ff]/5 to-[#00ff88]/5"
+            className="absolute inset-0 bg-gradient-to-br from-card to-card"
             animate={{ opacity: [0.5, 0.8, 0.5] }}
             transition={{ duration: 3, repeat: Infinity }}
           />
-          <div className="absolute top-0 right-0 w-40 h-40 bg-[#00d9ff]/20 rounded-full blur-3xl group-hover:bg-[#00d9ff]/30 transition-colors" />
+          <div className="absolute top-0 right-0 w-40 h-40 bg-card rounded-full blur-3xl group-hover:bg-card transition-colors" />
           <div className="relative">
             <div className="flex items-center justify-between mb-2">
               <p className="text-white/60 mb-2">{t("home.totalBalance")}</p>
@@ -164,7 +164,7 @@ export function Home() {
             <p className="text-white/50 text-xs mb-4">{t("home.liveBalance", "Live balance from your transactions")}</p>
             <div className="flex items-center gap-4 flex-wrap">
               <div className="flex items-center gap-2">
-                <div className="bg-[#00ff88]/20 p-2 rounded-xl">
+                <div className="bg-card p-2 rounded-xl">
                   <TrendingUp size={16} className="text-[#00ff88]" />
                 </div>
                 <div>
@@ -174,7 +174,7 @@ export function Home() {
               </div>
               <div className="w-px h-8 bg-white/10 hidden sm:block" />
               <div className="flex items-center gap-2">
-                <div className="bg-[#ff3366]/20 p-2 rounded-xl">
+                <div className="bg-card p-2 rounded-xl">
                   <TrendingDown size={16} className="text-[#ff3366]" />
                 </div>
                 <div>
@@ -226,7 +226,7 @@ export function Home() {
               <button
                 type="button"
                 onClick={() => navigate("/transactions")}
-                className="w-full bg-white/5 border border-dashed border-white/20 rounded-2xl py-8 text-[#00d9ff] text-sm font-medium"
+                className="w-full bg-card shadow-sm border border-dashed border-white/20 rounded-2xl py-8 text-[#00d9ff] text-sm font-medium"
               >
                 + {t("home.addTransaction")}
               </button>
@@ -243,8 +243,8 @@ export function Home() {
                   animate={{ opacity: 1, x: 0 }}
                   whileHover={{ scale: 1.02, x: 4 }}
                   transition={{ delay: 0.5 + index * 0.1 }}
-                  className={`w-full bg-white/5 backdrop-blur-sm p-4 rounded-2xl border ${
-                    isIncome ? "border-[#00ff88]/20" : "border-white/10"
+                  className={`w-full bg-card shadow-sm  p-4 rounded-2xl border ${
+                    isIncome ? "border-[#00ff88]/20" : "border-border"
                   } flex items-center gap-4 text-left group relative overflow-hidden`}
                 >
                   <div className="text-3xl">{cat.icon}</div>

@@ -3,11 +3,11 @@ import { useTranslation } from "react-i18next";
 import type { AchievementStatus } from "../../types/achievement";
 
 const rarityStyles: Record<AchievementStatus["rarity"], string> = {
-  common: "from-white/5 to-white/10 border-white/10",
-  uncommon: "from-[#00d9ff]/10 to-[#00d9ff]/20 border-[#00d9ff]/30",
-  rare: "from-[#9d4edd]/10 to-[#9d4edd]/20 border-[#9d4edd]/30",
-  epic: "from-[#ff9500]/10 to-[#ff9500]/20 border-[#ff9500]/30",
-  legendary: "from-[#ffd60a]/10 to-[#ffd60a]/20 border-[#ffd60a]/30",
+  common: "from-white/5 to-white/10 border-border",
+  uncommon: "from-card to-card border-[#00d9ff]/30",
+  rare: "from-card to-card border-[#9d4edd]/30",
+  epic: "from-card to-card border-[#ff9500]/30",
+  legendary: "from-card to-card border-[#ffd60a]/30",
 };
 
 export function AchievementBadgeCard({ achievement }: { achievement: AchievementStatus }) {
@@ -29,7 +29,7 @@ export function AchievementBadgeCard({ achievement }: { achievement: Achievement
           className={`rounded-full px-2 py-1 text-[10px] font-semibold uppercase tracking-[0.2em] ${
             achievement.earned
               ? "bg-white/10 text-[#fff]"
-              : "bg-white/5 text-white/60"
+              : "bg-card shadow-sm text-white/60"
           }`}
         >
           {achievement.rarity}

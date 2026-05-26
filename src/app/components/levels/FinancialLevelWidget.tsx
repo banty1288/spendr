@@ -12,7 +12,7 @@ export function FinancialLevelWidget({ level }: FinancialLevelWidgetProps) {
       initial={{ opacity: 0, y: 18 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5 }}
-      className="rounded-3xl border border-white/10 bg-gradient-to-br from-[#080808] via-[#0f1115] to-[#0b0b0b] p-5 shadow-sm shadow-[#00ff88]/10"
+      className="rounded-3xl border border-border bg-gradient-to-br from-[#080808] via-[#0f1115] to-[#0b0b0b] p-5 shadow-sm shadow-[#00ff88]/10"
     >
       <div className="flex items-center justify-between gap-4 mb-5">
         <div>
@@ -20,7 +20,7 @@ export function FinancialLevelWidget({ level }: FinancialLevelWidgetProps) {
             Financial Level
           </p>
           <div className="flex items-center gap-3">
-            <div className="rounded-2xl bg-[#00ff88]/10 p-3">
+            <div className="rounded-2xl bg-card p-3">
               <Trophy size={24} className="text-[#00ff88]" />
             </div>
             <div>
@@ -29,7 +29,7 @@ export function FinancialLevelWidget({ level }: FinancialLevelWidgetProps) {
             </div>
           </div>
         </div>
-        <div className="rounded-3xl bg-white/5 px-3 py-2 text-right">
+        <div className="rounded-3xl bg-card shadow-sm px-3 py-2 text-right">
           <p className="text-white/60 text-[11px] uppercase tracking-[0.18em]">XP</p>
           <p className="text-white text-lg font-semibold">{level.totalXp.toLocaleString()}</p>
         </div>
@@ -50,7 +50,7 @@ export function FinancialLevelWidget({ level }: FinancialLevelWidgetProps) {
         </div>
       </div>
 
-      <div className="mt-5 rounded-3xl border border-white/10 bg-background/20 p-4">
+      <div className="mt-5 rounded-3xl border border-border bg-background/20 p-4">
         <div className="flex items-center justify-between gap-3 mb-3">
           <div>
             <p className="text-white/60 text-[11px] uppercase tracking-[0.24em]">
@@ -69,14 +69,14 @@ export function FinancialLevelWidget({ level }: FinancialLevelWidgetProps) {
         {level.recentGains.map((gain) => (
           <div
             key={gain.id}
-            className="rounded-3xl bg-white/5 border border-white/10 p-3"
+            className="rounded-3xl bg-card shadow-sm border border-border p-3"
           >
             <div className="flex items-center justify-between gap-3">
               <div>
                 <p className="text-white font-semibold text-sm">{gain.title}</p>
                 <p className="text-white/50 text-xs mt-1">{gain.subtitle}</p>
               </div>
-              <div className="rounded-full bg-[#00ff88]/10 px-3 py-1 text-[#00ff88] text-sm font-semibold">
+              <div className="rounded-full bg-card px-3 py-1 text-[#00ff88] text-sm font-semibold">
                 +{gain.xp} XP
               </div>
             </div>
@@ -86,7 +86,7 @@ export function FinancialLevelWidget({ level }: FinancialLevelWidgetProps) {
 
       <button
         type="button"
-        className="mt-6 w-full inline-flex items-center justify-center gap-2 rounded-2xl bg-[#00ff88]/10 border border-[#00ff88]/20 px-4 py-3 text-sm font-semibold text-[#00ff88] transition hover:bg-[#00ff88]/15"
+        className="mt-6 w-full inline-flex items-center justify-center gap-2 rounded-2xl bg-card border border-[#00ff88]/20 px-4 py-3 text-sm font-semibold text-[#00ff88] transition hover:bg-card"
       >
         See your path to mastery
         <ArrowRight size={16} />

@@ -30,7 +30,7 @@ export function OnboardingShell({
           initial={{ opacity: 0 }}
           animate={{ opacity: 0.22 }}
           transition={{ duration: 0.7 }}
-          className="absolute top-16 left-1/2 -translate-x-1/2 w-[480px] h-[480px] rounded-full blur-[140px]"
+          className="absolute top-16 left-1/2 -translate-x-1/2 w-[480px] h-[480px] rounded-full hidden"
           style={{ background: glow }}
         />
       </div>

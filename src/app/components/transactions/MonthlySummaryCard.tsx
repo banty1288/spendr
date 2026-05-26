@@ -20,7 +20,7 @@ export function MonthlySummaryCard({
     <motion.div
       initial={{ opacity: 0, scale: 0.95 }}
       animate={{ opacity: 1, scale: 1 }}
-      className="bg-gradient-to-br from-[#00d9ff]/10 to-[#00ff88]/10 backdrop-blur-sm p-6 rounded-3xl border border-white/10 mb-6"
+      className="bg-gradient-to-br from-card to-card  p-6 rounded-3xl border border-border mb-6"
     >
       <p className="text-white/60 text-sm mb-4">{monthLabel}</p>
       <div className="grid grid-cols-3 gap-4">

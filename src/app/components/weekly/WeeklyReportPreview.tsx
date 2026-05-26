@@ -29,7 +29,7 @@ export function WeeklyReportPreview({
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
-        className={`rounded-2xl border border-white/10 bg-gradient-to-br from-white/5 to-white/[0.02] p-6 backdrop-blur-xl overflow-hidden group cursor-pointer hover:border-white/20 transition-colors ${className}`}
+        className={`rounded-2xl border border-border bg-gradient-to-br from-white/5 to-white/[0.02] p-6  overflow-hidden group cursor-pointer hover:border-white/20 transition-colors ${className}`}
         onClick={() => navigate("/weekly-report")}
       >
         <div className="flex items-center justify-between mb-4">
@@ -51,7 +51,7 @@ export function WeeklyReportPreview({
             onGenerate?.();
           }}
           disabled={isGenerating}
-          className="w-full px-4 py-2 rounded-lg bg-[#00d9ff]/20 hover:bg-[#00d9ff]/30 transition-colors text-white text-sm font-medium flex items-center justify-center gap-2 disabled:opacity-50"
+          className="w-full px-4 py-2 rounded-lg bg-card hover:bg-card transition-colors text-white text-sm font-medium flex items-center justify-center gap-2 disabled:opacity-50"
         >
           {isGenerating ? (
             <>
@@ -77,7 +77,7 @@ export function WeeklyReportPreview({
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       onClick={() => navigate("/weekly-report")}
-      className={`rounded-2xl border border-white/10 bg-gradient-to-br from-white/5 to-white/[0.02] p-6 backdrop-blur-xl overflow-hidden group cursor-pointer hover:border-white/20 transition-colors ${className}`}
+      className={`rounded-2xl border border-border bg-gradient-to-br from-white/5 to-white/[0.02] p-6  overflow-hidden group cursor-pointer hover:border-white/20 transition-colors ${className}`}
     >
       {/* Header */}
       <div className="flex items-center justify-between mb-4">
@@ -113,7 +113,7 @@ export function WeeklyReportPreview({
       </div>
 
       {/* Summary Stats */}
-      <div className="grid grid-cols-3 gap-2 mb-4 pb-4 border-b border-white/10">
+      <div className="grid grid-cols-3 gap-2 mb-4 pb-4 border-b border-border">
         <div>
           <p className="text-xs text-white/60">Income</p>
           <p className="text-[#00ff88] font-bold text-lg mt-1">
@@ -148,7 +148,7 @@ export function WeeklyReportPreview({
 
       {/* Risk Alert */}
       {topRisk && (
-        <div className="p-2 rounded-lg bg-[#ff3366]/10 border border-[#ff3366]/20">
+        <div className="p-2 rounded-lg bg-card border border-[#ff3366]/20">
           <p className="text-xs font-medium text-[#ff3366] mb-1">⚠️ Risky Behavior Detected</p>
           <p className="text-xs text-white/70 line-clamp-1">{topRisk.description}</p>
         </div>

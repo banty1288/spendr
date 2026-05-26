@@ -18,14 +18,14 @@ export function CoachingWidget({ notification, onClick }: CoachingWidgetProps) {
       onClick={onClick}
       className={`w-full text-left p-4 rounded-3xl border relative overflow-hidden bg-gradient-to-r ${
         isWarning 
-          ? "from-[#ff3366]/20 to-[#9d4edd]/10 border-[#ff3366]/30" 
-          : "from-[#ffd60a]/20 to-[#ff6b35]/10 border-[#ffd60a]/30"
+          ? "from-card to-card border-[#ff3366]/30" 
+          : "from-card to-card border-[#ffd60a]/30"
       }`}
     >
-      <div className="absolute right-0 top-0 w-32 h-32 bg-white/5 rounded-full blur-2xl pointer-events-none" />
+      <div className="absolute right-0 top-0 w-32 h-32 bg-card shadow-sm rounded-full blur-2xl pointer-events-none" />
       
       <div className="flex items-start gap-3 relative z-10">
-        <div className={`p-2 rounded-xl ${isWarning ? "bg-[#ff3366]/20 text-[#ff3366]" : "bg-[#ffd60a]/20 text-[#ffd60a]"}`}>
+        <div className={`p-2 rounded-xl ${isWarning ? "bg-card text-[#ff3366]" : "bg-card text-[#ffd60a]"}`}>
           {isWarning ? <Sparkles size={20} /> : <Lightbulb size={20} />}
         </div>
         <div className="flex-1 min-w-0">

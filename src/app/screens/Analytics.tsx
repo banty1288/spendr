@@ -43,7 +43,7 @@ export function Analytics() {
           <div className="flex items-center justify-between">
             <p className="text-white/60 text-sm">Track where your money goes</p>
             {/* Month selector */}
-            <div className="bg-white/5 backdrop-blur-sm px-3 py-2 rounded-full border border-white/10 flex items-center gap-2 shrink-0">
+            <div className="bg-card shadow-sm  px-3 py-2 rounded-full border border-border flex items-center gap-2 shrink-0">
               <Calendar size={14} className="text-white/50" />
               <select
                 value={month}
@@ -78,9 +78,9 @@ export function Analytics() {
               initial={{ opacity: 0, scale: 0.97 }}
               animate={{ opacity: 1, scale: 1 }}
               transition={{ duration: 0.35 }}
-              className="bg-gradient-to-br from-[#00d9ff]/15 to-[#00ff88]/10 backdrop-blur-sm p-6 rounded-3xl border border-white/10 mb-5 relative overflow-hidden"
+              className="bg-gradient-to-br from-card to-card  p-6 rounded-3xl border border-border mb-5 relative overflow-hidden"
             >
-              <div className="absolute right-0 top-0 w-40 h-40 bg-[#00d9ff]/10 rounded-full blur-3xl pointer-events-none" />
+              <div className="absolute right-0 top-0 w-40 h-40 bg-card rounded-full blur-3xl pointer-events-none" />
               <div className="flex items-start justify-between gap-3 relative mb-6">
                 <div>
                   <p className="text-white/60 text-sm mb-1">{t("analytics.totalSpending", "Total Spending")}</p>
@@ -89,7 +89,7 @@ export function Analytics() {
                   </h2>
                 </div>
                 <div className="shrink-0 text-right">
-                  <div className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full mb-1 text-sm font-semibold ${totals.net >= 0 ? "bg-[#00ff88]/20 text-[#00ff88]" : "bg-[#ff3366]/20 text-[#ff3366]"}`}>
+                  <div className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full mb-1 text-sm font-semibold ${totals.net >= 0 ? "bg-card text-[#00ff88]" : "bg-card text-[#ff3366]"}`}>
                     <ArrowUpRight size={14} className={totals.net < 0 ? "rotate-180" : ""} />
                     {convertAndFormat(Math.abs(totals.net))}
                   </div>
@@ -97,11 +97,11 @@ export function Analytics() {
                 </div>
               </div>
               <div className="grid grid-cols-2 gap-3 text-sm">
-                <div className="flex justify-between items-center bg-[#00ff88]/5 p-4 rounded-2xl border border-[#00ff88]/10">
+                <div className="flex justify-between items-center bg-card p-4 rounded-2xl border border-[#00ff88]/10">
                   <span className="text-white/60">{t("home.income", "Income")}</span>
                   <span className="text-[#00ff88] font-semibold">{convertAndFormat(totals.income)}</span>
                 </div>
-                <div className="flex justify-between items-center bg-white/5 p-4 rounded-2xl border border-white/10">
+                <div className="flex justify-between items-center bg-card shadow-sm p-4 rounded-2xl border border-border">
                   <span className="text-white/60">{t("home.expenses", "Expenses")}</span>
                   <span className="text-white font-semibold">{convertAndFormat(totals.expenses)}</span>
                 </div>
@@ -113,7 +113,7 @@ export function Analytics() {
               initial={{ opacity: 0, y: 12 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.1 }}
-              className="bg-white/5 backdrop-blur-sm rounded-3xl border border-white/10 p-5 mb-5"
+              className="bg-card shadow-sm  rounded-3xl border border-border p-5 mb-5"
             >
               <p className="text-white/50 text-xs font-semibold uppercase tracking-wider mb-4">Spending by Category</p>
               <CategoryPieChart data={breakdown} />
@@ -124,7 +124,7 @@ export function Analytics() {
               initial={{ opacity: 0, y: 12 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.15 }}
-              className="bg-white/5 backdrop-blur-sm rounded-3xl border border-white/10 p-5 mb-5"
+              className="bg-card shadow-sm  rounded-3xl border border-border p-5 mb-5"
             >
               <p className="text-white/50 text-xs font-semibold uppercase tracking-wider mb-3">6-Month Trend</p>
               <MonthlyBarChart data={monthly} />
@@ -140,7 +140,7 @@ export function Analytics() {
                     initial={{ opacity: 0, x: -10 }}
                     animate={{ opacity: 1, x: 0 }}
                     transition={{ delay: 0.18 + index * 0.04 }}
-                    className="bg-white/5 backdrop-blur-sm p-4 rounded-2xl border border-white/8 flex items-center gap-4 hover:bg-white/8 transition-colors"
+                    className="bg-card shadow-sm  p-4 rounded-2xl border border-white/8 flex items-center gap-4 hover:bg-white/8 transition-colors"
                   >
                     <span className="text-2xl shrink-0">{item.icon}</span>
                     <div className="flex-1 min-w-0">
@@ -161,7 +161,7 @@ export function Analytics() {
               type="button"
               whileTap={{ scale: 0.98 }}
               onClick={() => navigate("/transactions")}
-              className="w-full py-4 rounded-2xl bg-white/5 hover:bg-white/10 border border-white/10 text-white/70 font-medium text-sm transition-colors flex items-center justify-center gap-2"
+              className="w-full py-4 rounded-2xl bg-card shadow-sm hover:bg-white/10 border border-border text-white/70 font-medium text-sm transition-colors flex items-center justify-center gap-2"
             >
               <TrendingUp size={16} />
               Manage Transactions

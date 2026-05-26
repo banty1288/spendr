@@ -44,8 +44,8 @@ export function Onboarding() {
       <div className="absolute inset-0 bg-gradient-to-b from-black via-[#0a0a14] to-black" />
 
       <div className="absolute inset-0 opacity-20">
-        <div className={`absolute top-40 left-10 w-80 h-80 bg-gradient-to-br ${slide.gradient} rounded-full blur-[64px] will-change-transform transition-all duration-700`} />
-        <div className={`absolute bottom-40 right-10 w-80 h-80 bg-gradient-to-br ${slide.gradient} rounded-full blur-[64px] will-change-transform transition-all duration-700`} />
+
+
       </div>
 
       <button

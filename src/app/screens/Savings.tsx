@@ -47,15 +47,15 @@ export function Savings() {
   return (
     <div className="min-h-screen pb-6 relative overflow-hidden">
       <div className="absolute inset-0 opacity-20">
-        <div className="absolute top-0 left-0 w-96 h-96 bg-[#00ff88]/30 rounded-full blur-[64px] will-change-transform" />
-        <div className="absolute bottom-0 right-0 w-96 h-96 bg-[#00d9ff]/30 rounded-full blur-[64px] will-change-transform" />
+
+
       </div>
 
       <div className="relative z-10 px-4 sm:px-6 pt-12 pb-6 max-w-3xl mx-auto">
         <div className="flex items-center gap-4 mb-8">
           <button
             onClick={() => navigate("/home")}
-            className="bg-white/5 backdrop-blur-sm p-3 rounded-full border border-white/10"
+            className="bg-card shadow-sm  p-3 rounded-full border border-border"
           >
             <ArrowLeft size={20} className="text-white" />
           </button>
@@ -69,15 +69,15 @@ export function Savings() {
           initial={{ opacity: 0, scale: 0.95 }}
           animate={{ opacity: 1, scale: 1 }}
           whileHover={{ scale: 1.01 }}
-          className="bg-gradient-to-br from-[#00ff88]/20 to-[#00d9ff]/20 backdrop-blur-sm p-6 rounded-3xl border border-[#00ff88]/30 mb-6 relative overflow-hidden group"
+          className="bg-gradient-to-br from-card to-card  p-6 rounded-3xl border border-[#00ff88]/30 mb-6 relative overflow-hidden group"
         >
           <motion.div
-            className="absolute inset-0 bg-gradient-to-br from-[#00ff88]/10 to-transparent"
+            className="absolute inset-0 bg-gradient-to-br from-card to-transparent"
             animate={{ opacity: [0.5, 0.8, 0.5] }}
             transition={{ duration: 3, repeat: Infinity }}
           />
           <motion.div
-            className="absolute -left-10 -bottom-10 w-48 h-48 bg-[#00ff88]/20 rounded-full blur-3xl"
+            className="absolute -left-10 -bottom-10 w-48 h-48 bg-card rounded-full blur-3xl"
             animate={{ scale: [1, 1.3, 1] }}
             transition={{ duration: 5, repeat: Infinity }}
           />
@@ -138,7 +138,7 @@ export function Savings() {
                   animate={{ opacity: 1, x: 0 }}
                   whileHover={{ scale: 1.02, x: 4 }}
                   transition={{ delay: 0.2 + index * 0.1 }}
-                  className="bg-white/5 backdrop-blur-sm p-5 rounded-3xl border border-white/10 relative overflow-hidden group cursor-pointer"
+                  className="bg-card shadow-sm  p-5 rounded-3xl border border-border relative overflow-hidden group cursor-pointer"
                 >
                   <motion.div
                     className="absolute top-0 right-0 w-32 h-32 rounded-full blur-3xl opacity-10"
@@ -178,7 +178,7 @@ export function Savings() {
                         </p>
                       </div>
                     </div>
-                    <div className="relative h-3 bg-white/5 rounded-full overflow-hidden">
+                    <div className="relative h-3 bg-card shadow-sm rounded-full overflow-hidden">
                       <motion.div
                         initial={{ width: 0 }}
                         animate={{ width: `${progress}%` }}
@@ -206,7 +206,7 @@ export function Savings() {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.4 }}
-          className="bg-white/5 backdrop-blur-sm p-6 rounded-3xl border border-white/10 mb-6"
+          className="bg-card shadow-sm  p-6 rounded-3xl border border-border mb-6"
         >
           <h3 className="text-white font-semibold mb-4 flex items-center gap-2">
             <Award size={20} className="text-[#ffd60a]" />
@@ -221,8 +221,8 @@ export function Savings() {
                 transition={{ delay: 0.5 + index * 0.05 }}
                 className={`p-4 rounded-2xl border text-center ${
                   achievement.earned
-                    ? "bg-gradient-to-br from-[#ffd60a]/20 to-[#ff9500]/20 border-[#ffd60a]/30"
-                    : "bg-white/5 border-white/10"
+                    ? "bg-gradient-to-br from-card to-card border-[#ffd60a]/30"
+                    : "bg-card shadow-sm border-border"
                 }`}
               >
                 <div className={`text-3xl mb-2 ${!achievement.earned && "grayscale opacity-30"}`}>
@@ -244,7 +244,7 @@ export function Savings() {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.6 }}
-          className="bg-gradient-to-br from-[#9d4edd]/20 to-[#c77dff]/20 backdrop-blur-sm p-5 rounded-3xl border border-[#9d4edd]/30"
+          className="bg-gradient-to-br from-card to-card  p-5 rounded-3xl border border-[#9d4edd]/30"
         >
           <div className="flex items-center gap-3 mb-3">
             <div className="bg-gradient-to-br from-[#9d4edd] to-[#c77dff] p-3 rounded-2xl">
@@ -259,7 +259,7 @@ export function Savings() {
             <span className="text-white text-lg font-bold">Level 4</span>
             <span className="text-white/60 text-sm">2,150 XP to Level 5</span>
           </div>
-          <div className="relative h-3 bg-white/5 rounded-full overflow-hidden">
+          <div className="relative h-3 bg-card shadow-sm rounded-full overflow-hidden">
             <motion.div
               initial={{ width: 0 }}
               animate={{ width: "68%" }}

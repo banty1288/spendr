@@ -78,15 +78,15 @@ export function MoneyPersonality() {
   return (
     <div className="min-h-screen pb-6 relative overflow-hidden">
       <div className="absolute inset-0 opacity-20 pointer-events-none">
-        <div className="absolute top-0 right-0 w-96 h-96 bg-[#ff3366]/30 rounded-full blur-[64px] will-change-transform" />
-        <div className="absolute bottom-0 left-0 w-96 h-96 bg-[#9d4edd]/30 rounded-full blur-[64px] will-change-transform" />
+
+
       </div>
 
       <div className="relative z-10 px-4 sm:px-6 pt-12 pb-6 max-w-3xl mx-auto">
         <div className="flex items-center justify-between mb-8">
           <button
             onClick={() => navigate("/home")}
-            className="bg-white/5 backdrop-blur-sm p-3 rounded-full border border-white/10"
+            className="bg-card shadow-sm  p-3 rounded-full border border-border"
           >
             <ArrowLeft size={20} className="text-white" />
           </button>
@@ -95,7 +95,7 @@ export function MoneyPersonality() {
             <button
               onClick={handleShare}
               disabled={isSharing}
-              className="bg-gradient-to-r from-[#00d9ff]/20 to-[#00ff88]/20 backdrop-blur-sm px-4 py-2 rounded-full border border-[#00d9ff]/30 flex items-center gap-2 hover:bg-white/10 transition-colors disabled:opacity-50"
+              className="bg-gradient-to-r from-card to-card  px-4 py-2 rounded-full border border-[#00d9ff]/30 flex items-center gap-2 hover:bg-white/10 transition-colors disabled:opacity-50"
             >
               {isSharing ? <Loader2 size={18} className="text-[#00d9ff] animate-spin" /> : <Share2 size={18} className="text-[#00d9ff]" />}
               <span className="text-white text-sm font-medium">Share</span>
@@ -172,7 +172,7 @@ export function MoneyPersonality() {
                 ref={cardRef}
                 initial={{ opacity: 0, scale: 0.9 }}
                 animate={{ opacity: 1, scale: 1 }}
-                className={`bg-gradient-to-br ${config.bg.replace('from-', 'from-').replace('to-', 'to-')}/20 backdrop-blur-sm p-8 rounded-3xl border border-${config.color}/30 mb-6 relative overflow-hidden`}
+                className={`bg-gradient-to-br ${config.bg.replace('from-', 'from-').replace('to-', 'to-')}/20  p-8 rounded-3xl border border-${config.color}/30 mb-6 relative overflow-hidden`}
               >
                 <div className="relative text-center z-10">
                   <div className={`inline-block bg-gradient-to-br ${config.bg} p-5 rounded-3xl mb-4`}>
@@ -198,7 +198,7 @@ export function MoneyPersonality() {
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.1 }}
-                className="bg-white/5 backdrop-blur-sm p-6 rounded-3xl border border-white/10 mb-6 text-center italic relative"
+                className="bg-card shadow-sm  p-6 rounded-3xl border border-border mb-6 text-center italic relative"
               >
                 <Quote className="absolute top-4 left-4 text-white/10" size={32} />
                 <p className="text-white/90 relative z-10 text-lg font-medium px-4">
@@ -212,7 +212,7 @@ export function MoneyPersonality() {
                   initial={{ opacity: 0, x: -20 }}
                   animate={{ opacity: 1, x: 0 }}
                   transition={{ delay: 0.2 }}
-                  className="bg-white/5 backdrop-blur-sm p-6 rounded-3xl border border-white/10"
+                  className="bg-card shadow-sm  p-6 rounded-3xl border border-border"
                 >
                   <h2 className="text-white font-semibold mb-4 flex items-center gap-2">
                     <Heart size={20} className="text-[#00ff88]" /> Strengths
@@ -220,7 +220,7 @@ export function MoneyPersonality() {
                   <ul className="space-y-3">
                     {personality.strengths.map((str, i) => (
                       <li key={i} className="flex items-start gap-3">
-                        <div className="bg-[#00ff88]/20 p-1 rounded-lg mt-0.5">
+                        <div className="bg-card p-1 rounded-lg mt-0.5">
                           <div className="w-1.5 h-1.5 bg-[#00ff88] rounded-full" />
                         </div>
                         <p className="text-white/80 text-sm">{str}</p>
@@ -233,7 +233,7 @@ export function MoneyPersonality() {
                   initial={{ opacity: 0, x: 20 }}
                   animate={{ opacity: 1, x: 0 }}
                   transition={{ delay: 0.3 }}
-                  className="bg-white/5 backdrop-blur-sm p-6 rounded-3xl border border-white/10"
+                  className="bg-card shadow-sm  p-6 rounded-3xl border border-border"
                 >
                   <h2 className="text-white font-semibold mb-4 flex items-center gap-2">
                     <AlertTriangle size={20} className="text-[#ff3366]" /> Areas to Watch
@@ -241,7 +241,7 @@ export function MoneyPersonality() {
                   <ul className="space-y-3">
                     {personality.weaknesses.map((wk, i) => (
                       <li key={i} className="flex items-start gap-3">
-                        <div className="bg-[#ff3366]/20 p-1 rounded-lg mt-0.5">
+                        <div className="bg-card p-1 rounded-lg mt-0.5">
                           <div className="w-1.5 h-1.5 bg-[#ff3366] rounded-full" />
                         </div>
                         <p className="text-white/80 text-sm">{wk}</p>
@@ -256,14 +256,14 @@ export function MoneyPersonality() {
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.4 }}
-                className="bg-white/5 backdrop-blur-sm p-6 rounded-3xl border border-white/10 mb-6"
+                className="bg-card shadow-sm  p-6 rounded-3xl border border-border mb-6"
               >
                 <h2 className="text-white font-semibold mb-4 flex items-center gap-2">
                   <Brain size={20} className="text-[#ffd60a]" /> Emotional Triggers
                 </h2>
                 <div className="flex flex-wrap gap-2">
                   {personality.emotionalTriggers.map((trigger, i) => (
-                    <span key={i} className="bg-[#ffd60a]/20 text-[#ffd60a] px-3 py-1.5 rounded-full text-xs font-medium border border-[#ffd60a]/30">
+                    <span key={i} className="bg-card text-[#ffd60a] px-3 py-1.5 rounded-full text-xs font-medium border border-[#ffd60a]/30">
                       {trigger}
                     </span>
                   ))}
@@ -275,7 +275,7 @@ export function MoneyPersonality() {
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.5 }}
-                className="bg-gradient-to-br from-[#00d9ff]/20 to-[#00ff88]/20 backdrop-blur-sm p-6 rounded-3xl border border-[#00d9ff]/30 mb-8"
+                className="bg-gradient-to-br from-card to-card  p-6 rounded-3xl border border-[#00d9ff]/30 mb-8"
               >
                 <h2 className="text-white font-semibold mb-4 flex items-center gap-2">
                   <Target size={20} className="text-[#00d9ff]" /> AI Coaching
@@ -290,7 +290,7 @@ export function MoneyPersonality() {
                 <ul className="space-y-3">
                   {personality.savingsOpportunities.map((opp, i) => (
                     <li key={i} className="flex items-start gap-3">
-                      <div className="bg-[#00d9ff]/20 p-1 rounded-lg mt-0.5">
+                      <div className="bg-card p-1 rounded-lg mt-0.5">
                         <div className="w-1.5 h-1.5 bg-[#00d9ff] rounded-full" />
                       </div>
                       <p className="text-white/80 text-sm">{opp}</p>

@@ -76,15 +76,15 @@ export function Gamification() {
           initial={{ opacity: 0, scale: 0.95 }}
           animate={{ opacity: 1, scale: 1 }}
           whileHover={{ scale: 1.01 }}
-          className="bg-gradient-to-br from-[#ffd60a]/20 to-[#ff9500]/20 backdrop-blur-sm p-6 rounded-3xl border border-[#ffd60a]/30 mb-6 relative overflow-hidden group"
+          className="bg-gradient-to-br from-card to-card  p-6 rounded-3xl border border-[#ffd60a]/30 mb-6 relative overflow-hidden group"
         >
           <motion.div
-            className="absolute inset-0 bg-gradient-to-br from-[#ffd60a]/10 to-transparent"
+            className="absolute inset-0 bg-gradient-to-br from-card to-transparent"
             animate={{ opacity: [0.5, 0.8, 0.5] }}
             transition={{ duration: 3, repeat: Infinity }}
           />
           <motion.div
-            className="absolute -right-10 -top-10 w-40 h-40 bg-[#ffd60a]/20 rounded-full blur-3xl"
+            className="absolute -right-10 -top-10 w-40 h-40 bg-card rounded-full blur-3xl"
             animate={{ scale: [1, 1.3, 1], rotate: [0, 180, 360] }}
             transition={{ duration: 15, repeat: Infinity }}
           />
@@ -150,19 +150,19 @@ export function Gamification() {
           transition={{ delay: 0.1 }}
           className="grid grid-cols-3 gap-3 mb-6"
         >
-          <div className="bg-gradient-to-br from-[#ff6b35]/20 to-[#f7931e]/20 backdrop-blur-sm p-4 rounded-2xl border border-[#ff6b35]/30 text-center">
+          <div className="bg-gradient-to-br from-card to-card  p-4 rounded-2xl border border-[#ff6b35]/30 text-center">
             <Flame size={24} className="text-[#ff6b35] mx-auto mb-2" />
             <p className="text-white text-2xl font-black mb-1">
               {streakAchievement?.current ?? 0}
             </p>
             <p className="text-white/60 text-xs">{t("gamification.streak", "Savings streak")}</p>
           </div>
-          <div className="bg-gradient-to-br from-[#00d9ff]/20 to-[#0099ff]/20 backdrop-blur-sm p-4 rounded-2xl border border-[#00d9ff]/30 text-center">
+          <div className="bg-gradient-to-br from-card to-card  p-4 rounded-2xl border border-[#00d9ff]/30 text-center">
             <Award size={24} className="text-[#00d9ff] mx-auto mb-2" />
             <p className="text-white text-2xl font-black mb-1">{unlockedCount}</p>
             <p className="text-white/60 text-xs">{t("gamification.unlocked", "Badges unlocked")}</p>
           </div>
-          <div className="bg-gradient-to-br from-[#00ff88]/20 to-[#00d9a5]/20 backdrop-blur-sm p-4 rounded-2xl border border-[#00ff88]/30 text-center">
+          <div className="bg-gradient-to-br from-card to-card  p-4 rounded-2xl border border-[#00ff88]/30 text-center">
             <Zap size={24} className="text-[#00ff88] mx-auto mb-2" />
             <p className="text-white text-2xl font-black mb-1">{rareCount}</p>
             <p className="text-white/60 text-xs">Rare badges</p>

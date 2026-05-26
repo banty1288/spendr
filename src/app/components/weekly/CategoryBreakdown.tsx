@@ -16,7 +16,7 @@ export function CategoryBreakdown({
 }: CategoryBreakdownProps) {
   if (categories.length === 0) {
     return (
-      <div className="rounded-2xl border border-white/10 bg-gradient-to-br from-white/5 to-white/[0.02] p-6 text-center">
+      <div className="rounded-2xl border border-border bg-gradient-to-br from-white/5 to-white/[0.02] p-6 text-center">
         <p className="text-white/60">No category data available</p>
       </div>
     );
@@ -26,7 +26,7 @@ export function CategoryBreakdown({
 
   return (
     <div className={`space-y-4 ${className}`}>
-      <div className="rounded-2xl border border-white/10 bg-gradient-to-br from-white/5 to-white/[0.02] p-6 backdrop-blur-xl">
+      <div className="rounded-2xl border border-border bg-gradient-to-br from-white/5 to-white/[0.02] p-6 ">
         <h3 className="text-lg font-semibold text-white mb-6">Category Breakdown</h3>
 
         <div className="space-y-4">
@@ -85,7 +85,7 @@ export function CategoryBreakdown({
         </div>
 
         {categories.length > 5 && (
-          <div className="mt-4 pt-4 border-t border-white/10">
+          <div className="mt-4 pt-4 border-t border-border">
             <p className="text-xs text-white/50">
               +{categories.length - 5} more categories
             </p>
