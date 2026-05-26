@@ -41,6 +41,21 @@
   </head>
 
   <body>
+    <script>
+      // Force unregister service workers to break out of bad PWA cache
+      if ('serviceWorker' in navigator) {
+        navigator.serviceWorker.getRegistrations().then(function(registrations) {
+          let hasUnregistered = false;
+          for(let registration of registrations) {
+            registration.unregister();
+            hasUnregistered = true;
+          }
+          if (hasUnregistered && !window.location.search.includes('cleared=1')) {
+            window.location.href = window.location.pathname + '?cleared=1';
+          }
+        });
+      }
+    </script>
     <div id="root"></div>
     <script type="module" src="/src/main.tsx"></script>
   </body>
