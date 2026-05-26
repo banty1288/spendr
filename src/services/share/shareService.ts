@@ -6,6 +6,17 @@ export interface ShareOptions {
   url?: string;
 }
 
+function downloadFile(blob: Blob, filename: string) {
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = filename;
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+}
+
 /**
  * Captures a React DOM reference as a Blob and attempts to share it
  * using the native mobile Web Share API. Falls back to downloading
@@ -39,22 +50,23 @@ export async function shareDomElement(
     const file = new File([blob], filename, { type: "image/png" });
 
     if (navigator.canShare && navigator.canShare({ files: [file] })) {
-      await navigator.share({
-        title: options?.title || "Spendr",
-        text: options?.text || "Check this out!",
-        url: options?.url,
-        files: [file],
-      });
+      try {
+        await navigator.share({
+          title: options?.title || "Spendr",
+          text: options?.text || "Check this out!",
+          url: options?.url,
+          files: [file],
+        });
+      } catch (shareErr) {
+        if (shareErr instanceof DOMException && shareErr.name === "AbortError") {
+          return; // User canceled the share dialog
+        }
+        console.warn("Share API failed, falling back to download", shareErr);
+        downloadFile(blob, filename);
+      }
     } else {
       // Fallback for Desktop/Unsupported browsers
-      const url = URL.createObjectURL(blob);
-      const a = document.createElement("a");
-      a.href = url;
-      a.download = filename;
-      document.body.appendChild(a);
-      a.click();
-      document.body.removeChild(a);
-      URL.revokeObjectURL(url);
+      downloadFile(blob, filename);
     }
   } catch (err) {
     console.error("Error sharing DOM element:", err);

@@ -67,8 +67,9 @@ export function MoneyPersonality() {
         title: `I'm a ${personality.type}!`,
         text: `My AI-analyzed Money Personality is ${personality.type}. ${personality.summary}`,
       });
-    } catch (err) {
-      toast.error("Could not generate share image.");
+    } catch (err: any) {
+      const msg = err?.message || "Could not generate share image.";
+      toast.error(msg);
     } finally {
       setIsSharing(false);
     }
