@@ -14,7 +14,8 @@ import type {
 import { getCategoryById } from "./constants";
 
 export function signedAmount(tx: Transaction): number {
-  return tx.type === "income" ? tx.amount : -tx.amount;
+  const amt = tx.baseAmountUsd ?? tx.amount;
+  return tx.type === "income" ? amt : -amt;
 }
 
 export function filterTransactions(
@@ -85,14 +86,15 @@ export function getCategoryBreakdown(
   for (const tx of expenses) {
     const cat = getCategoryById(tx.categoryId);
     const existing = map.get(tx.categoryId);
+    const amt = tx.baseAmountUsd ?? tx.amount;
     if (existing) {
-      existing.value += tx.amount;
+      existing.value += amt;
       existing.count += 1;
     } else {
       map.set(tx.categoryId, {
         categoryId: tx.categoryId,
         name: cat.label,
-        value: tx.amount,
+        value: amt,
         color: cat.color,
         icon: cat.icon,
         count: 1,
@@ -130,8 +132,9 @@ export function getMonthlySummaries(
     for (const tx of transactions) {
       const txDate = parseISO(tx.date);
       if (!isWithinInterval(txDate, { start, end })) continue;
-      if (tx.type === "income") income += tx.amount;
-      else expenses += tx.amount;
+      const amt = tx.baseAmountUsd ?? tx.amount;
+      if (tx.type === "income") income += amt;
+      else expenses += amt;
     }
 
     result.push({
@@ -152,8 +155,9 @@ export function getMonthTotals(transactions: Transaction[], month: string) {
 
   for (const tx of transactions) {
     if (format(parseISO(tx.date), "yyyy-MM") !== month) continue;
-    if (tx.type === "income") income += tx.amount;
-    else expenses += tx.amount;
+    const amt = tx.baseAmountUsd ?? tx.amount;
+    if (tx.type === "income") income += amt;
+    else expenses += amt;
   }
 
   return { income, expenses, net: income - expenses };

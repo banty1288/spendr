@@ -24,12 +24,23 @@ function ThemeController() {
   return null;
 }
 
+import { Suspense } from "react";
+import { Loader2 } from "lucide-react";
+
 export default function App() {
   return (
     <AppErrorBoundary name="app">
       <ThemeController />
       <div className="min-h-screen transition-colors duration-300">
-        <RouterProvider router={router} />
+        <Suspense
+          fallback={
+            <div className="min-h-screen flex items-center justify-center bg-background">
+              <Loader2 className="w-8 h-8 animate-spin text-primary opacity-50" />
+            </div>
+          }
+        >
+          <RouterProvider router={router} />
+        </Suspense>
         <Toaster
           position="top-center"
           toastOptions={{

@@ -18,6 +18,8 @@ function mapDoc(id: string, data: Record<string, unknown>): Transaction {
     id,
     merchant: String(data.merchant ?? ""),
     amount: Number(data.amount ?? 0),
+    currency: data.currency ? String(data.currency) : undefined,
+    baseAmountUsd: data.baseAmountUsd ? Number(data.baseAmountUsd) : undefined,
     type: data.type === "income" ? "income" : "expense",
     categoryId: String(data.categoryId ?? "other"),
     notes: String(data.notes ?? ""),
@@ -40,7 +42,8 @@ export async function createTransaction(
 ): Promise<Transaction> {
   await waitForFirestoreAuth(uid);
   const now = new Date().toISOString();
-  const ref = await addDoc(userTransactionsRef(uid), {
+  
+  const docData: Record<string, any> = {
     merchant: input.merchant.trim(),
     amount: Math.abs(input.amount),
     type: input.type,
@@ -49,12 +52,19 @@ export async function createTransaction(
     date: input.date,
     createdAt: now,
     updatedAt: now,
-  });
+  };
+  
+  if (input.currency) docData.currency = input.currency;
+  if (input.baseAmountUsd !== undefined) docData.baseAmountUsd = input.baseAmountUsd;
+
+  const ref = await addDoc(userTransactionsRef(uid), docData);
 
   return {
     id: ref.id,
     merchant: input.merchant.trim(),
     amount: Math.abs(input.amount),
+    currency: input.currency,
+    baseAmountUsd: input.baseAmountUsd,
     type: input.type,
     categoryId: input.categoryId,
     notes: (input.notes ?? "").trim(),
@@ -72,7 +82,8 @@ export async function updateTransaction(
   await waitForFirestoreAuth(uid);
   const now = new Date().toISOString();
   const ref = userTransactionRef(uid, id);
-  await updateDoc(ref, {
+  
+  const updateData: Record<string, any> = {
     merchant: input.merchant.trim(),
     amount: Math.abs(input.amount),
     type: input.type,
@@ -80,7 +91,12 @@ export async function updateTransaction(
     notes: (input.notes ?? "").trim(),
     date: input.date,
     updatedAt: now,
-  });
+  };
+  
+  if (input.currency) updateData.currency = input.currency;
+  if (input.baseAmountUsd !== undefined) updateData.baseAmountUsd = input.baseAmountUsd;
+
+  await updateDoc(ref, updateData);
 
   const existing = await getDoc(userTransactionRef(uid, id));
   const createdAt = existing.exists()
@@ -91,6 +107,8 @@ export async function updateTransaction(
     id,
     merchant: input.merchant.trim(),
     amount: Math.abs(input.amount),
+    currency: input.currency,
+    baseAmountUsd: input.baseAmountUsd,
     type: input.type,
     categoryId: input.categoryId,
     notes: (input.notes ?? "").trim(),

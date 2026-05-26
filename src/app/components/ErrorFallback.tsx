@@ -29,18 +29,13 @@ export function ErrorFallback({
 
         <div className="relative z-10 w-full flex flex-col items-center text-center px-4">
           <div className="relative mb-6">
-            <div className="absolute inset-0 bg-gradient-to-br from-[#00d9ff] to-[#00ff88] rounded-2xl blur-lg opacity-40" />
-            <div className="relative bg-gradient-to-br from-card to-card border border-border p-5 rounded-2xl">
+            <div className="relative bg-card shadow-sm border border-border p-5 rounded-2xl">
               {aiError ? (
-                <Brain size={40} className="text-[#00d9ff] mx-auto" />
+                <Brain size={40} className="text-primary mx-auto" />
               ) : (
-                <AlertCircle size={40} className="text-[#ffd60a] mx-auto" />
+                <AlertCircle size={40} className="text-destructive mx-auto" />
               )}
             </div>
-            <Sparkles
-              size={18}
-              className="absolute -top-1 -right-1 text-[#00ff88]"
-            />
           </div>
 
           <h1 className="text-2xl font-bold text-white mb-2">
@@ -55,7 +50,7 @@ export function ErrorFallback({
             <button
               type="button"
               onClick={onRetry}
-              className="w-full flex items-center justify-center gap-2 px-6 py-3.5 rounded-xl bg-gradient-to-r from-[#00d9ff] to-[#00ff88] text-black font-semibold text-sm hover:opacity-90 transition-opacity"
+              className="w-full flex items-center justify-center gap-2 px-6 py-3.5 rounded-xl bg-primary text-primary-foreground font-semibold text-sm hover:opacity-90 transition-opacity"
             >
               <RefreshCw size={18} />
               Try again

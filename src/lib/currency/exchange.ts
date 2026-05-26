@@ -67,3 +67,16 @@ export function convertCurrency(
   if (!rate) return amount; // Fallback if unsupported
   return amount * rate;
 }
+
+/**
+ * Converts an amount from a target currency back to USD base.
+ */
+export function convertToUsd(
+  amount: number,
+  sourceCurrency: string,
+  rates: Record<string, number>
+): number {
+  const rate = rates[sourceCurrency];
+  if (!rate) return amount; // Fallback if unsupported
+  return amount / rate;
+}

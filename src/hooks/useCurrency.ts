@@ -1,5 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
-import { fetchExchangeRates, convertCurrency } from "../lib/currency/exchange";
+import { fetchExchangeRates, convertCurrency, convertToUsd } from "../lib/currency/exchange";
 import { useUserData } from "./useUserData";
 import { formatCurrency } from "../lib/userDisplay";
 
@@ -26,10 +26,16 @@ export function useCurrency() {
     return formatCurrency(converted, currencyCode, language);
   };
 
+  const toUsd = (amount: number) => {
+    if (isLoading || !rates) return amount;
+    return convertToUsd(amount, currencyCode, rates);
+  };
+
   return {
     currencyCode,
     language,
     isLoading,
     convertAndFormat,
+    toUsd,
   };
 }

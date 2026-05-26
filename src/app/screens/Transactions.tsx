@@ -14,6 +14,7 @@ import {
   MonthlyBarChart,
 } from "../components/transactions";
 import { useTransactions, useFilteredTransactions } from "../../hooks/useTransactions";
+import { useCurrency } from "../../hooks/useCurrency";
 import {
   DEFAULT_TRANSACTION_FILTERS,
   type Transaction,
@@ -34,6 +35,7 @@ import { TransactionListSkeleton } from "../components/ui/ScreenLoader";
 export function Transactions() {
   const navigate = useNavigate();
   const { t } = useTranslation();
+  const { currencyCode, toUsd } = useCurrency();
   const [filters, setFilters] = useState<TransactionFilters>(DEFAULT_TRANSACTION_FILTERS);
   const [formOpen, setFormOpen] = useState(false);
   const [editing, setEditing] = useState<Transaction | null>(null);
@@ -191,11 +193,16 @@ export function Transactions() {
         onClose={() => { setFormOpen(false); setEditing(null); }}
         onSubmit={async (input) => {
           try {
+            const enrichedInput = {
+              ...input,
+              currency: currencyCode,
+              baseAmountUsd: toUsd(input.amount),
+            };
             if (editing) {
-              await updateTransaction({ id: editing.id, input });
+              await updateTransaction({ id: editing.id, input: enrichedInput });
               toast.success("Transaction updated");
             } else {
-              await addTransaction(input);
+              await addTransaction(enrichedInput);
               toast.success("Transaction added");
             }
           } catch {
