@@ -61,7 +61,8 @@ export class GeminiClient {
       const idToken = await currentUser.getIdToken(true); // true forces refresh if close to expiration
 
       // Call the Vercel API endpoint
-      const response = await fetch('https://spendr-main.vercel.app/api/generateInsight', {
+      const baseUrl = import.meta.env.VITE_API_URL || 'https://spendr-main.vercel.app';
+      const response = await fetch(`${baseUrl}/api/generateInsight`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
