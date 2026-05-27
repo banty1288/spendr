@@ -10,6 +10,7 @@ import { Splash } from "./screens/Splash";
 import { Onboarding } from "./screens/Onboarding";
 import { Login } from "./screens/Login";
 import { RouteErrorBoundary } from "./components/RouteErrorBoundary";
+const ScreenLoader = () => <div className="p-4 animate-pulse">Loading...</div>;
 
 const OnboardingFlow = lazy(() =>
   import("./screens/OnboardingFlow").then((m) => ({ default: m.OnboardingFlow }))
@@ -54,7 +55,7 @@ const HelpSupport = lazy(() => import("./screens/settings/HelpSupport").then(m =
 
 function LazyScreen({ children }: { children: ReactNode }) {
   return (
-    <Suspense fallback={<AuthLoadingScreen message="Loading…" />}>
+    <Suspense fallback={<ScreenLoader />}>
       {children}
     </Suspense>
   );

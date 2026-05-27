@@ -16,28 +16,10 @@ export function CategoryPieChart({ data }: CategoryPieChartProps) {
     );
   }
 
-  const CustomTooltip = ({ active, payload }: any) => {
-    if (active && payload && payload.length) {
-      const { name, value, color } = payload[0].payload;
-      return (
-        <div className="bg-[#181825] border border-white/10 rounded-xl px-3 py-2 shadow-xl outline-none">
-          <p className="text-white/80 font-medium text-xs m-0 flex items-center gap-2">
-            <span className="w-2 h-2 rounded-full" style={{ backgroundColor: color }} />
-            {name}
-          </p>
-          <p className="text-white font-bold text-sm m-0 mt-0.5 pl-4">
-            {convertAndFormat(value)}
-          </p>
-        </div>
-      );
-    }
-    return null;
-  };
-
   return (
-    <div className="h-[190px] min-[375px]:h-[200px] w-full min-w-0 overflow-visible" style={{ WebkitTapHighlightColor: "transparent", outline: "none" }}>
-    <ResponsiveContainer width="100%" height="100%" className="outline-none" style={{ overflow: "visible" }}>
-      <PieChart style={{ outline: "none", overflow: "visible" }}>
+    <div className="h-[190px] min-[375px]:h-[200px] w-full min-w-0 overflow-hidden">
+    <ResponsiveContainer width="100%" height="100%">
+      <PieChart>
         <Pie
           data={data}
           dataKey="value"
@@ -47,16 +29,20 @@ export function CategoryPieChart({ data }: CategoryPieChartProps) {
           innerRadius={50}
           outerRadius={80}
           paddingAngle={2}
-          activeShape={false}
-          isAnimationActive={false}
-          stroke="none"
-          style={{ outline: "none" }}
         >
           {data.map((entry) => (
-            <Cell key={entry.categoryId} fill={entry.color} stroke="none" style={{ outline: "none" }} />
+            <Cell key={entry.categoryId} fill={entry.color} />
           ))}
         </Pie>
-        <Tooltip content={<CustomTooltip />} cursor={false} />
+        <Tooltip
+          contentStyle={{
+            background: "#0a0a14",
+            border: "1px solid rgba(255,255,255,0.1)",
+            borderRadius: 12,
+            color: "#fff",
+          }}
+          formatter={(value: number) => convertAndFormat(value)}
+        />
       </PieChart>
     </ResponsiveContainer>
     </div>

@@ -47,7 +47,7 @@ export async function generatePersonalizedChallenges({
         category: "category_reduction",
         difficulty: "easy",
         targetAmount: 20,
-        unit: "USD",
+        unit: "INR",
         rewardXp: 50,
         durationDays: 7,
         targetCategoryId: "dining",

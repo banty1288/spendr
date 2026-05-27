@@ -52,50 +52,8 @@ export function PersonalInfo() {
 
     setIsUploading(true);
     try {
-      // 1. Create a canvas to compress the image
-      const reader = new FileReader();
-      
-      const fileData = await new Promise<string>((resolve, reject) => {
-        reader.onload = () => resolve(reader.result as string);
-        reader.onerror = () => reject(new Error("Failed to read file"));
-        reader.readAsDataURL(file);
-      });
-      
-      const img = new Image();
-      await new Promise<void>((resolve, reject) => {
-        img.onload = () => resolve();
-        img.onerror = () => reject(new Error("Failed to load image"));
-        img.src = fileData;
-      });
-
-      const canvas = document.createElement("canvas");
-      const MAX_SIZE = 400;
-      let width = img.width;
-      let height = img.height;
-
-      if (width > height) {
-        if (width > MAX_SIZE) {
-          height *= MAX_SIZE / width;
-          width = MAX_SIZE;
-        }
-      } else {
-        if (height > MAX_SIZE) {
-          width *= MAX_SIZE / height;
-          height = MAX_SIZE;
-        }
-      }
-
-      canvas.width = width;
-      canvas.height = height;
-      const ctx = canvas.getContext("2d");
-      ctx?.drawImage(img, 0, 0, width, height);
-      
-      const compressedDataUrl = canvas.toDataURL("image/webp", 0.7);
-
-      // 2. Upload to Firebase Storage
-      const storageRef = ref(storage, `users/${user.uid}/profile_pic.webp`);
-      await uploadString(storageRef, compressedDataUrl, "data_url");
-      const downloadUrl = await getDownloadURL(storageRef);
+      const { uploadProfileImage } = await import("../../../lib/firebase/storage");
+      const downloadUrl = await uploadProfileImage(user.uid, file);
 
       // 3. Save to state & trigger save
       setPhotoUrl(downloadUrl);

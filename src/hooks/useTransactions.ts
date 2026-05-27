@@ -71,8 +71,9 @@ export function useTransactions() {
       const previous = queryClient.getQueryData<Transaction[]>(
         transactionsQueryKey(uid)
       );
+      const tempId = `temp-${Date.now()}-${Math.random().toString(36).substring(7)}`;
       const optimistic: Transaction = {
-        id: `temp-${Date.now()}`,
+        id: tempId,
         merchant: input.merchant,
         amount: Math.abs(input.amount),
         type: input.type,
@@ -85,7 +86,7 @@ export function useTransactions() {
       const next = [optimistic, ...(previous ?? [])];
       queryClient.setQueryData(transactionsQueryKey(uid), next);
       syncBalance(next);
-      return { previous };
+      return { previous, tempId };
     },
     onError: (_err, _input, context) => {
       if (context?.previous) {
@@ -93,13 +94,13 @@ export function useTransactions() {
         syncBalance(context.previous);
       }
     },
-    onSuccess: (created) => {
+    onSuccess: (created, _variables, context) => {
       trackTransactionAdded(created.type, created.categoryId);
       queryClient.setQueryData<Transaction[]>(
         transactionsQueryKey(uid),
         (old) => {
           const list = old ?? [];
-          return [created, ...list.filter((t) => !t.id.startsWith("temp-"))];
+          return list.map(t => t.id === context?.tempId ? created : t);
         }
       );
       

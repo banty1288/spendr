@@ -123,12 +123,9 @@ export function AIInsights() {
 
           {(onboardingLoading || txLoading) && !hasAnalysis && (
             <div className="flex flex-col items-center justify-center gap-3 py-16">
-              <motion.div
-                animate={{ rotate: 360 }}
-                transition={{ duration: 1.5, repeat: Infinity, ease: "linear" }}
-              >
+              <div className="animate-spin">
                 <Loader2 size={32} className="text-[#9d4edd]" />
-              </motion.div>
+              </div>
               <p className="text-white/50 text-sm">Loading your data…</p>
             </div>
           )}
@@ -157,13 +154,11 @@ export function AIInsights() {
                   animate={{ opacity: 1, scale: 1 }}
                   className="bg-gradient-to-br from-card to-card border border-[#9d4edd]/30 rounded-3xl p-8 mb-4 text-center"
                 >
-                  <motion.div
-                    animate={{ y: [0, -6, 0] }}
-                    transition={{ duration: 3, repeat: Infinity }}
-                    className="inline-flex p-4 bg-card rounded-3xl mb-5"
+                  <div
+                    className="inline-flex p-4 bg-card rounded-3xl mb-5 animate-pulse"
                   >
                     <Brain size={40} className="text-[#9d4edd]" />
-                  </motion.div>
+                  </div>
                   <h3 className="text-white font-bold text-lg mb-2">Ready for AI Analysis</h3>
                   <p className="text-white/60 text-sm mb-6 max-w-xs mx-auto">
                     Gemini will analyze your spending patterns and generate personalized insights.
@@ -190,10 +185,8 @@ export function AIInsights() {
               className="flex flex-col items-center justify-center py-16 gap-4"
             >
               <div className="relative">
-                <motion.div
-                  animate={{ rotate: 360 }}
-                  transition={{ duration: 2, repeat: Infinity, ease: "linear" }}
-                  className="w-14 h-14 rounded-full border-2 border-[#9d4edd]/30 border-t-[#9d4edd]"
+                <div
+                  className="w-14 h-14 rounded-full border-2 border-[#9d4edd]/30 border-t-[#9d4edd] animate-spin"
                 />
                 <Brain size={22} className="text-[#9d4edd] absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2" />
               </div>

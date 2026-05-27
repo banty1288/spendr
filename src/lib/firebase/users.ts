@@ -106,7 +106,7 @@ export async function updateUserSettings(
   const currentSettings = data.settings || {
     notifications: { spendingAlerts: true, savingsReminders: true, streakReminders: true, weeklyReports: true, aiCoaching: true, quietHours: false },
     privacy: { dataVisibility: "private", analyticsOptIn: true },
-    app: { theme: "dark", currency: "USD", language: "en" }
+    app: { theme: "dark", currency: "INR", language: "en" }
   };
   
   const newSettings = {

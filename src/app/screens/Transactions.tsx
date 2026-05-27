@@ -213,11 +213,11 @@ export function Transactions() {
         onSubmit={async (input) => {
           const enrichedInput = { ...input };
           if (editing) {
-            updateTransaction({ id: editing.id, input: enrichedInput })
+            await updateTransaction({ id: editing.id, input: enrichedInput })
               .then(() => toast.success("Transaction updated successfully"))
               .catch(() => toast.error("Failed to save transaction"));
           } else {
-            addTransaction(enrichedInput)
+            await addTransaction(enrichedInput)
               .then(() => toast.success("Transaction added successfully"))
               .catch(() => toast.error("Failed to save transaction"));
           }

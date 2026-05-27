@@ -21,7 +21,7 @@ export function buildAnalysisFingerprint(
       ].join(";")
     : "";
 
-  const prefPart = `${userData?.preferences?.currency || userData?.settings?.app?.currency || 'USD'}`;
+  const prefPart = `${userData?.preferences?.currency || userData?.settings?.app?.currency || 'INR'}`;
 
   return `${transactions.length}::${txPart}::${userData?.balance ?? 0}::${profilePart}::${userData?.onboardingCompleted ? 1 : 0}::${prefPart}`;
 }

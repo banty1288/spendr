@@ -25,7 +25,7 @@ export function Splash() {
             x: [0, 30, 0],
             y: [0, -20, 0],
           }}
-          transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }}
+          transition={{ duration: 6, ease: "easeInOut" }}
         />
         <motion.div
           className="absolute bottom-20 right-10 w-64 h-64 bg-card rounded-full hidden"
@@ -34,7 +34,7 @@ export function Splash() {
             x: [0, -30, 0],
             y: [0, 20, 0],
           }}
-          transition={{ duration: 7, repeat: Infinity, ease: "easeInOut" }}
+          transition={{ duration: 7, ease: "easeInOut" }}
         />
         <motion.div
           className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-card rounded-full hidden"
@@ -42,7 +42,7 @@ export function Splash() {
             rotate: [0, 360],
             scale: [1, 1.2, 1],
           }}
-          transition={{ duration: 10, repeat: Infinity, ease: "linear" }}
+          transition={{ duration: 10, ease: "linear" }}
         />
       </div>
 
@@ -56,7 +56,7 @@ export function Splash() {
           <motion.div
             className="absolute inset-0 bg-gradient-to-br from-[#00d9ff] to-[#00ff88] rounded-3xl blur-xl opacity-50"
             animate={{ scale: [1, 1.2, 1] }}
-            transition={{ duration: 2, repeat: Infinity }}
+            transition={{ duration: 2 }}
           />
           <motion.div
             className="relative bg-gradient-to-br from-[#00d9ff] to-[#00ff88] p-6 rounded-3xl"
@@ -67,11 +67,11 @@ export function Splash() {
                 "0 0 20px rgba(0, 217, 255, 0.3)",
               ]
             }}
-            transition={{ duration: 2, repeat: Infinity }}
+            transition={{ duration: 2 }}
           >
             <motion.div
               animate={{ rotate: [0, 10, -10, 0] }}
-              transition={{ duration: 2, repeat: Infinity, repeatDelay: 1 }}
+              transition={{ duration: 2, delay: 1 }}
             >
               <Sparkles size={56} className="text-black" />
             </motion.div>
@@ -97,7 +97,7 @@ export function Splash() {
             animate={{
               backgroundPosition: ["0% 50%", "100% 50%", "0% 50%"],
             }}
-            transition={{ duration: 3, repeat: Infinity }}
+            transition={{ duration: 3 }}
             style={{ backgroundSize: "200% 200%" }}
           >
             Spendr
@@ -140,7 +140,6 @@ export function Splash() {
               }}
               transition={{
                 duration: 1.5,
-                repeat: Infinity,
                 delay: i * 0.2,
               }}
             />

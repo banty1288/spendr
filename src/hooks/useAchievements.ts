@@ -74,7 +74,7 @@ export function useAchievements(
       setPendingUnlocks((prev) => [...prev, achievement]);
       unlockMutation.mutate(achievement);
     });
-  }, [statuses, uid, userData, earnedRecords, achievementQuery.isLoading, unlockMutation.mutate]);
+  }, [statuses, uid, userData, earnedRecords, achievementQuery.isLoading]);
 
   const recentUnlocked = useMemo(
     () =>

@@ -12,7 +12,7 @@ export function getInitials(name: string): string {
   return (parts[0][0] + parts[parts.length - 1][0]).toUpperCase();
 }
 
-export function formatCurrency(amount: number, currency = "USD", locale = "en-US"): string {
+export function formatCurrency(amount: number, currency = "INR", locale = "en-IN"): string {
   let effectiveLocale = locale;
   if (effectiveLocale === "hi") effectiveLocale = "hi-IN";
   if (effectiveLocale === "en") effectiveLocale = "en-US";
