@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { createPortal } from "react-dom";
 import { motion, AnimatePresence } from "motion/react";
 import { X, Loader2 } from "lucide-react";
 import type { Transaction, TransactionInput, TransactionType } from "../../../types/transaction";
@@ -72,7 +73,7 @@ export function TransactionFormSheet({
 
   const loading = isSubmitting || internalLoading;
 
-  return (
+  return createPortal(
     <AnimatePresence>
       {open && (
         <>
@@ -80,7 +81,7 @@ export function TransactionFormSheet({
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="fixed inset-0 bg-background/70 z-[60]"
+            className="fixed inset-0 bg-background/70 z-[100]"
             onClick={onClose}
           />
           <motion.div
@@ -88,7 +89,7 @@ export function TransactionFormSheet({
             animate={{ y: 0 }}
             exit={{ y: "100%" }}
             transition={{ type: "spring", damping: 28, stiffness: 320 }}
-            className="fixed bottom-0 left-0 right-0 z-[70] flex justify-center"
+            className="fixed bottom-0 left-0 right-0 z-[110] flex justify-center"
           >
             <div className="w-full max-w-[430px] bg-[#0a0a14] border-t border-border rounded-t-3xl px-6 pt-6 pb-10 max-h-[90vh] overflow-y-auto">
               <div className="flex items-center justify-between mb-6">
@@ -189,7 +190,7 @@ export function TransactionFormSheet({
                 <button
                   type="submit"
                   disabled={loading || !form.merchant.trim() || form.amount <= 0}
-                  className="w-full bg-gradient-to-r from-[#00d9ff] to-[#00ff88] text-black py-4 rounded-2xl font-semibold disabled:opacity-60 flex items-center justify-center gap-2"
+                  className="w-full bg-gradient-to-r from-[#00d9ff] to-[#00ff88] text-black py-4 rounded-2xl font-semibold disabled:opacity-60 flex items-center justify-center gap-2 mb-2"
                 >
                   {loading ? (
                     <Loader2 className="w-5 h-5 animate-spin" />
@@ -204,6 +205,7 @@ export function TransactionFormSheet({
           </motion.div>
         </>
       )}
-    </AnimatePresence>
+    </AnimatePresence>,
+    document.body
   );
 }

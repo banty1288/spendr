@@ -1,3 +1,4 @@
+import { createPortal } from "react-dom";
 import { AnimatePresence, motion } from "motion/react";
 import { X, Sparkles } from "lucide-react";
 import type { AchievementStatus } from "../../../types/achievement";
@@ -8,7 +9,7 @@ interface AchievementUnlockModalProps {
 }
 
 export function AchievementUnlockModal({ achievements, onClose }: AchievementUnlockModalProps) {
-  return (
+  return createPortal(
     <AnimatePresence>
       {achievements.length > 0 ? (
         <motion.div
@@ -80,6 +81,7 @@ export function AchievementUnlockModal({ achievements, onClose }: AchievementUnl
           </motion.div>
         </motion.div>
       ) : null}
-    </AnimatePresence>
+    </AnimatePresence>,
+    document.body
   );
 }
