@@ -154,9 +154,9 @@ Spendr's frontend is optimized for deployment on **Vercel** (`vercel.json` inclu
 
 Spendr integrates **Google's Gemini 1.5 Flash** model to provide personalized financial insights.
 - **What it does:** Analyzes your transaction history to provide behavioral insights, identify impulse spending triggers, and suggest goal-based budgets.
-- **Limitations:** Insights are generated asynchronously and rely on accurate categorization by the user.
-- **Cost & Rate Limits:** Currently uses standard Gemini API tiers. Ensure you set `VITE_GEMINI_API_KEY` correctly and respect Google's API rate limits.
-
+- **Architecture:** The Gemini API is securely proxied through a **Vercel Serverless Function** (`api/generateInsight.ts`). 
+- **Security:** Strict `systemInstruction` parameters are enforced server-side to prevent prompt injection and jailbreak attempts.
+- **Cost & Rate Limits:** The endpoint implements basic IP/UID rate limiting to protect your API quota from abuse.
 ---
 
 ## ⚡ Performance & Optimization
@@ -168,9 +168,11 @@ Spendr integrates **Google's Gemini 1.5 Flash** model to provide personalized fi
 
 ## 🔒 Security Notes
 
-- **Authentication:** Firebase Authentication manages secure sign-in and session tokens.
-- **Database:** Firestore Security Rules ensure users can only read and write their own document paths.
-- **Client-Side:** Environment variables prefixed with `VITE_` are exposed to the client. Do not place sensitive admin secrets in these variables. Only use them for public API keys (like Firebase config).
+- **AI Proxy:** The Gemini API is secured behind a backend Vercel proxy, preventing clients from dictating arbitrary prompts (Server-Side Request Forgery mitigation).
+- **Authentication:** Firebase Authentication manages secure sign-in and ID tokens, which are verified on the backend before any AI request is processed.
+- **Database:** Firestore Security Rules ensure users can only read and write their own document paths (data isolation).
+- **Content Security Policy (CSP):** The app enforces strict CSP headers, disabling `unsafe-eval` and restricting network/image sources to explicitly trusted domains to mitigate XSS data exfiltration.
+- **Client-Side:** Environment variables prefixed with `VITE_` are exposed to the client. Do not place sensitive admin secrets (like the raw Gemini API key) in these client-facing variables.
 
 ---
 
