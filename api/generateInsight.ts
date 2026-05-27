@@ -1,6 +1,6 @@
 import * as admin from 'firebase-admin';
 import { GoogleGenerativeAI } from '@google/generative-ai';
-import type { VercelRequest, VercelResponse } from '@vercel/node';
+
 
 // Initialize Firebase Admin (only once per lambda invocation)
 if (!admin.apps.length) {
