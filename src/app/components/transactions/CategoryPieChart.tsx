@@ -29,19 +29,24 @@ export function CategoryPieChart({ data }: CategoryPieChartProps) {
           innerRadius={50}
           outerRadius={80}
           paddingAngle={2}
+          activeShape={false}
+          stroke="none"
         >
           {data.map((entry) => (
-            <Cell key={entry.categoryId} fill={entry.color} />
+            <Cell key={entry.categoryId} fill={entry.color} stroke="none" />
           ))}
         </Pie>
         <Tooltip
+          cursor={{ fill: "transparent" }}
           contentStyle={{
-            background: "#0a0a14",
+            background: "#181825",
             border: "1px solid rgba(255,255,255,0.1)",
             borderRadius: 12,
-            color: "#fff",
+            boxShadow: "0 4px 12px rgba(0,0,0,0.5)",
           }}
-          formatter={(value: number) => convertAndFormat(value)}
+          itemStyle={{ color: "#fff", fontWeight: 600 }}
+          formatter={(value: number) => [convertAndFormat(value), ""]}
+          separator=""
         />
       </PieChart>
     </ResponsiveContainer>
