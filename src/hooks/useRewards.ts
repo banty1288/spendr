@@ -6,7 +6,9 @@ import { toast } from "sonner";
 import React from "react";
 import { trackRewardEarned } from "../services/analytics";
 
-export const rewardsQueryKey = (uid?: string) => ["userRewards", uid] as const;
+export const rewardsQueryKey = (uid?: string) => ["rewards", uid] as const;
+
+const EMPTY_REWARDS: RewardEvent[] = [];
 
 export function useRewards() {
   const user = useAuthStore((state) => state.user);
@@ -49,7 +51,7 @@ export function useRewards() {
   });
 
   return {
-    rewards: query.data ?? [],
+    rewards: query.data ?? EMPTY_REWARDS,
     isLoading: query.isLoading,
     isError: query.isError,
     logReward: mutation.mutate,

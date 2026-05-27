@@ -14,6 +14,8 @@ import type { SavingsChallenge, ChallengeStatus, ChallengeRecommendation } from 
 
 export const challengesQueryKey = (uid?: string) => ["challenges", uid] as const;
 
+const EMPTY_CHALLENGES: SavingsChallenge[] = [];
+
 export function useChallenges(
   userData: UserData | null | undefined,
   transactions: Transaction[]

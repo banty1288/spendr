@@ -11,6 +11,8 @@ import { REWARD_ICONS } from "../services/rewards/xpEngine";
 
 export const achievementsQueryKey = (uid?: string) => ["userAchievements", uid] as const;
 
+const EMPTY_RECORDS: UserAchievementRecord[] = [];
+
 export function useAchievements(
   transactions: Transaction[],
   userData: UserData | null
@@ -29,7 +31,7 @@ export function useAchievements(
     staleTime: 1000 * 60 * 2,
   });
 
-  const earnedRecords = achievementQuery.data ?? [];
+  const earnedRecords = achievementQuery.data ?? EMPTY_RECORDS;
 
   const statuses = useMemo(
     () => buildAchievementStatuses(transactions, userData, earnedRecords),

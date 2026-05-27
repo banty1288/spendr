@@ -33,6 +33,8 @@ import { trackTransactionAdded, trackTransactionDeleted } from "../services/anal
 export const transactionsQueryKey = (uid?: string) =>
   ["transactions", uid] as const;
 
+const EMPTY_TX_ARRAY: Transaction[] = [];
+
 export function useTransactions() {
   const user = useAuthStore((s) => s.user);
   const queryClient = useQueryClient();
@@ -176,7 +178,7 @@ export function useTransactions() {
   });
 
   return {
-    transactions: query.data ?? [],
+    transactions: query.data ?? EMPTY_TX_ARRAY,
     isLoading: query.isLoading,
     isError: query.isError,
     error: query.error,

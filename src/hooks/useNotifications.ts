@@ -4,9 +4,13 @@ import { fetchUserNotifications, addNotification, markNotificationStatus, markAl
 import { generateCoachingInsights } from "../services/ai/coachingGateway";
 import { useAuthStore } from "../store/authStore";
 
-import type { NotificationStatus } from "../types/notification";
+import type { NotificationStatus, SmartNotification } from "../types/notification";
 import type { UserData } from "../types/user";
 import type { Transaction } from "../types/transaction";
+
+export const notificationsQueryKey = (uid?: string) => ["notifications", uid] as const;
+
+const EMPTY_NOTIFICATIONS: SmartNotification[] = [];
 
 export function useNotifications(userData: UserData | null | undefined, transactions: Transaction[]) {
   const user = useAuthStore((state) => state.user);
@@ -14,7 +18,7 @@ export function useNotifications(userData: UserData | null | undefined, transact
   const queryClient = useQueryClient();
   const [isGenerating, setIsGenerating] = useState(false);
 
-  const queryKey = ["notifications", uid];
+  const queryKey = notificationsQueryKey(uid);
 
   const query = useQuery({
     queryKey,
@@ -23,7 +27,7 @@ export function useNotifications(userData: UserData | null | undefined, transact
     staleTime: 1000 * 60 * 5, // 5 minutes
   });
 
-  const notifications = query.data ?? [];
+  const notifications = query.data ?? EMPTY_NOTIFICATIONS;
   const unreadCount = notifications.filter((n) => n.status === "unread").length;
 
   const markAsReadMutation = useMutation({
