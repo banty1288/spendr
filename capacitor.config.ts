@@ -1,32 +1,23 @@
 import type { CapacitorConfig } from '@capacitor/cli';
 
 const config: CapacitorConfig = {
-  appId: 'com.spendr.app',
+  appId: 'com.banty.spendr',
   appName: 'Spendr',
   webDir: 'dist',
-  server: {
-    // In production APK, assets are loaded from the local filesystem.
-    // No localhost dependency.
-    androidScheme: 'https',
-  },
-  android: {
-    allowMixedContent: false,
-    backgroundColor: '#000000',
-  },
+  bundledWebRuntime: false,
   plugins: {
     SplashScreen: {
+      launchShowDuration: 2000,
       launchAutoHide: true,
-      launchShowDuration: 1500,
-      backgroundColor: '#000000',
-      showSpinner: false,
-    },
-    Keyboard: {
-      resize: 'body',
-      resizeOnFullScreen: true,
-    },
-    StatusBar: {
-      style: 'DARK',
-      backgroundColor: '#000000',
+      backgroundColor: "#0a0a0a",
+      androidSplashResourceName: "splash",
+      androidScaleType: "CENTER_CROP",
+      showSpinner: true,
+      androidSpinnerStyle: "large",
+      iosSpinnerStyle: "small",
+      spinnerColor: "#00d9ff",
+      splashFullScreen: true,
+      splashImmersive: true,
     },
   },
 };

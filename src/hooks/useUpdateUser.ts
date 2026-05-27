@@ -14,7 +14,24 @@ export const useUpdateUser = () => {
     mutationFn: async (updates: Partial<UserData>) => {
       await updateUserDocument(updates);
     },
-    onSuccess: () => {
+    onMutate: async (updates) => {
+      await queryClient.cancelQueries({ queryKey: userDataQueryKey(user?.uid) });
+      const previousUserData = queryClient.getQueryData<UserData>(userDataQueryKey(user?.uid));
+      
+      if (previousUserData) {
+        queryClient.setQueryData<UserData>(userDataQueryKey(user?.uid), {
+          ...previousUserData,
+          ...updates
+        });
+      }
+      return { previousUserData };
+    },
+    onError: (_err, _updates, context) => {
+      if (context?.previousUserData) {
+        queryClient.setQueryData(userDataQueryKey(user?.uid), context.previousUserData);
+      }
+    },
+    onSettled: () => {
       queryClient.invalidateQueries({ queryKey: userDataQueryKey(user?.uid) });
     },
   });
@@ -35,14 +52,14 @@ export const useUpdateUser = () => {
             ...newSettings,
             app: {
               ...(previousUserData.settings?.app || {}),
-              ...(newSettings.app || {})
+              ...(newSettings?.app || {})
             }
           }
         });
       }
       return { previousUserData };
     },
-    onError: (err, newSettings, context) => {
+    onError: (_err, _newSettings, context) => {
       if (context?.previousUserData) {
         queryClient.setQueryData(userDataQueryKey(user?.uid), context.previousUserData);
       }
@@ -76,7 +93,7 @@ export const useUpdateUser = () => {
       }
       return { previousUserData };
     },
-    onError: (err, newPreferences, context) => {
+    onError: (_err, _newPreferences, context) => {
       if (context?.previousUserData) {
         queryClient.setQueryData(userDataQueryKey(user?.uid), context.previousUserData);
       }

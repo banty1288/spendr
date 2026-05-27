@@ -65,7 +65,7 @@ function mapDoc(id: string, data: Record<string, unknown>): WeeklyReport {
     mapped.error = data.error;
   }
 
-  return mapped as WeeklyReport;
+  return mapped as unknown as WeeklyReport;
 }
 
 /**

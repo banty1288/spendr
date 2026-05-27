@@ -2,7 +2,7 @@ import { motion } from "motion/react";
 import { Brain, AlertTriangle, TrendingUp, Sparkles, ChevronRight, Zap } from "lucide-react";
 import { useNavigate } from "react-router";
 import type { SpendrAIAnalysis } from "../../../services/ai/types";
-import type { EmotionalSpendingInsights } from "../../../services/ai/emotionalGateway";
+import type { EmotionalSpendingInsights } from "../../../types/emotionalInsight";
 
 interface AIInsightsCarouselProps {
   analysis: SpendrAIAnalysis | null | undefined;
@@ -49,21 +49,9 @@ export function AIInsightsCarousel({ analysis, emotionalInsights, isLoading }: A
     );
   }
 
-  const cards = [];
+  const cards: any[] = [];
 
   // Emotional Warnings
-  if (emotionalInsights?.warnings && emotionalInsights.warnings.length > 0) {
-    cards.push({
-      id: "emotional-warning",
-      icon: <AlertTriangle className="text-[#ff3366]" size={20} />,
-      title: "Emotional Spending",
-      color: "#ff3366",
-      content: emotionalInsights.warnings[0],
-      bg: "from-card to-transparent",
-      borderColor: "border-[#ff3366]/30",
-    });
-  }
-
   // Gemini Insight Cards
   if (analysis?.financialInsights?.cards) {
     analysis.financialInsights.cards.slice(0, 3).forEach((c, idx) => {

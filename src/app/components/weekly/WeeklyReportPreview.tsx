@@ -1,7 +1,7 @@
 import { motion } from "motion/react";
 import { ArrowRight, Loader2, Sparkles } from "lucide-react";
 import { useNavigate } from "react-router";
-import type { WeeklyReport } from "../../../services/ai/types";
+import type { WeeklyReport } from "../../../types/weeklyReport";
 import { useCurrency } from "../../../hooks/useCurrency";
 
 interface WeeklyReportPreviewProps {
@@ -138,7 +138,7 @@ export function WeeklyReportPreview({
       {highlightWins.length > 0 && (
         <div className="mb-3 space-y-2">
           <p className="text-xs font-medium text-white/70">🎉 Highlights</p>
-          {highlightWins.map((win, idx) => (
+          {highlightWins.map((win: any, idx: number) => (
             <p key={idx} className="text-xs text-white/60 line-clamp-1">
               • {win.title}
             </p>

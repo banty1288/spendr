@@ -4,6 +4,7 @@ import { useAuthStore } from "../store/authStore";
 import { fetchUserAchievements, unlockUserAchievement } from "../lib/firebase/achievements";
 import { buildAchievementStatuses } from "../services/achievements/badgeEngine";
 import type { Transaction } from "../types/transaction";
+import type { UserData } from "../types/user";
 import type { AchievementStatus, UserAchievementRecord } from "../types/achievement";
 import { useRewards } from "./useRewards";
 import { REWARD_ICONS } from "../services/rewards/xpEngine";
@@ -95,7 +96,7 @@ export function useAchievements(
     statuses,
     recentUnlocked,
     openUnlocks,
-    isLoading: achievementQuery.isLoading || unlockMutation.isLoading,
+    isLoading: achievementQuery.isLoading || unlockMutation.isPending,
     isError: achievementQuery.isError,
     onClearUnlocks: () => setPendingUnlocks([]),
   };

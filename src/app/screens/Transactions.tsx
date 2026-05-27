@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useCallback } from "react";
 import { useNavigate } from "react-router";
 import { useTranslation } from "react-i18next";
 import { motion } from "motion/react";
@@ -10,9 +10,11 @@ import {
   TransactionFormSheet,
   TransactionFiltersBar,
   MonthlySummaryCard,
-  CategoryPieChart,
-  MonthlyBarChart,
 } from "../components/transactions";
+import { lazy, Suspense } from "react";
+
+const CategoryPieChart = lazy(() => import("../components/transactions/CategoryPieChart").then(m => ({ default: m.CategoryPieChart })));
+const MonthlyBarChart = lazy(() => import("../components/transactions/MonthlyBarChart").then(m => ({ default: m.MonthlyBarChart })));
 import { useTransactions, useFilteredTransactions } from "../../hooks/useTransactions";
 import { useCurrency } from "../../hooks/useCurrency";
 import {
@@ -59,7 +61,12 @@ export function Transactions() {
   const breakdown = getCategoryBreakdown(all, monthKey);
   const monthlyChart = getMonthlySummaries(all, 6);
 
-  const handleDelete = async (tx: Transaction) => {
+  const handleEdit = useCallback((tx: Transaction) => {
+    setEditing(tx);
+    setFormOpen(true);
+  }, []);
+
+  const handleDelete = useCallback(async (tx: Transaction) => {
     if (!confirm(`Delete "${tx.merchant}"?`)) return;
     try {
       await deleteTransaction(tx.id);
@@ -67,7 +74,7 @@ export function Transactions() {
     } catch {
       toast.error("Failed to delete transaction");
     }
-  };
+  }, [deleteTransaction]);
 
   return (
     <PageShell orbs={[{ color: "#9d4edd", position: "top-right" }, { color: "#00d9ff", position: "bottom-left" }]}>
@@ -114,7 +121,9 @@ export function Transactions() {
           className="bg-card shadow-sm  rounded-3xl border border-border p-5 mb-5"
         >
           <p className="text-white/50 text-xs font-semibold uppercase tracking-wider mb-3">{t("transactions.spendingByCategory", "Spending by Category")}</p>
-          <CategoryPieChart data={breakdown} />
+          <Suspense fallback={<div className="h-64 flex items-center justify-center"><p className="text-white/40">Loading chart...</p></div>}>
+            <CategoryPieChart data={breakdown} />
+          </Suspense>
         </motion.div>
 
         <motion.div
@@ -124,7 +133,9 @@ export function Transactions() {
           className="bg-card shadow-sm  rounded-3xl border border-border p-5 mb-5"
         >
           <p className="text-white/50 text-xs font-semibold uppercase tracking-wider mb-3">Monthly Expenses</p>
-          <MonthlyBarChart data={monthlyChart} />
+          <Suspense fallback={<div className="h-64 flex items-center justify-center"><p className="text-white/40">Loading chart...</p></div>}>
+            <MonthlyBarChart data={monthlyChart} />
+          </Suspense>
         </motion.div>
 
         <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.12 }}>
@@ -173,19 +184,12 @@ export function Transactions() {
 
         <div className="space-y-2.5 pb-4">
           {transactions.slice(0, visibleCount).map((tx, i) => (
-            <motion.div
+            <TransactionCard
               key={tx.id}
-              initial={{ opacity: 0, y: 6 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: i * 0.03 }}
-            >
-              <TransactionCard
-                transaction={tx}
-                onEdit={() => { setEditing(tx); setFormOpen(true); }}
-                onDelete={() => handleDelete(tx)}
-                isDeleting={isDeleting}
-              />
-            </motion.div>
+              transaction={tx}
+              onEdit={handleEdit}
+              onDelete={handleDelete}
+            />
           ))}
         </div>
         

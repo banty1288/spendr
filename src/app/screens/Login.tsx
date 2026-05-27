@@ -6,6 +6,7 @@ import {
   signInWithEmailAndPassword,
   signInWithPopup,
   createUserWithEmailAndPassword,
+  sendPasswordResetEmail,
 } from "firebase/auth";
 import { FirebaseError } from "firebase/app";
 import { auth, googleProvider } from "../../lib/firebase";

@@ -23,7 +23,7 @@ export function AppSettings() {
   const saveSetting = async (key: string, value: string) => {
     try {
       if (key === "theme") {
-        updateSettings({ app: { theme: value as any } });
+        updateSettings({ app: { theme: value as "light" | "dark" | "system" } });
         trackThemeChanged(value);
       } else {
         updatePreferences({ [key]: value });
@@ -64,7 +64,7 @@ export function AppSettings() {
                   <h3 className="text-white font-medium">Theme Appearance</h3>
                   <select 
                     value={theme} 
-                    onChange={(e) => { setTheme(e.target.value); saveSetting("theme", e.target.value); }}
+                    onChange={(e) => { setTheme(e.target.value as "light" | "dark" | "system"); saveSetting("theme", e.target.value); }}
                     className="mt-2 w-full bg-background/50 border border-border rounded-xl px-4 py-3 text-white appearance-none focus:outline-none focus:border-[#9d4edd]"
                   >
                     <option value="dark">Dark Mode (Premium)</option>

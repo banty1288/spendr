@@ -12,6 +12,8 @@ import { AiError, toAiError } from "./errors";
 import { tryDevMockFallback } from "./devFallback";
 import { buildWeeklyReportPrompt } from "./weeklyPrompts";
 import { parseWeeklyReport } from "./weeklyParse";
+import { buildAiUserContext } from "./context";
+import type { SpendrAIAnalysis } from "./types";
 
 export interface GenerateWeeklyReportParams {
   uid: string;
@@ -54,21 +56,21 @@ export async function generateWeeklyReport({
     );
   }
 
-  const cacheKey = buildAnalysisCacheKey(uid, "weekly_report", weekStartDate);
+  const cacheKey = buildAnalysisCacheKey(uid, `weekly_report_${weekStartDate}`);
 
   if (!force) {
     const cached = getCachedAnalysis(cacheKey);
     if (cached) {
-      return cached as WeeklyReport;
+      return cached as unknown as WeeklyReport;
     }
   }
 
   if (!isAiEnabled()) {
     const mock = tryDevMockFallback(
       new AiError("CONFIG", "AI is not configured.", false),
-      { uid, transactions }
+      buildAiUserContext(userData, transactions)
     );
-    if (mock) return mock as WeeklyReport;
+    if (mock) return mock as unknown as WeeklyReport;
     throw new AiError(
       "CONFIG",
       "AI is not configured. Set VITE_GEMINI_API_KEY in .env.local.",
@@ -78,8 +80,8 @@ export async function generateWeeklyReport({
 
   const prompt = buildWeeklyReportPrompt({
     uid,
-    displayName: userData.displayName,
-    email: userData.email,
+    displayName: userData.displayName || "User",
+    email: userData.email || "",
     weekStartDate,
     weekEndDate,
     periodLabel,
@@ -87,17 +89,17 @@ export async function generateWeeklyReport({
     previousWeekExpenses,
     savingsGoals,
     emotionalTriggers,
-    spendingProfile: userData.profile?.spendingProfile || "General",
+    spendingProfile: userData.profile?.budgetingHabits?.[0] || "General",
   });
 
   try {
     const raw = await generateJsonText({ prompt });
     const report = parseWeeklyReport(raw, uid, weekStartDate, weekEndDate);
-    setCachedAnalysis(cacheKey, report);
+    setCachedAnalysis(cacheKey, `weekly_report_${weekStartDate}`, report as unknown as SpendrAIAnalysis);
     return report;
   } catch (err) {
-    const mock = tryDevMockFallback(err, { uid, transactions });
-    if (mock) return mock as WeeklyReport;
+    const mock = tryDevMockFallback(err, buildAiUserContext(userData, transactions));
+    if (mock) return mock as unknown as WeeklyReport;
     throw toAiError(err);
   }
 }

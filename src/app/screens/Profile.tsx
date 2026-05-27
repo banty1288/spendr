@@ -83,9 +83,9 @@ export function Profile() {
           <div className="relative flex items-center gap-4 mb-6">
             <div className="flex flex-col items-center mt-6">
               <div className="relative">
-                {userData?.profile?.avatarUrl ? (
+                {(userData?.profile as any)?.avatarUrl ? (
                   <img 
-                    src={userData.profile.avatarUrl} 
+                    src={(userData?.profile as any)?.avatarUrl} 
                     alt="Profile" 
                     className="w-24 h-24 rounded-full object-cover border-2 border-[#00d9ff]/30 shadow-[0_0_30px_rgba(0,217,255,0.2)]"
                   />

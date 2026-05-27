@@ -11,6 +11,7 @@ import { useAuthStore } from "../store/authStore";
 import { useOnboardingCompleted } from "./useUserData";
 import { useTransactions } from "./useTransactions";
 import { trackAiInsightGenerated } from "../services/analytics";
+import type { SpendrAIAnalysis } from "../services/ai/types";
 
 export const geminiInsightsQueryKey = (uid?: string) =>
   ["geminiInsights", uid] as const;
@@ -42,9 +43,9 @@ export function useGeminiInsights() {
     return buildSpendrAnalysisFingerprint(transactions, userData ?? null);
   }, [uid, transactions, userData]);
 
-  const query = useQuery({
+  const query = useQuery<SpendrAIAnalysis, Error>({
     queryKey: geminiInsightsQueryKey(uid),
-    queryFn: async () => {
+    queryFn: async (): Promise<SpendrAIAnalysis> => {
       throw new Error("Gemini insights are manual-only. Call runAnalysis().");
     },
     enabled: false,

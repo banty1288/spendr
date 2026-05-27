@@ -22,7 +22,7 @@ export function Notifications() {
 
   useEffect(() => {
     if (userData?.settings?.notifications) {
-      setSettings(userData.settings.notifications);
+      setSettings((prev) => ({ ...prev, ...(userData.settings!.notifications as any) }));
     }
   }, [userData]);
 

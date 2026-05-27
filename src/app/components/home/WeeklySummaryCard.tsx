@@ -47,14 +47,14 @@ export function WeeklySummaryCard({ report, isLoading }: WeeklySummaryCardProps)
       </div>
       
       <p className="text-white/90 text-sm leading-relaxed mb-4">
-        {report.summary}
+        {report.trendSummary}
       </p>
 
-      {report.highlights && report.highlights.length > 0 && (
+      {report.wins && report.wins.length > 0 && (
         <div className="flex flex-wrap gap-2">
-          {report.highlights.slice(0, 2).map((highlight, idx) => (
+          {report.wins.slice(0, 2).map((win, idx) => (
             <span key={idx} className="bg-card text-[#00d9ff] px-2.5 py-1 rounded-full text-[10px] font-medium border border-[#00d9ff]/20">
-              {highlight}
+              {win.title}
             </span>
           ))}
         </div>

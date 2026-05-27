@@ -33,7 +33,7 @@ export function useRewards() {
       trackRewardEarned(newReward.type, newReward.xp);
       
       // Trigger a visual toast animation for the reward
-      toast.custom((t) => React.createElement('div', {
+      toast.custom((_t) => React.createElement('div', {
         className: "bg-black/90 border border-[#00ff88]/30 p-4 rounded-2xl shadow-2xl shadow-[#00ff88]/10 flex items-center gap-4 animate-in slide-in-from-bottom-5 fade-in duration-300",
       }, [
         React.createElement('div', { className: "text-3xl animate-bounce" }, newReward.icon || "✨"),

@@ -4,11 +4,10 @@ import {
   fetchUserChallenges,
   addChallenge,
   updateChallengeProgress,
-  upsertUserChallenge,
 } from "../lib/firebase/challenges";
 import { generatePersonalizedChallenges } from "../services/ai/challengeGateway";
 import { useRewards } from "./useRewards";
-import { REWARD_ICONS } from "../services/rewards/xpEngine";
+import { REWARD_ICONS, XP_VALUES } from "../services/rewards/xpEngine";
 import type { UserData } from "../types/user";
 import type { Transaction } from "../types/transaction";
 import type { SavingsChallenge, ChallengeStatus, ChallengeRecommendation } from "../types/challenge";
@@ -55,7 +54,7 @@ export function useChallenges(
       });
     },
     onSuccess: () => {
-      queryClient.invalidateQueries(challengesQueryKey(uid));
+      queryClient.invalidateQueries({ queryKey: challengesQueryKey(uid) });
     },
   });
 
@@ -95,11 +94,11 @@ export function useChallenges(
     challenges: challengesQuery.data ?? [],
     isLoading: challengesQuery.isLoading,
     generateRecommendations: generateMutation.mutateAsync,
-    isGenerating: generateMutation.isLoading,
+    isGenerating: generateMutation.isPending,
     recommendations: generateMutation.data,
     acceptChallenge: acceptMutation.mutateAsync,
-    isAccepting: acceptMutation.isLoading,
+    isAccepting: acceptMutation.isPending,
     updateChallenge: updateMutation.mutateAsync,
-    isUpdating: updateMutation.isLoading,
+    isUpdating: updateMutation.isPending,
   };
 }

@@ -3,8 +3,8 @@ import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { fetchUserNotifications, addNotification, markNotificationStatus, markAllNotificationsRead } from "../lib/firebase/notifications";
 import { generateCoachingInsights } from "../services/ai/coachingGateway";
 import { useAuthStore } from "../store/authStore";
-import { generateRequestHash } from "../services/ai/requestLock";
-import type { SmartNotification, NotificationStatus } from "../types/notification";
+
+import type { NotificationStatus } from "../types/notification";
 import type { UserData } from "../types/user";
 import type { Transaction } from "../types/transaction";
 

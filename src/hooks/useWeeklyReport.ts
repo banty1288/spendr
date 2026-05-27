@@ -45,7 +45,7 @@ export function useWeeklyReport() {
       try {
         setIsFetching(true);
         setError(null);
-        const report = await fetchLatestWeeklyReport(uid);
+        const report = await fetchLatestWeeklyReport(uid!);
         setLatestReport(report);
       } catch (err) {
         setError(err instanceof Error ? err : new Error("Failed to load report"));
@@ -61,35 +61,19 @@ export function useWeeklyReport() {
   const generateReport = useCallback(
     async (force = false) => {
       if (!uid) {
-        throw new AiError(
-          "AUTH",
-          "Not authenticated. Please log in.",
-          false
-        );
+        throw new Error("Not authenticated. Please log in.");
       }
 
       if (!userData) {
-        throw new AiError(
-          "USER",
-          "User profile not loaded. Please wait.",
-          false
-        );
+        throw new Error("User profile not loaded. Please wait.");
       }
 
       if (!userData.onboardingCompleted) {
-        throw new AiError(
-          "ONBOARDING",
-          "Complete onboarding before generating weekly reports.",
-          false
-        );
+        throw new Error("Complete onboarding before generating weekly reports.");
       }
 
       if (transactions.length === 0) {
-        throw new AiError(
-          "EMPTY",
-          "Add at least one transaction to generate a weekly report.",
-          false
-        );
+        throw new Error("Add at least one transaction to generate a weekly report.");
       }
 
       setIsGenerating(true);

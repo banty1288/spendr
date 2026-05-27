@@ -17,9 +17,11 @@ import { useAchievements } from "../../hooks/useAchievements";
 
 import { HealthScoreCard } from "../components/home/HealthScoreCard";
 import { PersonalitySnapshotCard } from "../components/home/PersonalitySnapshotCard";
-import { AIInsightsCarousel } from "../components/home/AIInsightsCarousel";
 import { WeeklySummaryCard } from "../components/home/WeeklySummaryCard";
-import { SpendingTrendWidget } from "../components/home/SpendingTrendWidget";
+
+import { lazy, Suspense } from "react";
+const AIInsightsCarousel = lazy(() => import("../components/home/AIInsightsCarousel").then(m => ({ default: m.AIInsightsCarousel })));
+const SpendingTrendWidget = lazy(() => import("../components/home/SpendingTrendWidget").then(m => ({ default: m.SpendingTrendWidget })));
 
 import { computeBalanceFromTransactions, getMonthTotals } from "../../lib/transactions/analytics";
 import { getCategoryById } from "../../lib/transactions/constants";
@@ -171,13 +173,17 @@ export function Home() {
           <PersonalitySnapshotCard personality={personality} isLoading={isPersonalityLoading} />
           
           <div className="md:col-span-2 xl:col-span-3">
-            <AIInsightsCarousel analysis={analysis} emotionalInsights={emotionalInsights} isLoading={isAnalysisLoading || isEmotionalLoading} />
+            <Suspense fallback={<div className="h-40 bg-card rounded-3xl border border-border animate-pulse" />}>
+              <AIInsightsCarousel analysis={analysis} emotionalInsights={emotionalInsights} isLoading={isAnalysisLoading || isEmotionalLoading} />
+            </Suspense>
           </div>
           
           <WeeklySummaryCard report={latestReport} isLoading={isWeeklyLoading} />
           
           <div className="xl:col-span-2">
-            <SpendingTrendWidget monthlyData={monthlyTrendData} totalSpending={totalSpending} isLoading={isTrendLoading} />
+            <Suspense fallback={<div className="h-64 bg-card rounded-3xl border border-border animate-pulse" />}>
+              <SpendingTrendWidget monthlyData={monthlyTrendData} totalSpending={totalSpending} isLoading={isTrendLoading} />
+            </Suspense>
           </div>
         </div>
 

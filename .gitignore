@@ -8,3 +8,7 @@ dist
 .env
 .expo
 .vercel
+
+*.tsbuildinfo
+.firebase/
+

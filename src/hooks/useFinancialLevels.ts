@@ -42,7 +42,7 @@ export function useFinancialLevels(
   });
 
   useEffect(() => {
-    if (!uid || query.isLoading || mutation.isLoading) return;
+    if (!uid || query.isLoading || mutation.isPending) return;
 
     const currentDoc = query.data;
     const shouldPersist =
@@ -57,7 +57,7 @@ export function useFinancialLevels(
 
   return {
     financialLevel: summary,
-    isLoading: query.isLoading || mutation.isLoading,
+    isLoading: query.isLoading || mutation.isPending,
     isError: query.isError,
   };
 }

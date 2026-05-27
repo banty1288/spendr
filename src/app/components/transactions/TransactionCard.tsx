@@ -10,16 +10,14 @@ import { memo } from "react";
 
 interface TransactionCardProps {
   transaction: Transaction;
-  onEdit: () => void;
-  onDelete: () => void;
-  isDeleting?: boolean;
+  onEdit: (tx: Transaction) => void;
+  onDelete: (tx: Transaction) => void;
 }
 
 export const TransactionCard = memo(function TransactionCard({
   transaction,
   onEdit,
   onDelete,
-  isDeleting,
 }: TransactionCardProps) {
   const category = getCategoryById(transaction.categoryId);
   const isIncome = transaction.type === "income";
@@ -60,7 +58,7 @@ export const TransactionCard = memo(function TransactionCard({
       <div className="flex flex-col gap-1 shrink-0">
         <button
           type="button"
-          onClick={onEdit}
+          onClick={() => onEdit(transaction)}
           className="p-2 rounded-xl bg-card shadow-sm border border-border hover:bg-white/10 transition-colors"
           aria-label="Edit transaction"
         >
@@ -68,9 +66,8 @@ export const TransactionCard = memo(function TransactionCard({
         </button>
         <button
           type="button"
-          onClick={onDelete}
-          disabled={isDeleting}
-          className="p-2 rounded-xl bg-card border border-[#ff3366]/20 hover:bg-card transition-colors disabled:opacity-50"
+          onClick={() => onDelete(transaction)}
+          className="p-2 rounded-xl bg-card border border-[#ff3366]/20 hover:bg-card transition-colors"
           aria-label="Delete transaction"
         >
           <Trash2 size={14} className="text-[#ff3366]" />

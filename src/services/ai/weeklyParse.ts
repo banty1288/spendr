@@ -1,4 +1,14 @@
-import type { WeeklyReport } from "../../types/weeklyReport";
+import type { 
+  WeeklyReport,
+  CategorySpending,
+  FinancialWin,
+  RiskyBehavior,
+  EmotionalTrendPoint,
+  SavingsProgress,
+  WeeklyTrend,
+  ImprovementGoal,
+  CoachingInsight
+} from "../../types/weeklyReport";
 import { getGeminiModel } from "./config/index";
 
 export function parseWeeklyReport(
@@ -44,9 +54,9 @@ export function parseWeeklyReport(
           : "neutral"
       ) as "up" | "down" | "neutral",
       trendPercent: Number((cat as Record<string, unknown>).trendPercent ?? 0),
-    })),
+    })) as CategorySpending[],
     topCategory:
-      (parsed.categoryBreakdown as Array<unknown>)?.[0] ?? null,
+      ((parsed.categoryBreakdown as Array<unknown>)?.[0] as CategorySpending) ?? null,
     wins: ((parsed.wins as Array<unknown>) ?? []).map((win: unknown) => {
       const winObj: Record<string, unknown> = {
         title: String((win as Record<string, unknown>).title ?? ""),
@@ -64,7 +74,7 @@ export function parseWeeklyReport(
         winObj.amount = Number(amount);
       }
       return winObj;
-    }) as Array<unknown>,
+    }) as unknown as FinancialWin[],
     highlightSummary: String(parsed.highlightSummary ?? ""),
     riskyBehaviors: ((parsed.riskyBehaviors as Array<unknown>) ?? []).map(
       (risk: unknown) => ({
@@ -81,7 +91,7 @@ export function parseWeeklyReport(
         confidence: Number((risk as Record<string, unknown>).confidence ?? 0),
         suggestion: String((risk as Record<string, unknown>).suggestion ?? ""),
       })
-    ),
+    ) as RiskyBehavior[],
     riskAssessment: String(parsed.riskAssessment ?? ""),
     emotionalTrends: ((parsed.emotionalTrends as Array<unknown>) ?? []).map(
       (trend: unknown) => {
@@ -102,7 +112,7 @@ export function parseWeeklyReport(
         }
         return trendObj;
       }
-    ) as Array<unknown>,
+    ) as unknown as EmotionalTrendPoint[],
     emotionalInsight: String(parsed.emotionalInsight ?? ""),
     dominantEmotionalTrigger: (parsed.dominantEmotionalTrigger as string) ?? "Unknown",
     savingsProgress: ((parsed.savingsProgress as Array<unknown>) ?? []).map(
@@ -114,7 +124,7 @@ export function parseWeeklyReport(
         weeklySavingsAmount: Number((goal as Record<string, unknown>).weeklySavingsAmount ?? 0),
         estimatedWeeksToGoal: Number((goal as Record<string, unknown>).estimatedWeeksToGoal ?? 0),
       })
-    ),
+    ) as SavingsProgress[],
     savingsRate: Number(parsed.savingsRate ?? 0),
     weeklyTrends: ((parsed.weeklyTrends as Array<unknown>) ?? []).map(
       (trend: unknown) => ({
@@ -131,7 +141,7 @@ export function parseWeeklyReport(
             : "neutral"
         ) as "up" | "down" | "neutral",
       })
-    ),
+    ) as WeeklyTrend[],
     trendSummary: String(parsed.trendSummary ?? ""),
     improvementGoals: ((parsed.improvementGoals as Array<unknown>) ?? []).map(
       (goal: unknown) => {
@@ -158,7 +168,7 @@ export function parseWeeklyReport(
         }
         return goalObj;
       }
-    ) as Array<unknown>,
+    ) as unknown as ImprovementGoal[],
     coachingInsights: ((parsed.coachingInsights as Array<unknown>) ?? []).map(
       (insight: unknown) => {
         const insightObj: Record<string, unknown> = {
@@ -172,7 +182,7 @@ export function parseWeeklyReport(
         }
         return insightObj;
       }
-    ) as Array<unknown>,
+    ) as unknown as CoachingInsight[],
     coachingMessage: String(parsed.coachingMessage ?? ""),
     healthScore: {
       discipline: Number(

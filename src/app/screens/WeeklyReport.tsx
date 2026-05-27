@@ -21,6 +21,7 @@ import { TrendsSummaryCard } from "../components/weekly/TrendsSummaryCard";
 import { SavingsProgressCard } from "../components/weekly/SavingsProgressCard";
 import { WeeklyReportSkeleton } from "../components/weekly/WeeklyReportSkeleton";
 import { useWeeklyReport } from "../../hooks/useWeeklyReport";
+import { useTransactions } from "../../hooks/useTransactions";
 import { AiError } from "../../services/ai/errors";
 import { useCurrency } from "../../hooks/useCurrency";
 import { useTranslation } from "react-i18next";

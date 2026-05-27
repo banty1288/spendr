@@ -1,5 +1,5 @@
-import type { Transaction } from "../types/transaction";
-import type { WeeklyReport } from "../types/weeklyReport";
+import type { Transaction } from "../../types/transaction";
+import type { WeeklyReport } from "../../types/weeklyReport";
 import { format, startOfWeek, subWeeks } from "date-fns";
 
 /**

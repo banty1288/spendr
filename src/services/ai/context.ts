@@ -56,6 +56,7 @@ export function buildAiUserContext(
     emotionalTriggers: profile?.emotionalTriggers,
     transactionsSummary: buildTransactionsSummary(transactions),
     currency,
+    language: userData?.settings?.app?.language || "en",
   };
 }
 

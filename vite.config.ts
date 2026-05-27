@@ -7,7 +7,7 @@ import { VitePWA } from 'vite-plugin-pwa'
 function figmaAssetResolver() {
   return {
     name: 'figma-asset-resolver',
-    resolveId(id) {
+    resolveId(id: string) {
       if (id.startsWith('figma:asset/')) {
         const filename = id.replace('figma:asset/', '')
         return path.resolve(__dirname, 'src/assets', filename)
@@ -73,11 +73,13 @@ export default defineConfig({
   build: {
     rollupOptions: {
       output: {
-        manualChunks: {
-          'react-vendor': ['react', 'react-dom', 'react-router'],
-          'firebase-vendor': ['firebase/app', 'firebase/auth', 'firebase/firestore', 'firebase/storage'],
-          'ui-vendor': ['lucide-react', 'motion/react', 'sonner'],
-          'query-vendor': ['@tanstack/react-query'],
+        manualChunks(id: string) {
+          if (id.includes('node_modules')) {
+            if (id.includes('react')) return 'react-vendor'
+            if (id.includes('firebase')) return 'firebase-vendor'
+            if (id.includes('lucide-react') || id.includes('motion') || id.includes('sonner')) return 'ui-vendor'
+            if (id.includes('@tanstack')) return 'query-vendor'
+          }
         }
       }
     }

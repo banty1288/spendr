@@ -51,7 +51,7 @@ export function CategoryBreakdown({
                     <span className="text-xl">{categoryInfo?.icon || "💳"}</span>
                     <div>
                       <p className="text-sm font-medium text-white">
-                        {categoryInfo?.name || cat.categoryName}
+                        {categoryInfo?.label || cat.categoryName}
                       </p>
                       <p className="text-xs text-white/50">
                         ${cat.amount.toFixed(2)} • {cat.percentOfTotal.toFixed(1)}%

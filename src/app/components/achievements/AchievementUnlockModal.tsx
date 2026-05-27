@@ -1,6 +1,6 @@
 import { AnimatePresence, motion } from "motion/react";
 import { X, Sparkles } from "lucide-react";
-import type { AchievementStatus } from "../../types/achievement";
+import type { AchievementStatus } from "../../../types/achievement";
 
 interface AchievementUnlockModalProps {
   achievements: AchievementStatus[];

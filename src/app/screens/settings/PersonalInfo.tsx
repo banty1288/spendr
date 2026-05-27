@@ -25,7 +25,7 @@ export function PersonalInfo() {
     if (userData) {
       setDisplayName(userData.displayName || "");
       setEmail(userData.email || "");
-      setPhotoUrl(userData.profile?.avatarUrl || user?.photoURL || "");
+      setPhotoUrl((userData.profile as any)?.avatarUrl || user?.photoURL || "");
       setPhone("");
     }
   }, [userData, user]);

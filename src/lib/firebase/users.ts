@@ -49,10 +49,13 @@ async function bootstrapUserDoc(authed: User): Promise<UserData> {
     }
 
     const initialData: UserData = {
+      uid: authed.uid,
       displayName: authed.displayName || "New User",
       email: authed.email || "",
+      photoURL: authed.photoURL || "",
       balance: 0,
       createdAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString(),
       onboardingCompleted: false,
     };
 
@@ -109,9 +112,9 @@ export async function updateUserSettings(
   const newSettings = {
     ...currentSettings,
     ...settings,
-    notifications: { ...currentSettings.notifications, ...settings.notifications },
-    privacy: { ...currentSettings.privacy, ...settings.privacy },
-    app: { ...currentSettings.app, ...settings.app },
+    notifications: { ...currentSettings.notifications, ...settings?.notifications },
+    privacy: { ...currentSettings.privacy, ...settings?.privacy },
+    app: { ...currentSettings.app, ...settings?.app },
   };
   
   await updateDoc(userRef, {

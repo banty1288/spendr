@@ -1,5 +1,4 @@
 import { useMemo } from "react";
-import { useMemo } from "react";
 import { Home, Sparkles, TrendingUp, Trophy, User } from "lucide-react";
 import { useNavigate, useLocation } from "react-router";
 import { useTranslation } from "react-i18next";

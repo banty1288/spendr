@@ -1,6 +1,6 @@
 import { motion } from "motion/react";
 import { useTranslation } from "react-i18next";
-import type { AchievementStatus } from "../../types/achievement";
+import type { AchievementStatus } from "../../../types/achievement";
 
 const rarityStyles: Record<AchievementStatus["rarity"], string> = {
   common: "from-white/5 to-white/10 border-border",
