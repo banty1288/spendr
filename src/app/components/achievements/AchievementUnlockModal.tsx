@@ -12,13 +12,13 @@ export function AchievementUnlockModal({ achievements, onClose }: AchievementUnl
     <AnimatePresence>
       {achievements.length > 0 ? (
         <motion.div
-          className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-background/85"
+          className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-background/85"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
         >
           <motion.div
-            className="w-full max-w-xl rounded-[2rem] border border-border bg-card p-6 shadow-2xl shadow-black/60"
+            className="w-full max-w-xl max-h-[85vh] overflow-y-auto rounded-[2rem] border border-border bg-card p-6 shadow-2xl shadow-black/60"
             initial={{ opacity: 0, y: 40, scale: 0.96 }}
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: 20, scale: 0.98 }}
