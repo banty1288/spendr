@@ -39,7 +39,7 @@ export function OnboardingShell({
         <OnboardingProgress currentStep={currentStep} />
       </header>
 
-      <main className="relative z-10 flex-1 overflow-y-auto px-6 pb-safe-nav">
+      <main className="relative z-10 flex-1 overflow-y-auto px-6 pb-[120px]">
         <AnimatePresence mode="wait" custom={direction}>
           <motion.div
             key={stepKey}
