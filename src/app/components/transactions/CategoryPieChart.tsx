@@ -47,7 +47,7 @@ export function CategoryPieChart({ data }: CategoryPieChartProps) {
           innerRadius={50}
           outerRadius={80}
           paddingAngle={2}
-          activeShape={null}
+          activeShape={false}
           isAnimationActive={false}
           stroke="none"
           style={{ outline: "none" }}
