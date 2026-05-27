@@ -184,6 +184,9 @@ Spendr integrates **Google's Gemini 1.5 Flash** model to provide personalized fi
 
 ## 🔗 Links
 
+- **GitHub Repository:** [https://github.com/banty1614-source/spendr.git](https://github.com/banty1614-source/spendr.git)
+- **Vercel Deployment:** [https://spendr-main.vercel.app](https://spendr-main.vercel.app)
+- **Firebase Hosting:** [https://spendr-app-85a7b.web.app](https://spendr-app-85a7b.web.app)
 - **Documentation / Architecture:** [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md)
 - **Contributing Guidelines:** [CONTRIBUTING.md](CONTRIBUTING.md)
 
