@@ -1,4 +1,4 @@
-import { getFunctions, httpsCallable } from "firebase/functions";
+import { getAuth } from "firebase/auth";
 import { app } from "../../../lib/firebase"; // Ensure correct path to firebase app
 import { getAiSettings, type AiSettings } from "../config/index";
 import { AiError } from "../errors";
@@ -14,7 +14,7 @@ export interface GenerateJsonOptions {
 }
 
 /**
- * Reusable AI client — delegates to Firebase Cloud Functions securely.
+ * Reusable AI client — delegates to Vercel Serverless Functions securely.
  */
 export class GeminiClient {
   private readonly config: Readonly<AiSettings>;
@@ -49,23 +49,48 @@ export class GeminiClient {
     this.assertEnabled();
     const { prompt, temperature = this.config.temperature, analysisType } = options;
 
-    const functions = getFunctions(app, "us-central1");
-    const generateInsight = httpsCallable<{ 
-      prompt: string; 
-      temperature: number; 
-      jsonResponse: boolean;
-      analysisType?: string;
-    }, { text: string }>(functions, "generateInsight");
+    const auth = getAuth(app);
+    const currentUser = auth.currentUser;
+
+    if (!currentUser) {
+      throw new AiError("API", "You must be signed in to generate insights.", false);
+    }
 
     try {
-      const result = await generateInsight({
-        prompt,
-        temperature,
-        jsonResponse: this.config.features.jsonResponse,
-        analysisType,
+      // Get the Firebase ID token
+      const idToken = await currentUser.getIdToken(true); // true forces refresh if close to expiration
+
+      // Call the Vercel API endpoint
+      const response = await fetch('/api/generateInsight', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${idToken}`
+        },
+        body: JSON.stringify({
+          prompt,
+          temperature,
+          jsonResponse: this.config.features.jsonResponse,
+          analysisType,
+        })
       });
 
-      const text = result.data.text;
+      if (!response.ok) {
+        const errorData = await response.json().catch(() => null);
+        const status = response.status;
+        
+        if (status === 401) {
+          throw new AiError("API", "Authentication failed. Please sign in again.", false);
+        }
+        if (status === 429) {
+          throw new AiError("API", "Rate limit exceeded. Please wait a moment.", true);
+        }
+        
+        throw new Error(errorData?.error || `API Error: ${status}`);
+      }
+
+      const result = await response.json();
+      const text = result.text;
 
       if (!text?.trim()) {
         throw new AiError("EMPTY", "AI returned an empty response.", true);
@@ -73,13 +98,6 @@ export class GeminiClient {
 
       return text;
     } catch (err: any) {
-      // Handle Firebase Functions specific errors
-      if (err?.code === "functions/resource-exhausted") {
-        throw new AiError("API", "Rate limit exceeded. Please wait a moment.", true);
-      }
-      if (err?.code === "functions/unauthenticated") {
-        throw new AiError("API", "You must be signed in to generate insights.", false);
-      }
       throw toAiError(err);
     }
   }
