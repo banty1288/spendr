@@ -35,9 +35,9 @@ export function CategoryPieChart({ data }: CategoryPieChartProps) {
   };
 
   return (
-    <div className="h-[190px] min-[375px]:h-[200px] w-full min-w-0 overflow-hidden" style={{ WebkitTapHighlightColor: "transparent", outline: "none" }}>
-    <ResponsiveContainer width="100%" height="100%" className="outline-none">
-      <PieChart style={{ outline: "none" }}>
+    <div className="h-[190px] min-[375px]:h-[200px] w-full min-w-0 overflow-visible" style={{ WebkitTapHighlightColor: "transparent", outline: "none" }}>
+    <ResponsiveContainer width="100%" height="100%" className="outline-none" style={{ overflow: "visible" }}>
+      <PieChart style={{ outline: "none", overflow: "visible" }}>
         <Pie
           data={data}
           dataKey="value"
