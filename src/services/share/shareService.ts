@@ -1,4 +1,7 @@
 import { toBlob } from "html-to-image";
+import { Share } from '@capacitor/share';
+import { Filesystem, Directory } from '@capacitor/filesystem';
+import { Capacitor } from '@capacitor/core';
 
 export interface ShareOptions {
   title?: string;
@@ -16,6 +19,19 @@ function downloadFile(blob: Blob, filename: string) {
   document.body.removeChild(a);
   URL.revokeObjectURL(url);
 }
+
+const blobToBase64 = (blob: Blob): Promise<string> => {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onloadend = () => {
+      const result = reader.result as string;
+      // Remove the data:image/png;base64, prefix
+      resolve(result.split(',')[1]);
+    };
+    reader.onerror = reject;
+    reader.readAsDataURL(blob);
+  });
+};
 
 /**
  * Captures a React DOM reference as a Blob and attempts to share it
@@ -42,26 +58,50 @@ export async function shareDomElement(
       throw new Error("Failed to generate image blob");
     }
 
-    const file = new File([blob], filename, { type: "image/png" });
-
-    if (navigator.canShare && navigator.canShare({ files: [file] })) {
+    if (Capacitor.isNativePlatform()) {
+      // Native Capacitor Share via Filesystem
       try {
-        await navigator.share({
+        const base64Data = await blobToBase64(blob);
+        const writeResult = await Filesystem.writeFile({
+          path: filename,
+          data: base64Data,
+          directory: Directory.Cache,
+        });
+
+        await Share.share({
           title: options?.title || "Spendr",
           text: options?.text || "Check this out!",
-          url: options?.url,
-          files: [file],
+          url: writeResult.uri,
+          dialogTitle: 'Share with',
         });
-      } catch (shareErr) {
-        if (shareErr instanceof DOMException && shareErr.name === "AbortError") {
-          return; // User canceled the share dialog
-        }
-        console.warn("Share API failed, falling back to download", shareErr);
+      } catch (nativeShareErr) {
+        console.warn("Native share failed:", nativeShareErr);
+        // Fallback gracefully
         downloadFile(blob, filename);
       }
     } else {
-      // Fallback for Desktop/Unsupported browsers
-      downloadFile(blob, filename);
+      // Web Share API fallback
+      const file = new File([blob], filename, { type: "image/png" });
+
+      if (navigator.canShare && navigator.canShare({ files: [file] })) {
+        try {
+          await navigator.share({
+            title: options?.title || "Spendr",
+            text: options?.text || "Check this out!",
+            url: options?.url,
+            files: [file],
+          });
+        } catch (shareErr) {
+          if (shareErr instanceof DOMException && shareErr.name === "AbortError") {
+            return; // User canceled the share dialog
+          }
+          console.warn("Web Share API failed, falling back to download", shareErr);
+          downloadFile(blob, filename);
+        }
+      } else {
+        // Fallback for Desktop/Unsupported browsers
+        downloadFile(blob, filename);
+      }
     }
   } catch (err) {
     console.error("Error sharing DOM element:", err);

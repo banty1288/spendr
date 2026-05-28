@@ -51,6 +51,7 @@ This is an actively evolving project. It started as an MVP and is steadily gaini
 - **AI Financial Insights:** Powered by Gemini 1.5 Flash. Get in-depth analysis on your savings rate, high category spending, and emotional triggers (like FOMO or social pressure). Receive personalized coaching, goal-based budget suggestions, and a breakdown of your past weeks' performance.
 - **Profile & Settings:** Centrally manage personal information, security, notifications, and linked accounts.
 - **Responsive UI:** Works seamlessly on desktop and mobile web with a premium dark-mode aesthetic.
+- **Native Android Support:** Compiled into a standalone Android APK using Capacitor with native Share sheet integration.
 - **PWA Support:** Installable as a progressive web app for quick access on any device.
 
 ### Planned Features
@@ -125,9 +126,22 @@ cp .env.example .env.local
 npm run dev
 ```
 
-### 5. Build for production
+### 5. Build for production (Web)
 ```bash
 npm run build
+```
+
+### 6. Build Android APK (Capacitor)
+```bash
+# Build the frontend and sync Capacitor plugins
+npm run build
+npx cap sync android
+
+# Compile the APK (Requires Android Studio / SDK)
+cd android
+./gradlew assembleDebug
+
+# The APK will be available at: android/app/build/outputs/apk/debug/app-debug.apk
 ```
 
 ---

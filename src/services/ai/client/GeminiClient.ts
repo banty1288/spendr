@@ -58,7 +58,7 @@ export class GeminiClient {
 
     try {
       // Get the Firebase ID token
-      const idToken = await currentUser.getIdToken(true); // true forces refresh if close to expiration
+      const idToken = await currentUser.getIdToken();
 
       // Call the Vercel API endpoint
       const baseUrl = import.meta.env.VITE_API_URL || 'https://spendr-main.vercel.app';

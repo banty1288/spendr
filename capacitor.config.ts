@@ -5,6 +5,15 @@ const config: CapacitorConfig = {
   appName: 'Spendr',
   webDir: 'dist',
   bundledWebRuntime: false,
+  server: {
+    androidScheme: 'https',
+    cleartext: true,
+    allowNavigation: [
+      "*.firebaseio.com",
+      "*.googleapis.com",
+      "*.firebase.com"
+    ]
+  },
   plugins: {
     SplashScreen: {
       launchShowDuration: 2000,

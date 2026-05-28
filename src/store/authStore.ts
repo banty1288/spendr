@@ -65,7 +65,7 @@ function startAuthListener() {
 
           useAuthStore.setState({ bootstrapping: true });
           try {
-            await ensureUserDocument(undefined, true);
+            await ensureUserDocument(undefined, false);
           } catch (err) {
             console.error("Failed to bootstrap user document:", err);
           } finally {

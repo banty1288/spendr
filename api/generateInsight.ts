@@ -1,4 +1,4 @@
-import * as admin from 'firebase-admin';
+import admin from 'firebase-admin';
 import { GoogleGenerativeAI } from '@google/generative-ai';
 
 // Initialize Firebase Admin (only once per lambda invocation)
@@ -16,7 +16,7 @@ const MAX_REQUESTS_PER_WINDOW = 5;
 
 export default async function handler(req: any, res: any) {
   // CORS configuration
-  const allowedOrigins = ['https://spendr-main.vercel.app', 'https://spendr-app-85a7b.web.app', 'http://localhost:5173'];
+  const allowedOrigins = ['https://spendr-main.vercel.app', 'https://spendr-app-85a7b.web.app', 'http://localhost:5173', 'https://localhost', 'capacitor://localhost'];
   const origin = req.headers.origin;
   
   if (origin && allowedOrigins.includes(origin)) {
