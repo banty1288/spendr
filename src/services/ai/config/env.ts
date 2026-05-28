@@ -26,7 +26,6 @@ function parseCsvList(value: string | undefined): string[] {
 }
 
 export interface RawAiEnv {
-  apiKey: string;
   model: string;
   fallbackModels: string[];
   timeoutMs: number;
@@ -55,9 +54,6 @@ function readRawAiEnv(isDev: boolean, forceEmpty = false): RawAiEnv {
   const env = import.meta.env ?? {};
 
   return {
-    apiKey: forceEmpty
-      ? ""
-      : sanitizeEnv(env.VITE_GEMINI_API_KEY as string | undefined, ""),
     model: forceEmpty
       ? ""
       : sanitizeEnv(env.VITE_GEMINI_MODEL as string | undefined, ""),

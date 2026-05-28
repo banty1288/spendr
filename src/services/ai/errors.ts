@@ -101,7 +101,7 @@ export function toAiError(err: unknown): AiError {
   if (lower.includes("api key") || lower.includes("api_key")) {
     return new AiError(
       "CONFIG",
-      "Invalid or missing Gemini API key. Add VITE_GEMINI_API_KEY to .env.local.",
+      "Invalid or missing API key. Backend configuration error.",
       false
     );
   }

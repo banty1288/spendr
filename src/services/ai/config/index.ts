@@ -39,11 +39,11 @@ import { AiError } from "../errors";
 
 /** Returns API key or throws CONFIG — only call when making an API request */
 export function getGeminiApiKey(): string {
-  const key = getAiSettings().apiKey;
+  const key = "";
   if (!key) {
     throw new AiError(
       "CONFIG",
-      "Gemini API key is not configured. Set VITE_GEMINI_API_KEY in .env.local.",
+      "AI features are not configured correctly.",
       false
     );
   }

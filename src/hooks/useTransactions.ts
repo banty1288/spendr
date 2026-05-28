@@ -105,18 +105,20 @@ export function useTransactions() {
       );
       
       if (uid) {
-        const lastLogged = localStorage.getItem(`last_tx_reward_${uid}`);
-        const now = Date.now();
-        if (!lastLogged || now - parseInt(lastLogged) > 60000) {
-          localStorage.setItem(`last_tx_reward_${uid}`, now.toString());
-          logReward({
-            type: "transaction",
-            title: "Transaction Logged",
-            subtitle: "Tracking your spending habits",
-            xp: XP_VALUES.TRANSACTION_LOGGED,
-            icon: REWARD_ICONS.transaction,
-          });
-        }
+        logReward({
+          type: "transaction",
+          title: "Transaction Logged",
+          subtitle: "Tracking your spending habits",
+          xp: XP_VALUES.TRANSACTION_LOGGED,
+          icon: REWARD_ICONS.transaction,
+        }, {
+          onError: (err: any) => {
+            // Ignore 429 Too Many Requests silently as it's just throttling
+            if (!err.message?.includes("Too many requests")) {
+              console.error("Reward failed:", err);
+            }
+          }
+        });
       }
     },
     onSettled: () => void invalidateAll(),

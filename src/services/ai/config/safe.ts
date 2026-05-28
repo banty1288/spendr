@@ -12,7 +12,6 @@ import type { AiSettings } from "./settings";
 /** Used when env parsing or settings resolution fails — never throws */
 export const SAFE_AI_SETTINGS: Readonly<AiSettings> = Object.freeze({
   enabled: false,
-  apiKey: "",
   models: Object.freeze(buildModelChain(PRIMARY_GEMINI_MODEL)),
   timeoutMs: DEFAULT_REQUEST_TIMEOUT_MS,
   cacheTtlMs: DEFAULT_CACHE_TTL_MS,

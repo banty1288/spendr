@@ -178,7 +178,7 @@ export function Home() {
             </Suspense>
           </div>
           
-          <WeeklySummaryCard report={latestReport} isLoading={isWeeklyLoading} />
+          <WeeklySummaryCard report={latestReport ?? null} isLoading={isWeeklyLoading} />
           
           <div className="xl:col-span-2">
             <Suspense fallback={<div className="h-64 bg-card rounded-3xl border border-border animate-pulse" />}>

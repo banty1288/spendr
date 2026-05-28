@@ -32,7 +32,7 @@ async function callGeminiAndParse(
     if (mock) return mock;
     throw new AiError(
       "CONFIG",
-      "AI is not configured. Set VITE_GEMINI_API_KEY in .env.local.",
+      "AI is not configured.",
       false
     );
   }

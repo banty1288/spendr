@@ -1,6 +1,7 @@
 import { createRoot } from "react-dom/client";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { AppErrorBoundary } from "./app/components/AppErrorBoundary";
+import { GlobalErrorBoundary } from "./components/GlobalErrorBoundary";
+import { logger } from "./lib/logger";
 import "./store/authStore";
 import "./lib/i18n"; // Fix i18n initialization
 import App from "./app/App.tsx";
@@ -22,7 +23,7 @@ const queryClient = new QueryClient({
 /** Log unhandled promise rejections without taking down the UI */
 if (typeof window !== "undefined") {
   window.addEventListener("unhandledrejection", (event) => {
-    console.error("[Spendr] Unhandled promise rejection:", event.reason);
+    logger.fatal("Unhandled promise rejection", event.reason);
     if (import.meta.env.PROD) {
       event.preventDefault();
     }
@@ -30,9 +31,9 @@ if (typeof window !== "undefined") {
 }
 
 createRoot(document.getElementById("root")!).render(
-  <AppErrorBoundary name="root">
+  <GlobalErrorBoundary>
     <QueryClientProvider client={queryClient}>
       <App />
     </QueryClientProvider>
-  </AppErrorBoundary>
+  </GlobalErrorBoundary>
 );

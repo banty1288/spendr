@@ -1,15 +1,104 @@
-import type { 
-  WeeklyReport,
-  CategorySpending,
-  FinancialWin,
-  RiskyBehavior,
-  EmotionalTrendPoint,
-  SavingsProgress,
-  WeeklyTrend,
-  ImprovementGoal,
-  CoachingInsight
-} from "../../types/weeklyReport";
+import { z } from "zod";
+import type { WeeklyReport } from "../../types/weeklyReport";
 import { getGeminiModel } from "./config/index";
+
+export const CategorySpendingSchema = z.object({
+  categoryId: z.string(),
+  categoryName: z.string(),
+  amount: z.number().default(0),
+  percentOfTotal: z.number().default(0),
+  trend: z.enum(["up", "down", "neutral"]).default("neutral"),
+  trendPercent: z.number().default(0),
+});
+
+export const FinancialWinSchema = z.object({
+  title: z.string(),
+  description: z.string(),
+  amount: z.number().optional(),
+  impact: z.enum(["savings", "discipline", "consistency"]).default("discipline"),
+});
+
+export const RiskyBehaviorSchema = z.object({
+  type: z.enum(["impulse", "emotional", "recurring", "outlier"]).default("outlier"),
+  description: z.string(),
+  category: z.string(),
+  amount: z.number().default(0),
+  confidence: z.number().default(0),
+  suggestion: z.string(),
+});
+
+export const EmotionalTrendPointSchema = z.object({
+  date: z.string(),
+  spendingType: z.enum(["rational", "emotional", "impulse"]).default("rational"),
+  amount: z.number().default(0),
+  note: z.string().optional(),
+});
+
+export const SavingsProgressSchema = z.object({
+  goalName: z.string(),
+  currentAmount: z.number().default(0),
+  targetAmount: z.number().default(0),
+  percentComplete: z.number().default(0),
+  weeklySavingsAmount: z.number().default(0),
+  estimatedWeeksToGoal: z.number().default(0),
+});
+
+export const WeeklyTrendSchema = z.object({
+  metric: z.string(),
+  currentWeek: z.number().default(0),
+  previousWeek: z.number().default(0),
+  change: z.number().default(0),
+  changePercent: z.number().default(0),
+  direction: z.enum(["up", "down", "neutral"]).default("neutral"),
+});
+
+export const ImprovementGoalSchema = z.object({
+  goalId: z.string(),
+  title: z.string(),
+  description: z.string(),
+  targetAmount: z.number().optional(),
+  category: z.string().optional(),
+  priority: z.enum(["high", "medium", "low"]).default("medium"),
+  aiReasoning: z.string(),
+});
+
+export const CoachingInsightSchema = z.object({
+  category: z.string(),
+  insight: z.string(),
+  actionableStep: z.string(),
+  emoji: z.string().optional(),
+});
+
+export const WeeklyReportSchema = z.object({
+  periodLabel: z.string().default(""),
+  totalIncome: z.number().default(0),
+  totalExpenses: z.number().default(0),
+  netCashFlow: z.number().default(0),
+  previousWeekExpenses: z.number().default(0),
+  expenseChange: z.number().default(0),
+  categoryBreakdown: z.array(CategorySpendingSchema).default([]),
+  wins: z.array(FinancialWinSchema).default([]),
+  highlightSummary: z.string().default(""),
+  riskyBehaviors: z.array(RiskyBehaviorSchema).default([]),
+  riskAssessment: z.string().default(""),
+  emotionalTrends: z.array(EmotionalTrendPointSchema).default([]),
+  emotionalInsight: z.string().default(""),
+  dominantEmotionalTrigger: z.string().default("Unknown"),
+  savingsProgress: z.array(SavingsProgressSchema).default([]),
+  savingsRate: z.number().default(0),
+  weeklyTrends: z.array(WeeklyTrendSchema).default([]),
+  trendSummary: z.string().default(""),
+  improvementGoals: z.array(ImprovementGoalSchema).default([]),
+  coachingInsights: z.array(CoachingInsightSchema).default([]),
+  coachingMessage: z.string().default(""),
+  healthScore: z.object({
+    discipline: z.number().default(0),
+    consistency: z.number().default(0),
+    savingsRate: z.number().default(0),
+    emotionalControl: z.number().default(0),
+    overallScore: z.number().default(0),
+  }).default({ discipline: 0, consistency: 0, savingsRate: 0, emotionalControl: 0, overallScore: 0 }),
+});
 
 export function parseWeeklyReport(
   raw: string,
@@ -17,190 +106,33 @@ export function parseWeeklyReport(
   weekStartDate: string,
   weekEndDate: string
 ): WeeklyReport {
-  let parsed: Record<string, unknown>;
+  let parsedJson: unknown;
 
   try {
-    parsed = JSON.parse(raw);
+    parsedJson = JSON.parse(raw);
   } catch {
     throw new Error(`Invalid JSON response from AI: ${raw.substring(0, 100)}`);
   }
 
+  // Safe Runtime Parsing via Zod
+  const result = WeeklyReportSchema.safeParse(parsedJson);
+
+  if (!result.success) {
+    console.error("[Zod Parsing Error]", result.error.format());
+    throw new Error("AI returned malformed data structure that failed Zod validation.");
+  }
+
   const now = new Date().toISOString();
   const model = getGeminiModel();
+  const validated = result.data;
 
   return {
+    ...validated,
     id: `weekly_${weekStartDate}_${Date.now()}`,
     uid,
     weekStartDate,
     weekEndDate,
-    periodLabel: String(parsed.periodLabel ?? ""),
-    totalIncome: Number(parsed.totalIncome ?? 0),
-    totalExpenses: Number(parsed.totalExpenses ?? 0),
-    netCashFlow: Number(parsed.netCashFlow ?? 0),
-    previousWeekExpenses: Number(parsed.previousWeekExpenses ?? 0),
-    expenseChange: Number(parsed.expenseChange ?? 0),
-    categoryBreakdown: (
-      (parsed.categoryBreakdown as Array<unknown>) ?? []
-    ).map((cat: unknown) => ({
-      categoryId: String((cat as Record<string, unknown>).categoryId ?? ""),
-      categoryName: String((cat as Record<string, unknown>).categoryName ?? ""),
-      amount: Number((cat as Record<string, unknown>).amount ?? 0),
-      percentOfTotal: Number((cat as Record<string, unknown>).percentOfTotal ?? 0),
-      trend: (
-        ["up", "down", "neutral"].includes(
-          String((cat as Record<string, unknown>).trend ?? "")
-        )
-          ? (cat as Record<string, unknown>).trend
-          : "neutral"
-      ) as "up" | "down" | "neutral",
-      trendPercent: Number((cat as Record<string, unknown>).trendPercent ?? 0),
-    })) as CategorySpending[],
-    topCategory:
-      ((parsed.categoryBreakdown as Array<unknown>)?.[0] as CategorySpending) ?? null,
-    wins: ((parsed.wins as Array<unknown>) ?? []).map((win: unknown) => {
-      const winObj: Record<string, unknown> = {
-        title: String((win as Record<string, unknown>).title ?? ""),
-        description: String((win as Record<string, unknown>).description ?? ""),
-        impact: (
-          ["savings", "discipline", "consistency"].includes(
-            String((win as Record<string, unknown>).impact ?? "")
-          )
-            ? (win as Record<string, unknown>).impact
-            : "discipline"
-        ) as "savings" | "discipline" | "consistency",
-      };
-      const amount = (win as Record<string, unknown>).amount;
-      if (amount !== undefined && amount !== null) {
-        winObj.amount = Number(amount);
-      }
-      return winObj;
-    }) as unknown as FinancialWin[],
-    highlightSummary: String(parsed.highlightSummary ?? ""),
-    riskyBehaviors: ((parsed.riskyBehaviors as Array<unknown>) ?? []).map(
-      (risk: unknown) => ({
-        type: (
-          ["impulse", "emotional", "recurring", "outlier"].includes(
-            String((risk as Record<string, unknown>).type ?? "")
-          )
-            ? (risk as Record<string, unknown>).type
-            : "outlier"
-        ) as "impulse" | "emotional" | "recurring" | "outlier",
-        description: String((risk as Record<string, unknown>).description ?? ""),
-        category: String((risk as Record<string, unknown>).category ?? ""),
-        amount: Number((risk as Record<string, unknown>).amount ?? 0),
-        confidence: Number((risk as Record<string, unknown>).confidence ?? 0),
-        suggestion: String((risk as Record<string, unknown>).suggestion ?? ""),
-      })
-    ) as RiskyBehavior[],
-    riskAssessment: String(parsed.riskAssessment ?? ""),
-    emotionalTrends: ((parsed.emotionalTrends as Array<unknown>) ?? []).map(
-      (trend: unknown) => {
-        const trendObj: Record<string, unknown> = {
-          date: String((trend as Record<string, unknown>).date ?? ""),
-          spendingType: (
-            ["rational", "emotional", "impulse"].includes(
-              String((trend as Record<string, unknown>).spendingType ?? "")
-            )
-              ? (trend as Record<string, unknown>).spendingType
-              : "rational"
-          ) as "rational" | "emotional" | "impulse",
-          amount: Number((trend as Record<string, unknown>).amount ?? 0),
-        };
-        const note = (trend as Record<string, unknown>).note;
-        if (note) {
-          trendObj.note = String(note);
-        }
-        return trendObj;
-      }
-    ) as unknown as EmotionalTrendPoint[],
-    emotionalInsight: String(parsed.emotionalInsight ?? ""),
-    dominantEmotionalTrigger: (parsed.dominantEmotionalTrigger as string) ?? "Unknown",
-    savingsProgress: ((parsed.savingsProgress as Array<unknown>) ?? []).map(
-      (goal: unknown) => ({
-        goalName: String((goal as Record<string, unknown>).goalName ?? ""),
-        currentAmount: Number((goal as Record<string, unknown>).currentAmount ?? 0),
-        targetAmount: Number((goal as Record<string, unknown>).targetAmount ?? 0),
-        percentComplete: Number((goal as Record<string, unknown>).percentComplete ?? 0),
-        weeklySavingsAmount: Number((goal as Record<string, unknown>).weeklySavingsAmount ?? 0),
-        estimatedWeeksToGoal: Number((goal as Record<string, unknown>).estimatedWeeksToGoal ?? 0),
-      })
-    ) as SavingsProgress[],
-    savingsRate: Number(parsed.savingsRate ?? 0),
-    weeklyTrends: ((parsed.weeklyTrends as Array<unknown>) ?? []).map(
-      (trend: unknown) => ({
-        metric: String((trend as Record<string, unknown>).metric ?? ""),
-        currentWeek: Number((trend as Record<string, unknown>).currentWeek ?? 0),
-        previousWeek: Number((trend as Record<string, unknown>).previousWeek ?? 0),
-        change: Number((trend as Record<string, unknown>).change ?? 0),
-        changePercent: Number((trend as Record<string, unknown>).changePercent ?? 0),
-        direction: (
-          ["up", "down", "neutral"].includes(
-            String((trend as Record<string, unknown>).direction ?? "")
-          )
-            ? (trend as Record<string, unknown>).direction
-            : "neutral"
-        ) as "up" | "down" | "neutral",
-      })
-    ) as WeeklyTrend[],
-    trendSummary: String(parsed.trendSummary ?? ""),
-    improvementGoals: ((parsed.improvementGoals as Array<unknown>) ?? []).map(
-      (goal: unknown) => {
-        const goalObj: Record<string, unknown> = {
-          goalId: String((goal as Record<string, unknown>).goalId ?? ""),
-          title: String((goal as Record<string, unknown>).title ?? ""),
-          description: String((goal as Record<string, unknown>).description ?? ""),
-          priority: (
-            ["high", "medium", "low"].includes(
-              String((goal as Record<string, unknown>).priority ?? "")
-            )
-              ? (goal as Record<string, unknown>).priority
-              : "medium"
-          ) as "high" | "medium" | "low",
-          aiReasoning: String((goal as Record<string, unknown>).aiReasoning ?? ""),
-        };
-        const targetAmount = (goal as Record<string, unknown>).targetAmount;
-        if (targetAmount !== undefined && targetAmount !== null) {
-          goalObj.targetAmount = Number(targetAmount);
-        }
-        const category = (goal as Record<string, unknown>).category;
-        if (category) {
-          goalObj.category = String(category);
-        }
-        return goalObj;
-      }
-    ) as unknown as ImprovementGoal[],
-    coachingInsights: ((parsed.coachingInsights as Array<unknown>) ?? []).map(
-      (insight: unknown) => {
-        const insightObj: Record<string, unknown> = {
-          category: String((insight as Record<string, unknown>).category ?? ""),
-          insight: String((insight as Record<string, unknown>).insight ?? ""),
-          actionableStep: String((insight as Record<string, unknown>).actionableStep ?? ""),
-        };
-        const emoji = (insight as Record<string, unknown>).emoji;
-        if (emoji) {
-          insightObj.emoji = String(emoji);
-        }
-        return insightObj;
-      }
-    ) as unknown as CoachingInsight[],
-    coachingMessage: String(parsed.coachingMessage ?? ""),
-    healthScore: {
-      discipline: Number(
-        (parsed.healthScore as Record<string, unknown>)?.discipline ?? 0
-      ),
-      consistency: Number(
-        (parsed.healthScore as Record<string, unknown>)?.consistency ?? 0
-      ),
-      savingsRate: Number(
-        (parsed.healthScore as Record<string, unknown>)?.savingsRate ?? 0
-      ),
-      emotionalControl: Number(
-        (parsed.healthScore as Record<string, unknown>)?.emotionalControl ?? 0
-      ),
-      overallScore: Number(
-        (parsed.healthScore as Record<string, unknown>)?.overallScore ?? 0
-      ),
-    },
+    topCategory: validated.categoryBreakdown[0] ?? null,
     generatedAt: now,
     generatedBy: model,
     modelVersion: "1.0",

@@ -20,7 +20,7 @@ import {
 } from "./paths";
 
 function mapDoc(id: string, data: Record<string, unknown>): WeeklyReport {
-  const mapped: Record<string, unknown> = {
+  const mapped: any = {
     id,
     uid: String(data.uid ?? ""),
     weekStartDate: String(data.weekStartDate ?? ""),
@@ -31,21 +31,21 @@ function mapDoc(id: string, data: Record<string, unknown>): WeeklyReport {
     netCashFlow: Number(data.netCashFlow ?? 0),
     previousWeekExpenses: Number(data.previousWeekExpenses ?? 0),
     expenseChange: Number(data.expenseChange ?? 0),
-    categoryBreakdown: (data.categoryBreakdown as Array<unknown>) ?? [],
-    topCategory: data.topCategory ?? null,
-    wins: (data.wins as Array<unknown>) ?? [],
+    categoryBreakdown: (data.categoryBreakdown as any[]) ?? [],
+    topCategory: (data.topCategory as any) ?? null,
+    wins: (data.wins as any[]) ?? [],
     highlightSummary: String(data.highlightSummary ?? ""),
-    riskyBehaviors: (data.riskyBehaviors as Array<unknown>) ?? [],
+    riskyBehaviors: (data.riskyBehaviors as any[]) ?? [],
     riskAssessment: String(data.riskAssessment ?? ""),
-    emotionalTrends: (data.emotionalTrends as Array<unknown>) ?? [],
+    emotionalTrends: (data.emotionalTrends as any[]) ?? [],
     emotionalInsight: String(data.emotionalInsight ?? ""),
     dominantEmotionalTrigger: (data.dominantEmotionalTrigger as string) ?? "Unknown",
     savingsProgress: (data.savingsProgress as Array<unknown>) ?? [],
     savingsRate: Number(data.savingsRate ?? 0),
     weeklyTrends: (data.weeklyTrends as Array<unknown>) ?? [],
     trendSummary: String(data.trendSummary ?? ""),
-    improvementGoals: (data.improvementGoals as Array<unknown>) ?? [],
-    coachingInsights: (data.coachingInsights as Array<unknown>) ?? [],
+    improvementGoals: (data.improvementGoals as any[]) ?? [],
+    coachingInsights: (data.coachingInsights as any[]) ?? [],
     coachingMessage: String(data.coachingMessage ?? ""),
     healthScore: data.healthScore ?? {
       discipline: 0,
@@ -65,7 +65,7 @@ function mapDoc(id: string, data: Record<string, unknown>): WeeklyReport {
     mapped.error = data.error;
   }
 
-  return mapped as unknown as WeeklyReport;
+  return mapped;
 }
 
 /**

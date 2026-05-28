@@ -24,7 +24,6 @@ export interface AiFeatureFlags {
 
 export interface AiSettings {
   readonly enabled: boolean;
-  readonly apiKey: string;
   readonly models: AiModelConfig;
   readonly timeoutMs: number;
   readonly cacheTtlMs: number;
@@ -41,8 +40,7 @@ function resolveSettings(raw: RawAiEnv): AiSettings {
   );
 
   return Object.freeze({
-    enabled: raw.enabled && Boolean(raw.apiKey),
-    apiKey: raw.apiKey,
+    enabled: raw.enabled,
     models,
     timeoutMs: raw.timeoutMs || DEFAULT_REQUEST_TIMEOUT_MS,
     cacheTtlMs: raw.cacheTtlMs || DEFAULT_CACHE_TTL_MS,
@@ -97,7 +95,7 @@ export function isAiEnabled(): boolean {
 
 export function isAiConfigured(): boolean {
   try {
-    return Boolean(getAiSettings().apiKey);
+    return true; // Backend proxies the API key
   } catch {
     return false;
   }
