@@ -6,12 +6,37 @@ Spendr is a production-grade, AI-powered financial tracking application. Built w
 
 ## 🏗 Architecture & Stack
 
-Spendr utilizes a highly scalable, decoupled serverless architecture:
+Spendr utilizes a highly scalable, decoupled serverless architecture designed for speed and security:
 
 *   **Frontend:** React 18, Vite, React Router v7. Styled with TailwindCSS and Radix UI primitives.
 *   **State Management:** Hybrid approach. Zustand for global synchronous state (Authentication), and `@tanstack/react-query` for heavily cached, asynchronous server state.
 *   **Authentication & Database:** Firebase Auth & Firestore (NoSQL).
 *   **AI Backend:** Vercel Serverless Edge Functions (`/api/generateInsight`) securely acting as a proxy to the Gemini API.
+*   **Mobile Shell:** Capacitor for native iOS/Android packaging.
+
+### Core Workflow Diagram
+
+```text
+User Opens App (Capacitor/Web)
+       ↓
+Firebase Auth (Google/Email Sign In)
+       ↓
+Zustand (State Bootstrap)
+       ↓
+Firestore (Fetch Profile, Transactions, Savings)
+       ↓
+UI Rendering (React/Radix UI/Tailwind v4)
+       ↓
+User Requests AI Insight / Gamification Logic
+       ↓
+POST /api/... (Vercel Serverless Function)
+       ↓
+Verify Firebase Token → Enforce Redis Rate Limit
+       ↓
+Execute Logic (e.g., Query Gemini API / Award Points)
+       ↓
+Return JSON Response → UI Renders Update
+```
 
 ## 🛡️ Security Posture
 
