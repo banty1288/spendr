@@ -18,9 +18,9 @@ Spendr utilizes a highly scalable, decoupled serverless architecture:
 Spendr is engineered with enterprise-level security concepts:
 
 *   **Strict Client-Side Trust:** Granular Firestore Rules enforce strict field-level validation. Clients cannot arbitrarily modify protected fields such as `subscription` or `isPro`.
-*   **Zero Exposure Architecture:** AI API keys are never exposed to the client. All AI generation is routed through a secure backend proxy.
-*   **Distributed Rate Limiting:** The Vercel API utilizes Upstash Redis for distributed, IP-based, and UID-based rate limiting to prevent Denial of Wallet attacks.
-*   **Payload Validation:** Incoming API requests are strictly sanitized and typed using Zod to prevent prompt injection and payload stuffing.
+*   **Zero Exposure Architecture:** AI API keys and Firebase Admin credentials are never exposed to the client. All generation and gamification logic (`/api/logReward`) is routed through secure backend proxies.
+*   **Distributed Rate Limiting:** Vercel Edge functions utilize Upstash Redis for distributed, IP-based, and UID-based rate limiting to prevent gamification farming and Denial of Wallet attacks.
+*   **Runtime Type Safety:** Incoming API requests and AI JSON responses are strictly parsed and validated at runtime using Zod, completely eradicating "hallucination" crashes.
 
 ## ✨ Features
 
@@ -64,8 +64,18 @@ Spendr is optimized for deployment on Vercel.
 3. In Vercel Environment Variables, configure the following:
    * `GEMINI_API_KEY` (Required for AI features)
    * `UPSTASH_REDIS_REST_URL` & `UPSTASH_REDIS_REST_TOKEN` (Required for API rate limiting)
+   * `FIREBASE_PROJECT_ID` (Required for Firebase Admin)
+   * `FIREBASE_SERVICE_ACCOUNT_KEY` (Required for secure backend Gamification via Firebase Admin)
    * `VITE_FIREBASE_API_KEY` (and corresponding Firebase vars)
 4. Deploy! Vercel will automatically read `vercel.json` to enforce strict Security headers (HSTS, XSS Protection) and cache immutable assets at the edge.
+
+## 📱 Native Mobile App (Android/iOS)
+
+Spendr is built with Capacitor for seamless native compilation.
+
+1. Build the web bundle: `npm run build`
+2. Sync the native projects: `npx cap sync`
+3. Build the APK using Android Studio or via Gradle in the `/android` directory.
 
 ## 🤝 Contributing
 
