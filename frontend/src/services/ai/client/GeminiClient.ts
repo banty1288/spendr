@@ -9,10 +9,14 @@ export interface GenerateJsonOptions {
   temperature?: number;
   modelChain?: readonly string[]; // No longer used directly, but kept for signature compatibility
   analysisType?: string;
+  inlineData?: {
+    mimeType: string;
+    data: string; // Base64
+  };
 }
 
 const GEMINI_REST_URL =
-  "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent";
+  "https://generativelanguage.googleapis.com/v1beta/models/gemini-flash-latest:generateContent";
 
 /**
  * Reusable AI client — calls Gemini directly from the client.
@@ -63,7 +67,10 @@ export class GeminiClient {
         contents: [
           {
             role: "user",
-            parts: [{ text: prompt }],
+            parts: options.inlineData ? [
+              { text: prompt },
+              { inline_data: { mime_type: options.inlineData.mimeType, data: options.inlineData.data } }
+            ] : [{ text: prompt }],
           },
         ],
         generationConfig: {

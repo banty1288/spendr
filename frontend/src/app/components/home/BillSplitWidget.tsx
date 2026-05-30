@@ -5,7 +5,7 @@ import { useNavigate } from 'react-router';
 import { useBillSplits, useBillSplitDetails } from '../../../hooks/useBillSplits';
 import { useAuthStore } from '../../../store/authStore';
 
-export function BillSplitWidget() {
+export function BillSplitWidget({ onCreateClick }: { onCreateClick: () => void }) {
   const navigate = useNavigate();
   const { user } = useAuthStore();
   const { bills, isLoading } = useBillSplits();
@@ -70,6 +70,13 @@ export function BillSplitWidget() {
                 </div>
               </div>
             ))}
+            <button 
+              onClick={onCreateClick}
+              className="w-full mt-2 py-2.5 bg-emerald-500/10 hover:bg-emerald-500/20 border border-emerald-500/20 text-emerald-400 font-semibold text-sm rounded-xl transition-colors flex items-center justify-center gap-2"
+            >
+              <Receipt className="w-4 h-4" />
+              Create Smart Split
+            </button>
           </div>
         )}
       </div>

@@ -1,12 +1,12 @@
 import { motion } from "motion/react";
-import type { VoiceState } from "../../../hooks/useAIVoice";
+import type { AssistantState } from "../../../hooks/useVoiceAssistant";
 
 interface Props {
-  state: VoiceState;
+  state: AssistantState;
   size?: "sm" | "md";
 }
 
-const stateColors: Record<VoiceState, string> = {
+const stateColors: Record<AssistantState, string> = {
   idle: "#ffffff30",
   connecting: "#00d9ff",
   listening: "#00ff88",
@@ -15,7 +15,7 @@ const stateColors: Record<VoiceState, string> = {
   error: "#ff3366",
 };
 
-const glowColors: Record<VoiceState, string> = {
+const glowColors: Record<AssistantState, string> = {
   idle: "rgba(255,255,255,0.05)",
   connecting: "rgba(0,217,255,0.25)",
   listening: "rgba(0,255,136,0.25)",

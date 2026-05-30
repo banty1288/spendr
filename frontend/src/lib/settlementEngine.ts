@@ -12,7 +12,7 @@ export interface ParticipantDraft extends Partial<BillParticipant> {
 export function calculateSplit(
   totalAmount: number,
   participants: ParticipantDraft[],
-  splitMethod: "equal" | "percentage" | "custom" | "share"
+  splitMethod: "equal" | "percentage" | "custom" | "share" | "itemized"
 ): ParticipantDraft[] {
   if (participants.length === 0) return participants;
 
@@ -43,6 +43,11 @@ export function calculateSplit(
           p.amountOwed = (totalAmount * (p.shares || 1)) / totalShares;
         });
       }
+      break;
+
+    case "itemized":
+      // amountOwed is calculated explicitly from item assignment mappings during the bill creation.
+      // We assume it's already set or updated externally, similar to custom.
       break;
   }
 
@@ -78,6 +83,52 @@ export function computeSettlements(participants: BillParticipant[]): SimplifiedD
 
   let i = 0; // Debtors index
   let j = 0; // Creditors index
+
+  while (i < debtors.length && j < creditors.length) {
+    const debtor = debtors[i];
+    const creditor = creditors[j];
+
+    const amountToSettle = Math.min(-debtor.balance, creditor.balance);
+
+    if (amountToSettle > 0.01) {
+      settlements.push({
+        payerId: debtor.userId,
+        payerName: debtor.name,
+        receiverId: creditor.userId,
+        receiverName: creditor.name,
+        amount: Number(amountToSettle.toFixed(2)),
+      });
+    }
+
+    debtor.balance += amountToSettle;
+    creditor.balance -= amountToSettle;
+
+    if (Math.abs(debtor.balance) < 0.01) i++;
+    if (Math.abs(creditor.balance) < 0.01) j++;
+  }
+
+  return settlements;
+}
+
+// Computes who owes whom across MULTIPLE bills (e.g. for a Group)
+export function computeGroupSettlements(allParticipantsAcrossBills: BillParticipant[]): SimplifiedDebt[] {
+  const balances: Record<string, { userId: string; name: string; balance: number }> = {};
+
+  // Aggregate net balances globally
+  allParticipantsAcrossBills.forEach(p => {
+    if (!balances[p.userId]) {
+      balances[p.userId] = { userId: p.userId, name: p.name, balance: 0 };
+    }
+    balances[p.userId].balance += (p.amountPaid - p.amountOwed);
+  });
+
+  const debtors = Object.values(balances).filter(b => b.balance < -0.01).sort((a, b) => a.balance - b.balance);
+  const creditors = Object.values(balances).filter(b => b.balance > 0.01).sort((a, b) => b.balance - a.balance);
+
+  const settlements: SimplifiedDebt[] = [];
+
+  let i = 0;
+  let j = 0;
 
   while (i < debtors.length && j < creditors.length) {
     const debtor = debtors[i];

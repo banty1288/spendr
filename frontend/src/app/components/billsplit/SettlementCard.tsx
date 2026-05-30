@@ -58,6 +58,23 @@ export function SettlementCard({ debt, receiverUpiId, onMarkPaid }: SettlementCa
     }
   };
 
+  const handleSendWhatsApp = () => {
+    if (!receiverUpiId) {
+      alert("You haven't provided your UPI ID to request money.");
+      return;
+    }
+    const upiLink = generateUpiIntent({
+      pa: receiverUpiId,
+      pn: debt.receiverName,
+      am: debt.amount.toString(),
+      cu: 'INR',
+      tn: `Spendr Bill Split`
+    });
+    const message = `Hi ${debt.payerName}, you owe me ₹${debt.amount} for the recent bill split. Please pay using this link: ${upiLink}`;
+    const waUrl = `https://wa.me/?text=${encodeURIComponent(message)}`;
+    window.open(waUrl, '_blank');
+  };
+
   const handleMarkPaid = async () => {
     if (!confirm(`Confirm you want to mark ₹${debt.amount} as paid?`)) return;
     setIsProcessing(true);
@@ -104,12 +121,20 @@ export function SettlementCard({ debt, receiverUpiId, onMarkPaid }: SettlementCa
         )}
 
         {isReceiver && receiverUpiId && (
-          <button 
-            onClick={handleRequestMoney}
-            className="px-3 py-1.5 bg-blue-500/20 hover:bg-blue-500/30 text-blue-400 text-xs font-semibold rounded-lg transition-colors flex items-center gap-1"
-          >
-            <Share className="w-3.5 h-3.5" /> Request
-          </button>
+          <>
+            <button 
+              onClick={handleSendWhatsApp}
+              className="px-3 py-1.5 bg-green-500/20 hover:bg-green-500/30 text-green-400 text-xs font-semibold rounded-lg transition-colors flex items-center gap-1"
+            >
+              <Share className="w-3.5 h-3.5" /> Send
+            </button>
+            <button 
+              onClick={handleRequestMoney}
+              className="px-3 py-1.5 bg-blue-500/20 hover:bg-blue-500/30 text-blue-400 text-xs font-semibold rounded-lg transition-colors flex items-center gap-1 hidden sm:flex"
+            >
+              <Share className="w-3.5 h-3.5" /> Share
+            </button>
+          </>
         )}
         
         {(isPayer || isReceiver) && (

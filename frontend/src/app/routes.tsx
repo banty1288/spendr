@@ -44,6 +44,9 @@ const NewsHub = lazy(() =>
 const BillSplit = lazy(() =>
   import("./screens/BillSplit").then((m) => ({ default: m.BillSplit }))
 );
+const Groups = lazy(() =>
+  import("./screens/Groups").then((m) => ({ default: m.GroupsPage }))
+);
 const AIBudgetPlanner = lazy(() =>
   import("./screens/AIBudgetPlanner").then((m) => ({ default: m.AIBudgetPlanner }))
 );
@@ -177,6 +180,14 @@ export const router = createBrowserRouter([
                     element: (
                       <LazyScreen>
                         <BillSplit />
+                      </LazyScreen>
+                    ),
+                  },
+                  {
+                    path: "groups",
+                    element: (
+                      <LazyScreen>
+                        <Groups />
                       </LazyScreen>
                     ),
                   },

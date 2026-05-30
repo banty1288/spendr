@@ -10,7 +10,7 @@ import type { UserData } from "../../types/user";
 import { format } from "date-fns";
 
 const GEMINI_REST_URL =
-  "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent";
+  "https://generativelanguage.googleapis.com/v1beta/models/gemini-flash-latest:generateContent";
 
 const SYSTEM_PROMPT = `You are Aoede, a friendly AI financial assistant inside Spendr — a personal finance app for Indian users.
 Keep replies SHORT: 2-4 sentences max. Use ₹ for currency.

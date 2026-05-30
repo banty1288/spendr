@@ -4,10 +4,12 @@ Spendr is a personal finance and expense management web application designed to 
 
 ## Key Features
 
+* **Intelligent Bill Splitting**: Create customized splits via manual entry, percentage-based splits, or itemized selections with real-time settlement tracking.
+* **AI Receipt Smart Scan**: Instantly parse and auto-assign line items from physical receipts or invoices using multimodal AI.
+* **Groups & Settlements Dashboard**: Manage individual and group balances in a unified Settlement Center, complete with payment histories.
 * **Expense tracking**: Log and categorize daily transactions.
 * **Budget planning**: Set and monitor spending limits across different categories.
 * **Financial insights**: View analytics and trends to understand spending behavior.
-* **Bill splitting**: Calculate and divide shared expenses with friends, including custom settlement splits.
 * **Financial wellness tools**: Track financial habits and goals.
 * **News and financial tips**: Access relevant financial news and daily insights.
 * **AI-powered assistance**: Use Gemini AI via text or voice for contextual financial advice and transaction analysis.

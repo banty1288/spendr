@@ -13,7 +13,7 @@ import {
 } from "lucide-react";
 import { useAssistantStore } from "../../../store/assistantStore";
 import { useAIChat } from "../../../hooks/useAIChat";
-import { useAIVoice } from "../../../hooks/useAIVoice";
+import { useVoiceAssistant } from "../../../hooks/useVoiceAssistant";
 import { ChatMessage } from "./ChatMessage";
 import { InlineVoiceOrb } from "./InlineVoiceOrb";
 
@@ -51,7 +51,14 @@ export function AIAssistantPanel() {
     [setInputMode]
   );
 
-  const { voiceState, startVoice, stopVoice } = useAIVoice(handleFallbackToText);
+  const { state: voiceState, startSession: startVoice, stopSession: stopVoice, sendText } = useVoiceAssistant();
+
+  // Watch for voice errors and fallback
+  useEffect(() => {
+    if (voiceState === "error") {
+      handleFallbackToText("Voice connection failed. Using chat mode.");
+    }
+  }, [voiceState, handleFallbackToText]);
 
   // Auto-scroll to bottom
   useEffect(() => {
@@ -65,18 +72,25 @@ export function AIAssistantPanel() {
     }
   }, [isOpen, inputMode]);
 
-  // Stop voice when panel closes or mode switches
+  // Stop voice when panel closes
   useEffect(() => {
-    if (!isOpen || inputMode === "text") {
+    if (!isOpen) {
       stopVoice();
     }
-  }, [isOpen, inputMode, stopVoice]);
+  }, [isOpen, stopVoice]);
 
   const handleSend = () => {
     const text = inputText.trim();
-    if (!text || isLoading) return;
+    if (!text && inputMode === "text") return;
     setInputText("");
-    sendMessage(text);
+    
+    if (voiceState === "listening" || voiceState === "thinking" || voiceState === "speaking") {
+      // Send text over the live voice websocket
+      sendText(text || "Please respond now.");
+    } else {
+      // Fallback to normal text chat
+      sendMessage(text);
+    }
   };
 
   const handleKeyDown = (e: React.KeyboardEvent) => {
@@ -88,11 +102,22 @@ export function AIAssistantPanel() {
 
   const handleChip = (prompt: string) => {
     setInputMode("text");
-    sendMessage(prompt);
+    if (voiceState === "listening" || voiceState === "thinking" || voiceState === "speaking") {
+      sendText(prompt);
+    } else {
+      sendMessage(prompt);
+    }
+  };
+
+  const forceReply = () => {
+    if (voiceState === "listening") {
+      sendText("Respond to what I just said.");
+    }
   };
 
   const toggleVoice = () => {
     if (voiceState === "idle" || voiceState === "error") {
+      setInputMode("voice");
       startVoice();
     } else {
       stopVoice();
@@ -310,24 +335,34 @@ export function AIAssistantPanel() {
                   <p className="text-white/50 text-xs font-medium tracking-widest uppercase">
                     {VOICE_STATE_LABELS[voiceState]}
                   </p>
-                  <button
-                    onClick={toggleVoice}
-                    className={`flex items-center gap-2 px-5 py-2.5 rounded-2xl text-sm font-semibold transition-all ${
-                      voiceState === "idle" || voiceState === "error"
-                        ? "bg-[#00d9ff]/15 text-[#00d9ff] border border-[#00d9ff]/30 hover:bg-[#00d9ff]/25"
-                        : "bg-[#ff3366]/15 text-[#ff3366] border border-[#ff3366]/30 hover:bg-[#ff3366]/25"
-                    }`}
-                  >
-                    {voiceState === "idle" || voiceState === "error" ? (
-                      <>
-                        <Mic size={15} /> Start Listening
-                      </>
-                    ) : (
-                      <>
-                        <MicOff size={15} /> Stop
-                      </>
+                  <div className="flex gap-2">
+                    {voiceState === "listening" && (
+                      <button
+                        onClick={forceReply}
+                        className="flex items-center gap-2 px-5 py-2.5 rounded-2xl text-sm font-semibold transition-all bg-[#9d4edd]/15 text-[#9d4edd] border border-[#9d4edd]/30 hover:bg-[#9d4edd]/25"
+                      >
+                        <Send size={15} /> Send
+                      </button>
                     )}
-                  </button>
+                    <button
+                      onClick={toggleVoice}
+                      className={`flex items-center gap-2 px-5 py-2.5 rounded-2xl text-sm font-semibold transition-all ${
+                        voiceState === "idle" || voiceState === "error"
+                          ? "bg-[#00d9ff]/15 text-[#00d9ff] border border-[#00d9ff]/30 hover:bg-[#00d9ff]/25"
+                          : "bg-[#ff3366]/15 text-[#ff3366] border border-[#ff3366]/30 hover:bg-[#ff3366]/25"
+                      }`}
+                    >
+                      {voiceState === "idle" || voiceState === "error" ? (
+                        <>
+                          <Mic size={15} /> Start Listening
+                        </>
+                      ) : (
+                        <>
+                          <MicOff size={15} /> Stop
+                        </>
+                      )}
+                    </button>
+                  </div>
                 </div>
               ) : (
                 /* Text mode */

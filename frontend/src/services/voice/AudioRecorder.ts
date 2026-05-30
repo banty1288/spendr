@@ -14,12 +14,17 @@ export class AudioRecorder {
     if (this.isRecording) return;
     
     try {
-      this.stream = await navigator.mediaDevices.getUserMedia({ audio: true });
-      
-      // Gemini expects 16kHz
+      // Create context synchronously to avoid Safari suspended state
       this.audioContext = new (window.AudioContext || (window as any).webkitAudioContext)({
         sampleRate: 16000,
       });
+
+      this.stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+      
+      // Ensure it is resumed
+      if (this.audioContext.state === "suspended") {
+        await this.audioContext.resume();
+      }
 
       await this.audioContext.audioWorklet.addModule("/worklets/audio-processor.js");
 

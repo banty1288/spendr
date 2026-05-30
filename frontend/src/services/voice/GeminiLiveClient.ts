@@ -143,6 +143,9 @@ export class GeminiLiveClient {
       console.log("[GeminiLive] Setup complete, session is live!");
       this.setupComplete = true;
       this.onStateChange("connected");
+      
+      // Force the AI to speak first by sending the initial trigger
+      this.sendText("INITIATE_GREETING");
       return;
     }
 
@@ -180,6 +183,21 @@ export class GeminiLiveClient {
             mimeType: "audio/pcm;rate=16000",
             data: base64Pcm
           }]
+        }
+      };
+      this.ws.send(JSON.stringify(msg));
+    }
+  }
+
+  sendText(text: string) {
+    if (this.ws?.readyState === WebSocket.OPEN) {
+      const msg = {
+        clientContent: {
+          turns: [{
+            role: "user",
+            parts: [{ text }]
+          }],
+          turnComplete: true
         }
       };
       this.ws.send(JSON.stringify(msg));

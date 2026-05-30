@@ -39,7 +39,7 @@ export const PageShell = memo(function PageShell({ children, orbs, className = "
   ];
 
   return (
-    <div className={`min-h-[100dvh] ${extraPad ? "pb-[100px]" : "pb-[100px]"} relative overflow-x-clip bg-background ${className}`}>
+    <div className={`min-h-[100dvh] ${extraPad ? "pb-[150px]" : "pb-[100px]"} relative overflow-x-clip bg-background ${className}`}>
       {/* Ambient background — static divs (no animation for performance) */}
       <div className="absolute inset-0 pointer-events-none overflow-hidden" aria-hidden>
         {defaultOrbs.map((orb, i) => (

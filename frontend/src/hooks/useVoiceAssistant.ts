@@ -1,4 +1,4 @@
-import { useState, useRef, useCallback } from "react";
+import { useState, useRef, useCallback, useEffect } from "react";
 import { getAuth } from "firebase/auth";
 import { AudioRecorder } from "../services/voice/AudioRecorder";
 import { AudioPlayer } from "../services/voice/AudioPlayer";
@@ -8,6 +8,7 @@ import { useAuthStore } from "../store/authStore";
 import { useUserData } from "./useUserData";
 import { addDoc, collection } from "firebase/firestore";
 import { db } from "../lib/firebase";
+import { useAssistantStore } from "../store/assistantStore";
 
 export type AssistantState = "idle" | "connecting" | "listening" | "thinking" | "speaking" | "error";
 
@@ -19,7 +20,7 @@ interface Transcript {
 
 export function useVoiceAssistant() {
   const [state, setState] = useState<AssistantState>("idle");
-  const [transcripts, setTranscripts] = useState<Transcript[]>([]);
+  const addMessage = useAssistantStore(s => s.addMessage);
   
   const { user } = useAuthStore();
   const { data: userData } = useUserData();
@@ -28,6 +29,10 @@ export function useVoiceAssistant() {
   const playerRef = useRef<AudioPlayer | null>(null);
   const clientRef = useRef<GeminiLiveClient | null>(null);
   const currentBotText = useRef("");
+  const userDataRef = useRef(userData);
+
+  // Keep ref synced without triggering useCallback rebuilds
+  useEffect(() => { userDataRef.current = userData; }, [userData]);
 
   const handleToolCall = async (name: string, args: any) => {
     if (!user) return { success: false, error: "Not logged in" };
@@ -42,7 +47,7 @@ export function useVoiceAssistant() {
           type: "expense",
           date: new Date().toISOString()
         });
-        return { success: true, message: `Added ${args.amount} to ${args.category}` };
+        return { success: true, message: `Added ₹${args.amount} to ${args.category}` };
       }
       
       if (name === "createBudget") {
@@ -53,7 +58,7 @@ export function useVoiceAssistant() {
           spent: 0,
           month: new Date().toISOString().slice(0, 7)
         });
-        return { success: true, message: `Budget set for ${args.category}` };
+        return { success: true, message: `Budget set for ${args.category} at ₹${args.limit}` };
       }
       
       if (name === "createGoal") {
@@ -65,7 +70,7 @@ export function useVoiceAssistant() {
           currentAmount: 0,
           createdAt: new Date().toISOString()
         });
-        return { success: true, message: `Goal created: ${args.name}` };
+        return { success: true, message: `Goal created: ${args.name} for ₹${args.targetAmount}` };
       }
 
       return { success: false, error: "Unknown tool" };
@@ -76,9 +81,17 @@ export function useVoiceAssistant() {
   };
 
   const startSession = useCallback(async () => {
-    if (!user || !userData) return;
+    if (!user) return;
+    const currentData = userDataRef.current;
     try {
       setState("connecting");
+      
+      // IMMEDIATELY initialize recorder to capture user gesture
+      recorderRef.current = new AudioRecorder((base64Pcm) => {
+        clientRef.current?.sendAudio(base64Pcm);
+      });
+      await recorderRef.current.start();
+
       const auth = getAuth();
       const token = await auth.currentUser?.getIdToken();
       if (!token) throw new Error("No auth token");
@@ -106,11 +119,6 @@ export function useVoiceAssistant() {
       clientRef.current = new GeminiLiveClient(apiKey, {
         onStateChange: (newState) => {
           if (newState === "connected") {
-            // Once connected, start the mic
-            recorderRef.current = new AudioRecorder((base64Pcm) => {
-              clientRef.current?.sendAudio(base64Pcm);
-            });
-            recorderRef.current.start();
             setState("listening");
           } else {
             setState(newState as AssistantState);
@@ -124,7 +132,7 @@ export function useVoiceAssistant() {
             currentBotText.current += text;
           }
           if (isFinal && currentBotText.current) {
-            setTranscripts(prev => [...prev, { id: Date.now().toString(), text: currentBotText.current, isUser: false }]);
+            addMessage({ role: "assistant", content: currentBotText.current });
             currentBotText.current = "";
           }
         },
@@ -133,9 +141,9 @@ export function useVoiceAssistant() {
 
       const sysInstruction = await buildSystemInstruction(
         user.uid, 
-        userData.displayName || "there", 
-        userData.balance || 0, 
-        userData.preferences?.currency || "$"
+        currentData?.displayName || "there", 
+        currentData?.balance || 0, 
+        currentData?.settings?.app?.currency || currentData?.preferences?.currency || "₹"
       );
       
       clientRef.current.connect(sysInstruction);
@@ -144,7 +152,7 @@ export function useVoiceAssistant() {
       console.error("Failed to start voice session", err);
       setState("error");
     }
-  }, [user, userData]);
+  }, [user]);
 
   const stopSession = useCallback(() => {
     recorderRef.current?.stop();
@@ -154,10 +162,18 @@ export function useVoiceAssistant() {
     setState("idle");
   }, []);
 
+  const sendText = useCallback((text: string) => {
+    if (clientRef.current) {
+      // Optimistically add user text to transcript
+      addMessage({ role: "user", content: text });
+      clientRef.current.sendText(text);
+    }
+  }, [addMessage]);
+
   return {
     state,
-    transcripts,
     startSession,
-    stopSession
+    stopSession,
+    sendText
   };
 }

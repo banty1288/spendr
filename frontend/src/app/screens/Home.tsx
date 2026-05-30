@@ -23,6 +23,9 @@ import { lazy, Suspense } from "react";
 const AIInsightsCarousel = lazy(() => import("../components/home/AIInsightsCarousel").then(m => ({ default: m.AIInsightsCarousel })));
 const SpendingTrendWidget = lazy(() => import("../components/home/SpendingTrendWidget").then(m => ({ default: m.SpendingTrendWidget })));
 import { BillSplitWidget } from "../components/home/BillSplitWidget";
+import { SplitCreationFlow } from "../components/smartsplit/SplitCreationFlow";
+import { useBillSplits } from "../../hooks/useBillSplits";
+import { useState } from "react";
 
 import { computeBalanceFromTransactions, getMonthTotals } from "../../lib/transactions/analytics";
 import { getCategoryById } from "../../lib/transactions/constants";
@@ -39,6 +42,8 @@ export function Home() {
   const { transactions: allTx, isLoading: txLoading } = useTransactions();
   const { t } = useTranslation();
   const { convertAndFormat } = useCurrency();
+  const [isCreateSplitOpen, setIsCreateSplitOpen] = useState(false);
+  const { createSplit } = useBillSplits();
 
   const monthKey = format(new Date(), "yyyy-MM");
   const { income, expenses } = getMonthTotals(allTx, monthKey);
@@ -176,7 +181,7 @@ export function Home() {
             + Add Expense
           </button>
           <button
-            onClick={() => navigate("/bill-split")}
+            onClick={() => setIsCreateSplitOpen(true)}
             className="flex-1 bg-card border border-border rounded-2xl py-3 text-white/80 font-semibold text-sm hover:border-white/20 transition-all flex items-center justify-center gap-2"
           >
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
@@ -223,7 +228,7 @@ export function Home() {
           
           <WeeklySummaryCard report={latestReport ?? null} isLoading={isWeeklyLoading} />
           
-          <BillSplitWidget />
+          <BillSplitWidget onCreateClick={() => setIsCreateSplitOpen(true)} />
           
           <div className="xl:col-span-2">
             <Suspense fallback={<div className="h-64 bg-card rounded-3xl border border-border animate-pulse" />}>
@@ -296,7 +301,11 @@ export function Home() {
         </motion.div>
       </div>
 
-
+      <SplitCreationFlow 
+        isOpen={isCreateSplitOpen}
+        onClose={() => setIsCreateSplitOpen(false)}
+        onSubmit={createSplit}
+      />
     </div>
   );
 }

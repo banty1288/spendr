@@ -2,17 +2,20 @@ import React, { useState, useMemo } from 'react';
 import { motion } from 'framer-motion';
 import { Receipt, Plus, History, ArrowUpRight, ArrowDownLeft, Activity } from 'lucide-react';
 import { useBillSplits, useBillSplitDetails } from '../../hooks/useBillSplits';
-import { CreateBillModal } from '../components/billsplit/CreateBillModal';
+import { SplitCreationFlow } from '../components/smartsplit/SplitCreationFlow';
 import { SettlementCard } from '../components/billsplit/SettlementCard';
 import { PageShell } from '../components/ui/PageShell';
 import { computeSettlements } from '../../lib/settlementEngine';
 import { useAuthStore } from '../../store/authStore';
+import { useNavigate } from 'react-router';
 
 export function BillSplit() {
   const { user } = useAuthStore();
+  const navigate = useNavigate();
   const { bills, isLoading, createSplit } = useBillSplits();
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
   const [selectedBillId, setSelectedBillId] = useState<string | null>(null);
+  const [activeTab, setActiveTab] = useState<'splits' | 'groups'>('splits');
 
   // Active vs Settled
   const activeBills = bills.filter(b => b.status !== 'settled');
@@ -22,11 +25,39 @@ export function BillSplit() {
   // For now, we will just pass down a SelectedBill details view when a bill is clicked.
 
   return (
-    <PageShell>
+    <PageShell extraPad={true}>
       <div className="space-y-6 px-4 md:px-8 pt-8">
-        <h1 className="text-2xl font-bold text-white mb-6">Bill Split</h1>
+        <div className="flex items-center justify-between mb-2">
+          <h1 className="text-2xl font-bold text-white">Settlement Center</h1>
+        </div>
         
-        {/* Quick Actions & Summary */}
+        {/* Tabs */}
+        <div className="flex gap-2 p-1 bg-white/5 border border-white/10 rounded-xl mb-4">
+          <button 
+            onClick={() => setActiveTab('splits')}
+            className={`flex-1 py-2 text-sm font-semibold rounded-lg transition-colors ${activeTab === 'splits' ? 'bg-white/10 text-white shadow-sm' : 'text-white/50 hover:text-white/80'}`}
+          >
+            Individual Splits
+          </button>
+          <button 
+            onClick={() => setActiveTab('groups')}
+            className={`flex-1 py-2 text-sm font-semibold rounded-lg transition-colors ${activeTab === 'groups' ? 'bg-white/10 text-white shadow-sm' : 'text-white/50 hover:text-white/80'}`}
+          >
+            Groups
+          </button>
+        </div>
+        
+        {activeTab === 'groups' ? (
+          <div className="space-y-4">
+            <h2 className="text-lg font-semibold text-white">Your Groups</h2>
+            <div className="bg-white/5 border border-white/10 rounded-2xl p-8 text-center">
+               <p className="text-white/60 mb-4">Groups are currently managed on a separate page.</p>
+               <button onClick={() => navigate('/groups')} className="px-4 py-2 bg-emerald-500/20 text-emerald-400 font-semibold rounded-xl">Go to Groups</button>
+            </div>
+          </div>
+        ) : (
+          <>
+            {/* Quick Actions & Summary */}
         <div className="grid grid-cols-2 gap-4">
           <button 
             onClick={() => setIsCreateModalOpen(true)}
@@ -110,10 +141,12 @@ export function BillSplit() {
             </div>
           </div>
         )}
+          </>
+        )}
 
       </div>
 
-      <CreateBillModal 
+      <SplitCreationFlow 
         isOpen={isCreateModalOpen}
         onClose={() => setIsCreateModalOpen(false)}
         onSubmit={createSplit}

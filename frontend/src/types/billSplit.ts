@@ -1,15 +1,32 @@
-export type SplitMethod = "equal" | "percentage" | "custom" | "share";
+export type SplitMethod = "equal" | "percentage" | "custom" | "share" | "itemized";
 export type SettlementStatus = "pending" | "partially_paid" | "paid" | "settled";
+
+export interface BillItemAssignment {
+  userId: string;
+  portion: number; // For example: 1 = full item, 0.5 = half item
+}
+
+export interface BillItem {
+  id: string;
+  name: string;
+  amount: number;
+  assignedTo: BillItemAssignment[];
+}
 
 export interface BillSplit {
   id: string;
+  groupId?: string; // Optional: If part of a group
   title: string;
   description?: string;
   totalAmount: number;
+  taxAmount?: number;
+  tipAmount?: number;
   currency: string;
   category: string;
   splitMethod: SplitMethod;
   status: SettlementStatus;
+  items?: BillItem[]; // For item-based splits
+  attachments?: string[]; // URLs to receipts/images
   createdBy: string;
   createdByName: string;
   createdAt: string; // ISO string
