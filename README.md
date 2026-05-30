@@ -38,8 +38,8 @@ Spendr is a personal finance and expense management web application designed to 
 
 1. Clone the repository:
    ```bash
-   git clone https://github.com/banty1614-source/NewSpendr.git
-   cd NewSpendr
+   git clone https://github.com/banty1614-source/spendr.git
+   cd spendr
    ```
 
 2. Install dependencies (using pnpm workspaces):
