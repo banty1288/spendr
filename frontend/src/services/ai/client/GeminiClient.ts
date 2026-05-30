@@ -53,33 +53,17 @@ export class GeminiClient {
 
   private async executeWithFunction(options: GenerateJsonOptions): Promise<string> {
     this.assertEnabled();
-    const { prompt, temperature = this.config.temperature } = options;
-
-    const apiKey =
-      import.meta.env.VITE_GEMINI_API_KEY ||
-      import.meta.env.VITE_GEMINI_API_KEY;
+    const { prompt, temperature = this.config.temperature, inlineData } = options;
 
     try {
       const requestBody = {
-        system_instruction: {
-          parts: [{ text: "You are a financial analysis AI. ONLY output raw JSON. Do NOT wrap in markdown fences. Do NOT include explanations." }],
-        },
-        contents: [
-          {
-            role: "user",
-            parts: options.inlineData ? [
-              { text: prompt },
-              { inline_data: { mime_type: options.inlineData.mimeType, data: options.inlineData.data } }
-            ] : [{ text: prompt }],
-          },
-        ],
-        generationConfig: {
-          temperature,
-          ...(this.config.features.jsonResponse ? { responseMimeType: "application/json" } : {}),
-        },
+        prompt,
+        temperature,
+        inlineData,
+        jsonResponse: this.config.features.jsonResponse
       };
 
-      const response = await fetch(`${GEMINI_REST_URL}?key=${apiKey}`, {
+      const response = await fetch(`/api/generate`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(requestBody),
@@ -93,23 +77,17 @@ export class GeminiClient {
           throw new AiError("API", "Rate limit exceeded. Please wait a moment.", true);
         }
         
-        throw new Error(errorData?.error?.message || `API Error: ${status}`);
+        throw new Error(errorData?.error || `API Error: ${status}`);
       }
 
       const result = await response.json();
-      const text = result.candidates?.[0]?.content?.parts?.[0]?.text ?? "";
+      const text = result.result ?? "";
 
       if (!text?.trim()) {
         throw new AiError("EMPTY", "AI returned an empty response.", true);
       }
 
-      // If jsonResponse was requested, it might still have markdown fences sometimes
-      let cleanText = text.trim();
-      if (cleanText.startsWith("```json")) {
-        cleanText = cleanText.replace(/^```json\s*/, "").replace(/\s*```$/, "");
-      }
-
-      return cleanText;
+      return text.trim();
     } catch (err: any) {
       throw toAiError(err);
     }

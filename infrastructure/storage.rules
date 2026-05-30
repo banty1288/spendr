@@ -9,5 +9,11 @@ service firebase.storage {
                    && request.resource.size < 2 * 1024 * 1024 // Strict 2MB limit
                    && request.resource.contentType.matches('image/.*'); // Strict image validation
     }
+    
+    // Open receipts so participants can view them
+    match /receipts/{receiptId} {
+      allow read: if request.auth != null;
+      allow write: if request.auth != null && request.resource.size < 5 * 1024 * 1024;
+    }
   }
 }

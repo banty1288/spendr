@@ -59,7 +59,7 @@ cp infrastructure/.env.example frontend/.env.local
 Ensure the following variables are set:
 * `VITE_FIREBASE_API_KEY`
 * `VITE_FIREBASE_PROJECT_ID`
-* `VITE_GEMINI_API_KEY`
+* `GEMINI_API_KEY` (Required for the Vercel Serverless Function proxy)
 *(See `.env.example` for the full list of required variables).*
 
 ### Development
@@ -89,9 +89,14 @@ This repository uses a monorepo structure with four primary domains:
 * `infrastructure/`: Contains deployment configurations (`firebase.json`, `vercel.json`), security rules, CI/CD workflows, and environment templates.
 * `docs/`: Contains architectural documentation, design guidelines, and contribution rules.
 
-## Architecture Overview
+## Architecture & Security Overview
 
-Spendr relies on a serverless architecture. The React frontend communicates directly with Firebase for authentication and database operations via the client SDK. Computationally heavy or secure operations are handled via Vercel Serverless APIs (`backend/api`) and Firebase Cloud Functions (`backend/functions`). AI features are driven by direct client-to-API integrations with Google's Gemini models for real-time responsiveness.
+Spendr relies on a serverless architecture. The React frontend communicates directly with Firebase for authentication and database operations via the client SDK. Computationally heavy or secure operations are handled via Vercel Serverless APIs (`/api`) and Firebase Cloud Functions (`backend/functions`). 
+
+**Security Features:**
+* **API Key Protection:** The Google Gemini API is accessed securely through a Vercel Serverless Function proxy (`api/generate.ts`), preventing client-side exposure of API keys.
+* **Strict Data Boundaries:** Advanced Firestore rules enforce strict IDOR prevention and explicitly reject unauthenticated attempts to alter balance or profile state.
+* **Prompt Injection Prevention:** The AI modules execute rigorous client and server-side text sanitization to protect structured generation paths.
 
 ## Deployment
 
