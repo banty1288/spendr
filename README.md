@@ -1,111 +1,117 @@
-# 💸 Spendr
+# Spendr
 
-Spendr is a production-grade, AI-powered financial tracking application. Built with modern web architecture, Spendr goes beyond simple budgeting by leveraging Google's Gemini AI to analyze your spending habits, discover your "Money Personality", and generate personalized weekly coaching reports.
+Spendr is a personal finance and expense management web application designed to help users track their spending, manage budgets, and gain financial insights. It integrates AI-powered analysis to provide contextual recommendations and simplify financial planning.
 
----
+## Key Features
 
-## 🏗 Architecture & Stack
+* **Expense tracking**: Log and categorize daily transactions.
+* **Budget planning**: Set and monitor spending limits across different categories.
+* **Financial insights**: View analytics and trends to understand spending behavior.
+* **Bill splitting**: Calculate and divide shared expenses with friends, including custom settlement splits.
+* **Financial wellness tools**: Track financial habits and goals.
+* **News and financial tips**: Access relevant financial news and daily insights.
+* **AI-powered assistance**: Use Gemini AI via text or voice for contextual financial advice and transaction analysis.
 
-Spendr utilizes a highly scalable, decoupled serverless architecture designed for speed and security:
+## Tech Stack
 
-*   **Frontend:** React 18, Vite, React Router v7. Styled with TailwindCSS and Radix UI primitives.
-*   **State Management:** Hybrid approach. Zustand for global synchronous state (Authentication), and `@tanstack/react-query` for heavily cached, asynchronous server state.
-*   **Authentication & Database:** Firebase Auth & Firestore (NoSQL).
-*   **AI Backend:** Vercel Serverless Edge Functions (`/api/generateInsight`) securely acting as a proxy to the Gemini API.
-*   **Mobile Shell:** Capacitor for native iOS/Android packaging.
+**Frontend:**
+* React
+* Vite
+* TypeScript
+* Tailwind CSS
+* Framer Motion (Animations)
 
-### Core Workflow Diagram
+**Backend:**
+* Firebase Authentication
+* Cloud Firestore (Database)
+* Firebase Cloud Functions
+* Vercel Serverless Functions (API)
 
-```text
-User Opens App (Capacitor/Web)
-       ↓
-Firebase Auth (Google/Email Sign In)
-       ↓
-Zustand (State Bootstrap)
-       ↓
-Firestore (Fetch Profile, Transactions, Savings)
-       ↓
-UI Rendering (React/Radix UI/Tailwind v4)
-       ↓
-User Requests AI Insight / Gamification Logic
-       ↓
-POST /api/... (Vercel Serverless Function)
-       ↓
-Verify Firebase Token → Enforce Redis Rate Limit
-       ↓
-Execute Logic (e.g., Query Gemini API / Award Points)
-       ↓
-Return JSON Response → UI Renders Update
-```
+**AI Integration:**
+* Google Gemini API (REST and WebSockets for Voice)
 
-## 🛡️ Security Posture
+## Installation
 
-Spendr is engineered with enterprise-level security concepts:
+### Setup
 
-*   **Strict Client-Side Trust:** Granular Firestore Rules enforce strict field-level validation. Clients cannot arbitrarily modify protected fields such as `subscription` or `isPro`.
-*   **Zero Exposure Architecture:** AI API keys and Firebase Admin credentials are never exposed to the client. All generation and gamification logic (`/api/logReward`) is routed through secure backend proxies.
-*   **Distributed Rate Limiting:** Vercel Edge functions utilize Upstash Redis for distributed, IP-based, and UID-based rate limiting to prevent gamification farming and Denial of Wallet attacks.
-*   **Runtime Type Safety:** Incoming API requests and AI JSON responses are strictly parsed and validated at runtime using Zod, completely eradicating "hallucination" crashes.
-
-## ✨ Features
-
-*   **⚡ Lightning Fast:** Aggressive code-splitting via Rollup `manualChunks`, lazy-loaded routes, and `staleTime` React Query caches.
-*   **🤖 AI Financial Insights:** Secure, backend-proxied AI generation that analyzes your specific transactions and provides actionable advice.
-*   **🎮 Gamification:** Unlock badges and achievements as you hit savings goals.
-*   **🌓 Adaptive UI:** Full light/dark mode support with fluid micro-animations using Framer Motion.
-
-## 🚀 Getting Started
-
-### Prerequisites
-*   Node.js 18+
-*   Firebase Account
-*   Google Gemini API Key
-*   Upstash Redis Account (for production rate-limiting)
-
-### Local Setup
 1. Clone the repository:
    ```bash
-   git clone https://github.com/yourusername/spendr.git
-   cd spendr
+   git clone https://github.com/banty1614-source/NewSpendr.git
+   cd NewSpendr
    ```
-2. Install dependencies:
+
+2. Install dependencies (using pnpm workspaces):
    ```bash
-   npm install
-   ```
-3. Environment Setup:
-   Copy `.env.example` to `.env.local` and fill in your Firebase details.
-   *(Note: Do not put your Gemini API key in the frontend `.env.local`. Set it in your backend environment).*
-4. Start the development server:
-   ```bash
-   npm run dev
+   npm install -g pnpm
+   pnpm install
    ```
 
-## 📦 Deployment Guide
+### Environment Variables
 
-Spendr is optimized for deployment on Vercel.
+Copy the provided environment template from the infrastructure directory and populate it with your Firebase and Gemini credentials:
 
-1. Connect your GitHub repository to Vercel.
-2. Ensure the Framework Preset is set to **Vite**.
-3. In Vercel Environment Variables, configure the following:
-   * `GEMINI_API_KEY` (Required for AI features)
-   * `UPSTASH_REDIS_REST_URL` & `UPSTASH_REDIS_REST_TOKEN` (Required for API rate limiting)
-   * `FIREBASE_PROJECT_ID` (Required for Firebase Admin)
-   * `FIREBASE_SERVICE_ACCOUNT_KEY` (Required for secure backend Gamification via Firebase Admin)
-   * `VITE_FIREBASE_API_KEY` (and corresponding Firebase vars)
-4. Deploy! Vercel will automatically read `vercel.json` to enforce strict Security headers (HSTS, XSS Protection) and cache immutable assets at the edge.
+```bash
+cp infrastructure/.env.example frontend/.env.local
+```
 
-## 📱 Native Mobile App (Android/iOS)
+Ensure the following variables are set:
+* `VITE_FIREBASE_API_KEY`
+* `VITE_FIREBASE_PROJECT_ID`
+* `VITE_GEMINI_API_KEY`
+*(See `.env.example` for the full list of required variables).*
 
-Spendr is built with Capacitor for seamless native compilation.
+### Development
 
-1. Build the web bundle: `npm run build`
-2. Sync the native projects: `npx cap sync`
-3. Build the APK using Android Studio or via Gradle in the `/android` directory.
+To start the local development server:
 
-## 🤝 Contributing
+```bash
+pnpm run dev
+```
 
-Contributions are welcome! Please read our [CONTRIBUTING.md](CONTRIBUTING.md) for details on our code of conduct and the process for submitting pull requests.
+This will run the Vite frontend development server on `http://localhost:5173`.
 
-## 📄 License
+### Build
 
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+To compile the application for production:
+
+```bash
+pnpm run build
+```
+
+## Project Structure
+
+This repository uses a monorepo structure with four primary domains:
+
+* `frontend/`: Contains the React/Vite web application, components, and user interface logic.
+* `backend/`: Contains server-side API endpoints, Firebase Cloud Functions, and business logic.
+* `infrastructure/`: Contains deployment configurations (`firebase.json`, `vercel.json`), security rules, CI/CD workflows, and environment templates.
+* `docs/`: Contains architectural documentation, design guidelines, and contribution rules.
+
+## Architecture Overview
+
+Spendr relies on a serverless architecture. The React frontend communicates directly with Firebase for authentication and database operations via the client SDK. Computationally heavy or secure operations are handled via Vercel Serverless APIs (`backend/api`) and Firebase Cloud Functions (`backend/functions`). AI features are driven by direct client-to-API integrations with Google's Gemini models for real-time responsiveness.
+
+## Deployment
+
+**Vercel (Frontend & Serverless APIs):**
+When deploying to Vercel, set the **Root Directory** to the repository root if you are using the Vercel API routing, or configure Vercel to build the `frontend` workspace.
+
+**Firebase (Database & Functions):**
+Use the deployment scripts provided in the root `package.json`:
+```bash
+pnpm run deploy:firebase
+```
+
+## Known Limitations
+
+* Voice assistance relies on modern browser WebSockets and microphone permissions.
+* The application currently requires a Firebase project for authentication and data storage; it cannot run fully offline.
+* Real-time bill splitting sync requires active internet connections and Firebase listener quotas.
+
+## Contributing
+
+Please refer to `docs/CONTRIBUTING.md` and `docs/Guidelines.md` for coding standards, pull request processes, and architectural boundaries.
+
+## License
+
+MIT License

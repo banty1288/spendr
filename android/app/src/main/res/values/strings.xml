@@ -1,7 +1,0 @@
-<?xml version='1.0' encoding='utf-8'?>
-<resources>
-    <string name="app_name">Spendr</string>
-    <string name="title_activity_main">Spendr</string>
-    <string name="package_name">com.banty.spendr</string>
-    <string name="custom_url_scheme">com.banty.spendr</string>
-</resources>

@@ -1,0 +1,148 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    function isSignedIn() {
+      return request.auth != null;
+    }
+
+    function isOwner(userId) {
+      return isSignedIn() && request.auth.uid == userId;
+    }
+
+    // Prevents privilege escalation and tampering with protected fields
+    function safeUserUpdate() {
+      let data = request.resource.data;
+      let oldData = resource == null ? {} : resource.data;
+      
+      // Fields that ONLY a backend admin/function can modify
+      return (data.get('isPro', null) == oldData.get('isPro', null)) &&
+             (data.get('subscription', null) == oldData.get('subscription', null)) &&
+             (data.get('totalPoints', null) == oldData.get('totalPoints', null)) &&
+             (data.get('badges', null) == oldData.get('badges', null)) &&
+             (data.get('achievements', null) == oldData.get('achievements', null));
+    }
+
+    match /users/{userId} {
+      allow read: if isOwner(userId);
+      allow create: if isOwner(userId) && safeUserUpdate();
+      allow update: if isOwner(userId) && safeUserUpdate();
+      // Only allow delete if they want to delete their account
+      allow delete: if isOwner(userId);
+
+      match /transactions/{transactionId} {
+        allow read, write: if isOwner(userId);
+      }
+      
+      match /savings_challenges/{challengeId} {
+        allow read, write: if isOwner(userId);
+      }
+
+      // Gamification (Strictly server-authoritative)
+      match /achievements/{achievementId} {
+        allow read: if isOwner(userId);
+        allow write: if false; // ONLY BACKEND CAN WRITE ACHIEVEMENTS
+      }
+      match /financial_levels/{document} {
+        allow read, write: if isOwner(userId);
+      }
+      match /rewards/{rewardId} {
+        allow read: if isOwner(userId);
+        allow write: if false; // ONLY BACKEND CAN WRITE REWARDS
+      }
+
+      match /notifications/{notificationId} {
+        allow read, write: if isOwner(userId);
+      }
+
+      // Subscription details MUST be strictly read-only for clients!
+      match /subscription/{document} {
+        allow read: if isOwner(userId);
+        allow write: if false; // ONLY BACKEND CAN WRITE SUBSCRIPTIONS
+      }
+
+      match /ai_reports/{reportId} {
+        allow read, write: if isOwner(userId);
+      }
+
+      match /emotional_insights/{insightId} {
+        allow read, write: if isOwner(userId);
+      }
+
+      match /personality/{document=**} {
+        allow read, write: if isOwner(userId);
+      }
+
+      match /support_requests/{requestId} {
+        allow read, write: if isOwner(userId);
+      }
+      
+      // Budgets and wellness
+      match /budgets/{budgetId} {
+        allow read, write: if isOwner(userId);
+      }
+      match /wellnessScores/{scoreId} {
+        allow read, write: if isOwner(userId);
+      }
+      match /streaks/{streakId} {
+        allow read, write: if isOwner(userId);
+      }
+      match /dailyTips/{tipId} {
+        allow read, write: if isOwner(userId);
+      }
+    }
+
+    // Top-level collections
+    match /billSplits/{splitId} {
+      allow create: if isSignedIn();
+      // Allow read/update if the user is a participant (checked via participantIds array)
+      allow read, update: if isSignedIn() && (request.auth.uid in resource.data.participantIds || request.auth.uid == resource.data.createdBy);
+      allow delete: if isSignedIn() && request.auth.uid == resource.data.createdBy;
+    }
+
+    match /financialNews/{newsId} {
+      allow read: if isSignedIn();
+      allow write: if false; // Only written by backend
+    }
+
+    match /likes/{likeId} {
+      // allow read/write if signed in and the like belongs to the user
+      allow read: if isSignedIn();
+      allow create: if isSignedIn() && request.resource.data.userId == request.auth.uid;
+      allow update, delete: if isSignedIn() && resource.data.userId == request.auth.uid;
+    }
+
+    match /financialGoals/{goalId} {
+      allow read: if isSignedIn() && resource.data.userId == request.auth.uid;
+      allow create: if isSignedIn() && request.resource.data.userId == request.auth.uid;
+      allow update, delete: if isSignedIn() && resource.data.userId == request.auth.uid;
+    }
+
+    match /voiceConversations/{convId} {
+      allow read: if isSignedIn() && resource.data.userId == request.auth.uid;
+      allow create: if isSignedIn() && request.resource.data.userId == request.auth.uid;
+      allow update, delete: if isSignedIn() && resource.data.userId == request.auth.uid;
+    }
+
+    match /assistantMemory/{memoryId} {
+      allow read: if isSignedIn() && resource.data.userId == request.auth.uid;
+      allow create: if isSignedIn() && request.resource.data.userId == request.auth.uid;
+      allow update, delete: if isSignedIn() && resource.data.userId == request.auth.uid;
+    }
+
+    match /billParticipants/{participantId} {
+      allow read, write: if isSignedIn();
+    }
+    match /billActivities/{activityId} {
+      allow read, write: if isSignedIn();
+    }
+    match /settlements/{settlementId} {
+      allow read, write: if isSignedIn();
+    }
+
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}
