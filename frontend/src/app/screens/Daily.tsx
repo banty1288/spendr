@@ -128,6 +128,9 @@ export function Daily() {
                       className="block bg-card border border-border p-4 rounded-2xl shadow-sm hover:border-primary/50 transition-colors"
                     >
                       <h4 className="text-sm font-bold text-foreground leading-snug mb-2">{item.title}</h4>
+                      {item.description && (
+                        <p className="text-xs text-muted-foreground mb-3 line-clamp-3">{item.description}</p>
+                      )}
                       <div className="flex items-center justify-between text-[10px] font-semibold text-muted-foreground uppercase tracking-wide">
                         <span>{item.source}</span>
                         <span>{item.time}</span>

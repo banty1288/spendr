@@ -93,6 +93,7 @@ export interface NewsItem {
   title: string;
   source: string;
   time: string;
+  description: string;
   imageUrl?: string;
   url?: string;
 }

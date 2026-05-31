@@ -111,11 +111,25 @@ export async function sendChatMessage(
     parts: [{ text: m.content.slice(0, 300) }],
   }));
 
-  // Gemini expects alternating user/model turns — ensure we start with user
-  const filteredHistory = historyTurns.filter((_, i) => {
-    if (i === 0) return historyTurns[0].role === "user";
-    return true;
-  });
+  // Gemini expects strictly alternating user/model turns
+  // Let's build a strictly alternating array
+  const filteredHistory: any[] = [];
+  let expectedRole = "user";
+  
+  for (const turn of historyTurns) {
+    if (turn.role === expectedRole) {
+      filteredHistory.push(turn);
+      expectedRole = expectedRole === "user" ? "model" : "user";
+    }
+  }
+
+  // Gemini must end with user turn from the history if we append the final user message?
+  // Wait, the API requires the LAST message to be user, which is handled below:
+  // contents: [...filteredHistory, {role: "user", parts: [{text: userMessage}]}]
+  // This means filteredHistory MUST end with "model".
+  if (filteredHistory.length > 0 && filteredHistory[filteredHistory.length - 1].role === "user") {
+    filteredHistory.pop(); // Remove the last user message so the next one is our final userMessage
+  }
 
   const systemContent = `${SYSTEM_PROMPT}\n\nFINANCIAL CONTEXT:\n${financialContext}`;
 
