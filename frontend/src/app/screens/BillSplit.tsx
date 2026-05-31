@@ -1,6 +1,6 @@
 import React, { useState, useMemo } from 'react';
 import { motion } from 'motion/react';
-import { Receipt, Plus, History, ArrowUpRight, ArrowDownLeft, Activity } from 'lucide-react';
+import { Receipt, Plus, History, Activity } from 'lucide-react';
 import { useBillSplits, useBillSplitDetails } from '../../hooks/useBillSplits';
 import { SplitCreationFlow } from '../components/smartsplit/SplitCreationFlow';
 import { SettlementCard } from '../components/billsplit/SettlementCard';
@@ -21,27 +21,24 @@ export function BillSplit() {
   const activeBills = bills.filter(b => b.status !== 'settled');
   const settledBills = bills.filter(b => b.status === 'settled');
 
-  // Simple aggregation for dashboard (Wait for individual details for full settlements)
-  // For now, we will just pass down a SelectedBill details view when a bill is clicked.
-
   return (
     <PageShell extraPad={true}>
       <div className="space-y-6 px-4 md:px-8 pt-8">
         <div className="flex items-center justify-between mb-2">
-          <h1 className="text-2xl font-bold text-white">Settlement Center</h1>
+          <h1 className="text-2xl font-bold text-foreground">Settlement Center</h1>
         </div>
         
         {/* Tabs */}
-        <div className="flex gap-2 p-1 bg-white/5 border border-white/10 rounded-xl mb-4">
+        <div className="flex gap-2 p-1 bg-card/50 backdrop-blur-md border border-border rounded-xl mb-4">
           <button 
             onClick={() => setActiveTab('splits')}
-            className={`flex-1 py-2 text-sm font-semibold rounded-lg transition-colors ${activeTab === 'splits' ? 'bg-white/10 text-white shadow-sm' : 'text-white/50 hover:text-white/80'}`}
+            className={`flex-1 py-2 text-sm font-semibold rounded-lg transition-colors ${activeTab === 'splits' ? 'bg-primary/20 text-primary shadow-sm' : 'text-muted-foreground hover:text-foreground'}`}
           >
             Individual Splits
           </button>
           <button 
             onClick={() => setActiveTab('groups')}
-            className={`flex-1 py-2 text-sm font-semibold rounded-lg transition-colors ${activeTab === 'groups' ? 'bg-white/10 text-white shadow-sm' : 'text-white/50 hover:text-white/80'}`}
+            className={`flex-1 py-2 text-sm font-semibold rounded-lg transition-colors ${activeTab === 'groups' ? 'bg-primary/20 text-primary shadow-sm' : 'text-muted-foreground hover:text-foreground'}`}
           >
             Groups
           </button>
@@ -49,10 +46,10 @@ export function BillSplit() {
         
         {activeTab === 'groups' ? (
           <div className="space-y-4">
-            <h2 className="text-lg font-semibold text-white">Your Groups</h2>
-            <div className="bg-white/5 border border-white/10 rounded-2xl p-8 text-center">
-               <p className="text-white/60 mb-4">Groups are currently managed on a separate page.</p>
-               <button onClick={() => navigate('/groups')} className="px-4 py-2 bg-emerald-500/20 text-emerald-400 font-semibold rounded-xl">Go to Groups</button>
+            <h2 className="text-lg font-semibold text-foreground">Your Groups</h2>
+            <div className="bg-card border border-border rounded-2xl p-8 text-center shadow-sm">
+               <p className="text-muted-foreground mb-4">Groups are currently managed on a separate page.</p>
+               <button onClick={() => navigate('/groups')} className="px-4 py-2 bg-primary/20 text-primary font-semibold rounded-xl transition-all hover:bg-primary/30">Go to Groups</button>
             </div>
           </div>
         ) : (
@@ -61,7 +58,7 @@ export function BillSplit() {
         <div className="grid grid-cols-2 gap-4">
           <button 
             onClick={() => setIsCreateModalOpen(true)}
-            className="col-span-2 bg-emerald-500 hover:bg-emerald-600 text-white p-4 rounded-2xl flex items-center justify-center gap-2 font-semibold shadow-lg shadow-emerald-500/20 transition-all"
+            className="col-span-2 bg-primary hover:bg-primary/90 text-primary-foreground p-4 rounded-2xl flex items-center justify-center gap-2 font-semibold shadow-lg shadow-primary/20 transition-all active:scale-[0.98]"
           >
             <Plus className="w-5 h-5" />
             Create New Split
@@ -70,18 +67,18 @@ export function BillSplit() {
 
         {/* Active Bills */}
         <div className="space-y-4">
-          <h2 className="text-lg font-semibold text-white flex items-center gap-2">
-            <Activity className="w-5 h-5 text-emerald-400" />
+          <h2 className="text-lg font-semibold text-foreground flex items-center gap-2">
+            <Activity className="w-5 h-5 text-primary" />
             Active Bills
           </h2>
           
           {isLoading ? (
-            <div className="text-center text-white/50 py-8">Loading bills...</div>
+            <div className="text-center text-muted-foreground py-8">Loading bills...</div>
           ) : activeBills.length === 0 ? (
-            <div className="text-center bg-white/5 border border-white/10 rounded-2xl p-8">
-              <Receipt className="w-12 h-12 text-white/20 mx-auto mb-3" />
-              <p className="text-white font-medium">No active bills</p>
-              <p className="text-sm text-white/50">You're all settled up!</p>
+            <div className="text-center bg-card border border-border rounded-2xl p-8 shadow-sm">
+              <Receipt className="w-12 h-12 text-muted-foreground/30 mx-auto mb-3" />
+              <p className="text-foreground font-medium">No active bills</p>
+              <p className="text-sm text-muted-foreground">You're all settled up!</p>
             </div>
           ) : (
             <div className="space-y-3">
@@ -92,18 +89,18 @@ export function BillSplit() {
                     e.stopPropagation();
                     setSelectedBillId(selectedBillId === bill.id ? null : bill.id);
                   }}
-                  className="bg-white/5 border border-white/10 rounded-2xl p-4 cursor-pointer hover:bg-white/10 transition-colors"
+                  className="bg-card border border-border rounded-2xl p-4 cursor-pointer hover:bg-card/80 transition-colors shadow-sm"
                 >
                   <div className="flex justify-between items-start mb-2">
                     <div>
-                      <h3 className="text-white font-medium">{bill.title}</h3>
-                      <p className="text-xs text-white/50">{new Date(bill.createdAt).toLocaleDateString()}</p>
+                      <h3 className="text-foreground font-medium">{bill.title}</h3>
+                      <p className="text-xs text-muted-foreground">{new Date(bill.createdAt).toLocaleDateString()}</p>
                     </div>
                     <div className="text-right">
-                      <p className="text-white font-semibold flex items-center justify-end">
+                      <p className="text-foreground font-semibold flex items-center justify-end">
                         ₹{bill.totalAmount.toFixed(2)}
                       </p>
-                      <span className="text-[10px] uppercase tracking-wider text-emerald-400 font-medium px-2 py-0.5 rounded-full bg-emerald-500/10">
+                      <span className="text-[10px] uppercase tracking-wider text-primary font-medium px-2 py-0.5 rounded-full bg-primary/10">
                         {bill.splitMethod}
                       </span>
                     </div>
@@ -122,21 +119,21 @@ export function BillSplit() {
         {/* Settled Bills */}
         {settledBills.length > 0 && (
           <div className="space-y-4">
-            <h2 className="text-lg font-semibold text-white flex items-center gap-2">
-              <History className="w-5 h-5 text-white/50" />
+            <h2 className="text-lg font-semibold text-foreground flex items-center gap-2">
+              <History className="w-5 h-5 text-muted-foreground" />
               Recent History
             </h2>
             <div className="space-y-3">
               {settledBills.slice(0, 3).map(bill => (
-                <div key={bill.id} className="bg-white/5 border border-white/5 rounded-2xl p-4 opacity-75">
+                <div key={bill.id} className="bg-card/50 border border-border rounded-2xl p-4 opacity-75 shadow-sm">
                   <div className="flex justify-between items-center">
                     <div>
-                      <h3 className="text-white font-medium">{bill.title}</h3>
-                      <p className="text-xs text-white/40">{new Date(bill.createdAt).toLocaleDateString()}</p>
+                      <h3 className="text-foreground font-medium">{bill.title}</h3>
+                      <p className="text-xs text-muted-foreground">{new Date(bill.createdAt).toLocaleDateString()}</p>
                     </div>
                     <div className="text-right">
-                      <p className="text-white/70 font-semibold">₹{bill.totalAmount.toFixed(2)}</p>
-                      <p className="text-xs text-emerald-400">Settled</p>
+                      <p className="text-foreground/70 font-semibold">₹{bill.totalAmount.toFixed(2)}</p>
+                      <p className="text-xs text-primary">Settled</p>
                     </div>
                   </div>
                 </div>
@@ -164,19 +161,18 @@ function BillDetailsView({ billId }: { billId: string }) {
   const { user } = useAuthStore();
 
   const settlements = useMemo(() => computeSettlements(participants), [participants]);
-  const userSettlements = settlements.filter(s => s.payerId === user?.uid || s.receiverId === user?.uid);
 
   return (
     <motion.div 
       initial={{ height: 0, opacity: 0 }}
       animate={{ height: 'auto', opacity: 1 }}
-      className="mt-4 pt-4 border-t border-white/10"
+      className="mt-4 pt-4 border-t border-border"
       onClick={e => e.stopPropagation()} // Prevent closing when interacting inside
     >
       <div className="mb-4">
-        <h4 className="text-xs font-semibold text-white/50 uppercase tracking-wider mb-2">Settlements</h4>
+        <h4 className="text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-2">Settlements</h4>
         {settlements.length === 0 ? (
-          <p className="text-sm text-emerald-400 font-medium bg-emerald-500/10 p-2 rounded-lg text-center">
+          <p className="text-sm text-primary font-medium bg-primary/10 p-2 rounded-lg text-center">
             All settled!
           </p>
         ) : (
@@ -207,12 +203,12 @@ function BillDetailsView({ billId }: { billId: string }) {
       </div>
 
       <div>
-        <h4 className="text-xs font-semibold text-white/50 uppercase tracking-wider mb-2">Activity Log</h4>
+        <h4 className="text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-2">Activity Log</h4>
         <div className="space-y-2">
           {activities.slice(0, 5).map(act => (
-            <div key={act.id} className="text-xs text-white/60 bg-black/20 p-2 rounded-lg">
-              <span className="font-semibold text-white/80">{act.actorName}</span> {act.message}
-              <span className="block text-[10px] text-white/30 mt-0.5">
+            <div key={act.id} className="text-xs text-muted-foreground bg-muted p-2 rounded-lg">
+              <span className="font-semibold text-foreground">{act.actorName}</span> {act.message}
+              <span className="block text-[10px] text-muted-foreground/70 mt-0.5">
                 {new Date(act.timestamp).toLocaleString()}
               </span>
             </div>

@@ -5,3 +5,5 @@ export { TransactionFiltersBar } from "./TransactionFiltersBar";
 export { MonthlySummaryCard } from "./MonthlySummaryCard";
 export { CategoryPieChart } from "./CategoryPieChart";
 export { MonthlyBarChart } from "./MonthlyBarChart";
+export { CashFlowChart } from "./CashFlowChart";
+export { IncomeTrendChart } from "./IncomeTrendChart";

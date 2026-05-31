@@ -153,13 +153,42 @@ export function FinancialWellness() {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.45 }}
-          className="mb-6"
+          className="mb-6 space-y-6"
         >
-          <h3 className="text-foreground font-bold mb-4 text-lg">Milestone Gallery</h3>
-          <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-3">
-            {statuses.map((achievement) => (
-              <AchievementBadgeCard key={achievement.id} achievement={achievement} />
-            ))}
+          {/* Unlocked Achievements */}
+          <div>
+            <h3 className="text-foreground font-bold mb-3 text-sm uppercase tracking-widest text-muted-foreground flex items-center gap-2">
+              <Trophy size={16} className="text-accent" /> Unlocked Milestones
+            </h3>
+            <div className="flex overflow-x-auto pb-4 gap-4 snap-x hide-scrollbar">
+              {statuses.filter(a => a.earned).length > 0 ? (
+                statuses.filter(a => a.earned).map((achievement) => (
+                  <div key={achievement.id} className="min-w-[240px] snap-center">
+                    <AchievementBadgeCard achievement={achievement} />
+                  </div>
+                ))
+              ) : (
+                <div className="text-sm text-muted-foreground italic px-2">No milestones unlocked yet.</div>
+              )}
+            </div>
+          </div>
+
+          {/* Upcoming Achievements */}
+          <div>
+            <h3 className="text-foreground font-bold mb-3 text-sm uppercase tracking-widest text-muted-foreground flex items-center gap-2">
+              <Target size={16} className="text-primary" /> In Progress
+            </h3>
+            <div className="flex overflow-x-auto pb-4 gap-4 snap-x hide-scrollbar">
+              {statuses.filter(a => !a.earned).length > 0 ? (
+                statuses.filter(a => !a.earned).map((achievement) => (
+                  <div key={achievement.id} className="min-w-[240px] snap-center">
+                    <AchievementBadgeCard achievement={achievement} />
+                  </div>
+                ))
+              ) : (
+                <div className="text-sm text-muted-foreground italic px-2">You've unlocked everything!</div>
+              )}
+            </div>
           </div>
         </motion.div>
 

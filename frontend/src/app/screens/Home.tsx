@@ -1,6 +1,6 @@
 import { useEffect, useState, Suspense, lazy } from "react";
 import { motion } from "motion/react";
-import { ArrowRight, Eye, EyeOff, Plus, Users, ScanLine, MoreHorizontal, Bell } from "lucide-react";
+import { ArrowRight, Eye, EyeOff, Plus, Users, ScanLine, MoreHorizontal, Bell, Sparkles, Wand2 } from "lucide-react";
 import { useNavigate } from "react-router";
 import { format } from "date-fns";
 import { useTranslation } from "react-i18next";
@@ -22,7 +22,9 @@ import { useCurrency } from "../../hooks/useCurrency";
 import { trackDashboardOpened } from "../../services/analytics";
 
 import { SplitCreationFlow } from "../components/smartsplit/SplitCreationFlow";
+import { SmartBillFlow } from "../components/smartbill/SmartBillFlow";
 import { useBillSplits } from "../../hooks/useBillSplits";
+import { useAssistantStore } from "../../store/assistantStore";
 
 export function Home() {
   const navigate = useNavigate();
@@ -33,8 +35,10 @@ export function Home() {
   const { t } = useTranslation();
   const { convertAndFormat } = useCurrency();
   const { createSplit } = useBillSplits();
+  const toggleAssistant = useAssistantStore((s) => s.toggle);
   
   const [isCreateSplitOpen, setIsCreateSplitOpen] = useState(false);
+  const [isSmartBillOpen, setIsSmartBillOpen] = useState(false);
   const [showBalance, setShowBalance] = useState(true);
 
   const monthKey = format(new Date(), "yyyy-MM");
@@ -154,8 +158,8 @@ export function Home() {
         {[
           { id: 'add', icon: Plus, label: 'Add Expense', color: 'text-primary', bg: 'bg-primary/10', action: () => navigate("/transactions") },
           { id: 'split', icon: Users, label: 'Split Bill', color: 'text-[#8B5CF6]', bg: 'bg-[#8B5CF6]/10', action: () => setIsCreateSplitOpen(true) },
-          { id: 'scan', icon: ScanLine, label: 'Scan & Pay', color: 'text-accent', bg: 'bg-accent/10', action: () => navigate("/transactions") },
-          { id: 'more', icon: MoreHorizontal, label: 'More', color: 'text-muted-foreground', bg: 'bg-muted', action: () => navigate("/financial-wellness") },
+          { id: 'smart', icon: Wand2, label: 'Smart Bill', color: 'text-accent', bg: 'bg-accent/10', action: () => setIsSmartBillOpen(true) },
+          { id: 'ai', icon: Sparkles, label: 'AI Assistant', color: 'text-blue-400', bg: 'bg-blue-400/10', action: toggleAssistant },
         ].map((action) => (
           <button 
             key={action.id} 
@@ -191,37 +195,37 @@ export function Home() {
         <ArrowRight size={20} className="text-muted-foreground relative z-10" />
       </motion.button>
 
-      {/* 5. Progress Area (Reference implementation) */}
+      {/* 5. Achievement Dashboard */}
       <motion.div
         initial={{ opacity: 0, y: 10 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.4 }}
         className="mb-8"
       >
-        <div className="flex justify-between items-center mb-4">
-          <h3 className="font-bold text-foreground text-sm">Your Progress</h3>
-          <button onClick={() => navigate("/financial-wellness")} className="text-xs font-semibold text-accent">View all</button>
+        <div className="mb-4">
+          <h3 className="font-bold text-foreground text-sm">Achievement Dashboard</h3>
         </div>
         
         <div className="grid grid-cols-2 gap-4">
-          <div className="bg-card border border-border rounded-2xl p-4 shadow-sm">
-            <p className="text-xs text-muted-foreground mb-1">Financial Wellness</p>
-            <h4 className="text-xl font-bold text-accent mb-3">Level {financialLevel?.currentLevel ?? 1}</h4>
-            <div className="w-full h-1.5 bg-muted rounded-full overflow-hidden mb-2">
-              <div className="h-full bg-accent rounded-full" style={{ width: `${Math.min(100, ((financialLevel?.totalXp ?? 0) % 100))}%` }} />
+          <div className="bg-card border border-border rounded-2xl p-4 shadow-sm relative overflow-hidden group">
+            <div className="absolute top-0 right-0 w-24 h-24 bg-accent/10 rounded-full blur-xl pointer-events-none group-hover:bg-accent/20 transition-all" />
+            <p className="text-xs text-muted-foreground mb-1 relative z-10">Financial Level</p>
+            <h4 className="text-xl font-bold text-accent mb-3 relative z-10">Level {financialLevel?.currentLevel ?? 1}</h4>
+            <div className="w-full h-1.5 bg-muted rounded-full overflow-hidden mb-2 relative z-10">
+              <div className="h-full bg-gradient-to-r from-accent to-primary rounded-full shadow-[0_0_10px_rgba(0,255,153,0.5)]" style={{ width: `${Math.min(100, ((financialLevel?.totalXp ?? 0) % 100))}%` }} />
             </div>
-            <p className="text-[10px] text-muted-foreground">{financialLevel?.totalXp ?? 0} XP Total</p>
+            <p className="text-[10px] text-muted-foreground relative z-10">{financialLevel?.totalXp ?? 0} XP Total</p>
           </div>
 
-          <div className="bg-card border border-border rounded-2xl p-4 shadow-sm flex flex-col justify-between">
-            <div className="flex justify-between items-start">
-              <div className="w-8 h-8 rounded-lg bg-primary/20 flex items-center justify-center text-primary font-bold">💎</div>
+          <div className="bg-card border border-border rounded-2xl p-4 shadow-sm flex flex-col justify-between relative overflow-hidden group">
+            <div className="flex justify-between items-start relative z-10">
+              <div className="w-8 h-8 rounded-lg bg-primary/20 flex items-center justify-center text-primary font-bold shadow-inner group-hover:scale-110 transition-transform">💎</div>
               <div className="text-right">
                 <p className="text-xs font-bold text-foreground">65/100</p>
                 <p className="text-[10px] text-muted-foreground">Match</p>
               </div>
             </div>
-            <div>
+            <div className="relative z-10 mt-2">
               <p className="text-xs font-semibold text-foreground mb-0.5">Future Builder</p>
               <p className="text-[10px] text-muted-foreground leading-tight">Keep going! You're building a strong future.</p>
             </div>
@@ -279,6 +283,10 @@ export function Home() {
         isOpen={isCreateSplitOpen}
         onClose={() => setIsCreateSplitOpen(false)}
         onSubmit={createSplit}
+      />
+      <SmartBillFlow 
+        isOpen={isSmartBillOpen}
+        onClose={() => setIsSmartBillOpen(false)}
       />
     </div>
   );

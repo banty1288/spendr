@@ -1,121 +1,161 @@
-import { motion } from "motion/react";
-import { Sparkles, Target, Trophy, Flame, CheckCircle } from "lucide-react";
+import { motion, AnimatePresence } from "motion/react";
+import { Sparkles, Newspaper, Lightbulb, TrendingUp, RefreshCw, AlertCircle, TrendingDown, Minus } from "lucide-react";
 import { useTranslation } from "react-i18next";
-import { useAuthStore } from "../../store/authStore";
-import { useUserData } from "../../hooks/useUserData";
-import { useTransactions } from "../../hooks/useTransactions";
-import { useAchievements } from "../../hooks/useAchievements";
-import { useFinancialLevels } from "../../hooks/useFinancialLevels";
 import { format } from "date-fns";
+import { useDailyHubContent } from "../../hooks/useDailyHubContent";
+import { PageShell } from "../components/ui/PageShell";
 
 export function Daily() {
   const { t } = useTranslation();
-  const authUser = useAuthStore((s) => s.user);
-  const { data: userData } = useUserData();
-  const { transactions } = useTransactions();
-  const { statuses: achievements } = useAchievements(transactions, userData ?? null);
-  const { financialLevel } = useFinancialLevels(transactions, achievements, userData ?? null);
+  const { data, isLoading, isFetching, isError, refresh } = useDailyHubContent();
 
-  const streak = userData?.streakDays ?? 0;
-  
-  // Dummy missions for now
-  const missions = [
-    { id: 1, title: "Log your first expense", xp: 50, completed: transactions.length > 0 },
-    { id: 2, title: "Stay under budget today", xp: 100, completed: false },
-    { id: 3, title: "Review AI Insights", xp: 20, completed: true },
-  ];
+  const isRefreshing = isFetching && !isLoading;
+
+  const handleRefresh = async () => {
+    await refresh();
+  };
 
   return (
-    <div className="min-h-[100dvh] pb-safe-nav bg-background px-4 md:px-8 lg:px-12 pt-12">
-      <motion.div
-        initial={{ opacity: 0, y: -20 }}
-        animate={{ opacity: 1, y: 0 }}
-        className="mb-8"
-      >
-        <h1 className="text-3xl font-bold text-foreground">Daily Mission</h1>
-        <p className="text-muted-foreground mt-1">
-          {format(new Date(), "EEEE, MMMM do")}
-        </p>
-      </motion.div>
-
-      {/* Streak & XP Summary */}
-      <div className="grid grid-cols-2 gap-4 mb-8">
+    <PageShell orbs={[{ color: "var(--primary)", position: "top-left" }, { color: "var(--accent)", position: "bottom-right" }]}>
+      <div className="min-h-[100dvh] pb-safe-nav bg-background px-4 md:px-8 lg:px-12 pt-12 relative">
         <motion.div
-          whileHover={{ scale: 1.02 }}
-          className="bg-card border border-border p-5 rounded-3xl flex flex-col items-center justify-center shadow-lg"
+          initial={{ opacity: 0, y: -20 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="mb-6 flex items-start justify-between"
         >
-          <div className="bg-[#ff9500]/10 p-3 rounded-2xl mb-3">
-            <Flame size={28} className="text-[#ff9500]" />
+          <div>
+            <h1 className="text-3xl font-black text-foreground">Daily Hub</h1>
+            <p className="text-muted-foreground mt-1 font-medium text-sm">
+              {format(new Date(), "EEEE, MMMM do")}
+            </p>
           </div>
-          <h2 className="text-2xl font-black text-foreground">{streak}</h2>
-          <p className="text-sm text-muted-foreground font-medium">Day Streak</p>
-        </motion.div>
-
-        <motion.div
-          whileHover={{ scale: 1.02 }}
-          className="bg-card border border-border p-5 rounded-3xl flex flex-col items-center justify-center shadow-lg"
-        >
-          <div className="bg-primary/10 p-3 rounded-2xl mb-3">
-            <Trophy size={28} className="text-primary" />
-          </div>
-          <p className="text-foreground text-xl font-black">{financialLevel.totalXp}</p>
-          <p className="text-sm text-muted-foreground font-medium">Total XP</p>
-        </motion.div>
-      </div>
-
-      {/* Daily Challenges */}
-      <h3 className="text-xl font-bold text-foreground mb-4 flex items-center gap-2">
-        <Target size={20} className="text-accent" />
-        Today's Challenges
-      </h3>
-      
-      <div className="space-y-3 mb-8">
-        {missions.map((mission, idx) => (
-          <motion.div
-            key={mission.id}
-            initial={{ opacity: 0, x: -20 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ delay: idx * 0.1 }}
-            className={`p-4 rounded-2xl border flex items-center justify-between ${
-              mission.completed 
-                ? "bg-accent/5 border-accent/20" 
-                : "bg-card border-border"
-            }`}
+          <button 
+            onClick={handleRefresh}
+            disabled={isRefreshing || isLoading}
+            className="w-10 h-10 rounded-full bg-card border border-border flex items-center justify-center text-muted-foreground hover:text-primary transition-colors disabled:opacity-50"
           >
-            <div className="flex items-center gap-3">
-              <div className={`p-1 rounded-full ${mission.completed ? "bg-accent text-accent-foreground" : "bg-muted text-muted-foreground"}`}>
-                <CheckCircle size={16} />
+            <RefreshCw size={18} className={isRefreshing || isLoading ? "animate-spin" : ""} />
+          </button>
+        </motion.div>
+
+        {isError && (
+          <div className="bg-destructive/10 border border-destructive/20 text-destructive p-4 rounded-2xl flex items-center gap-3 mb-6">
+            <AlertCircle size={20} />
+            <p className="text-sm font-medium">Failed to load today's insights. Please try again.</p>
+          </div>
+        )}
+
+        <AnimatePresence mode="wait">
+          {isLoading && !data ? (
+            <motion.div key="skeleton" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="space-y-6">
+              {/* Top skeleton tip */}
+              <div className="h-32 bg-card/50 rounded-3xl animate-pulse" />
+              {/* Market skeleton */}
+              <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+                {[1,2,3,4].map(i => <div key={i} className="h-20 bg-card/50 rounded-2xl animate-pulse" />)}
               </div>
-              <p className={`font-medium ${mission.completed ? "text-foreground line-through opacity-70" : "text-foreground"}`}>
-                {mission.title}
-              </p>
-            </div>
-            <div className="text-sm font-bold text-primary">
-              +{mission.xp} XP
-            </div>
-          </motion.div>
-        ))}
+              {/* News skeleton */}
+              <div className="space-y-3">
+                <div className="h-6 w-32 bg-card/50 rounded animate-pulse" />
+                {[1,2,3].map(i => <div key={i} className="h-24 bg-card/50 rounded-2xl animate-pulse" />)}
+              </div>
+            </motion.div>
+          ) : data ? (
+            <motion.div key="content" initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="space-y-8 pb-10">
+              
+              {/* AI Money Tip */}
+              <div className="bg-gradient-to-br from-primary/10 to-accent/10 border border-primary/20 rounded-3xl p-6 relative overflow-hidden shadow-lg group">
+                <div className="absolute -top-10 -right-10 text-primary opacity-10 group-hover:rotate-12 transition-transform duration-700">
+                  <Sparkles size={120} />
+                </div>
+                <h3 className="text-base font-bold text-foreground flex items-center gap-2 mb-3">
+                  <Sparkles size={18} className="text-primary" />
+                  Your Smart Suggestion
+                </h3>
+                <p className="text-muted-foreground text-sm leading-relaxed font-medium relative z-10">
+                  {data.aiMoneyTip}
+                </p>
+              </div>
+
+              {/* Market Snapshot */}
+              {data.market && data.market.length > 0 && (
+                <div>
+                  <h3 className="text-sm font-bold text-foreground mb-3 flex items-center gap-2 uppercase tracking-wider text-muted-foreground">
+                    <TrendingUp size={16} /> Market Snapshot
+                  </h3>
+                  <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+                    {data.market.map((m, idx) => (
+                      <div key={idx} className="bg-card border border-border p-4 rounded-2xl flex flex-col justify-between shadow-sm">
+                        <p className="text-xs text-muted-foreground font-semibold mb-2">{m.label}</p>
+                        <div className="flex items-end justify-between">
+                          <p className="text-sm font-black text-foreground">{m.value}</p>
+                          <div className={`flex items-center text-[10px] font-bold ${m.trend === 'up' ? 'text-primary' : m.trend === 'down' ? 'text-destructive' : 'text-muted-foreground'}`}>
+                            {m.trend === 'up' ? <TrendingUp size={12} className="mr-0.5" /> : m.trend === 'down' ? <TrendingDown size={12} className="mr-0.5" /> : <Minus size={12} className="mr-0.5" />}
+                            {m.percentChange}
+                          </div>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              {/* Saving Tip */}
+              <div className="bg-card border border-border rounded-3xl p-5 flex items-start gap-4 shadow-sm relative overflow-hidden">
+                <div className="absolute left-0 top-0 bottom-0 w-1 bg-accent" />
+                <div className="bg-accent/10 p-3 rounded-2xl text-accent shrink-0">
+                  <Lightbulb size={24} />
+                </div>
+                <div>
+                  <h3 className="text-sm font-bold text-foreground mb-1">Today's Saving Tip</h3>
+                  <p className="text-xs text-muted-foreground leading-relaxed">{data.savingTip}</p>
+                </div>
+              </div>
+
+              {/* Financial News */}
+              <div>
+                <h3 className="text-sm font-bold text-foreground mb-3 flex items-center gap-2 uppercase tracking-wider text-muted-foreground">
+                  <Newspaper size={16} /> Latest Financial News
+                </h3>
+                <div className="space-y-3">
+                  {data.news.map((item, idx) => (
+                    <motion.a
+                      href={item.url || "#"}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      key={idx}
+                      whileHover={{ scale: 1.01 }}
+                      className="block bg-card border border-border p-4 rounded-2xl shadow-sm hover:border-primary/50 transition-colors"
+                    >
+                      <h4 className="text-sm font-bold text-foreground leading-snug mb-2">{item.title}</h4>
+                      <div className="flex items-center justify-between text-[10px] font-semibold text-muted-foreground uppercase tracking-wide">
+                        <span>{item.source}</span>
+                        <span>{item.time}</span>
+                      </div>
+                    </motion.a>
+                  ))}
+                </div>
+              </div>
+
+              {/* Trending Topics */}
+              <div>
+                <h3 className="text-sm font-bold text-foreground mb-3 flex items-center gap-2 uppercase tracking-wider text-muted-foreground">
+                  <TrendingUp size={16} /> Trending Topics
+                </h3>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                  {data.trendingTopics.map((topic, idx) => (
+                    <div key={idx} className="bg-card/50 border border-border/50 p-4 rounded-2xl hover:bg-card transition-colors">
+                      <h4 className="text-sm font-bold text-foreground mb-1">#{topic.title}</h4>
+                      <p className="text-xs text-muted-foreground line-clamp-2">{topic.description}</p>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+            </motion.div>
+          ) : null}
+        </AnimatePresence>
       </div>
-
-      {/* AI Recommendation */}
-      <motion.div
-        initial={{ opacity: 0, scale: 0.95 }}
-        animate={{ opacity: 1, scale: 1 }}
-        transition={{ delay: 0.3 }}
-        className="bg-gradient-to-r from-primary/10 to-accent/10 border border-primary/20 rounded-3xl p-6 relative overflow-hidden"
-      >
-        <div className="absolute -top-10 -right-10 text-primary opacity-10">
-          <Sparkles size={120} />
-        </div>
-        <h3 className="text-lg font-bold text-foreground flex items-center gap-2 mb-2">
-          <Sparkles size={18} className="text-primary" />
-          Finny's Tip
-        </h3>
-        <p className="text-muted-foreground text-sm leading-relaxed">
-          You're doing great! Try to log your lunch expense right after you eat to keep your streak alive. Small habits build big wealth.
-        </p>
-      </motion.div>
-
-    </div>
+    </PageShell>
   );
 }

@@ -88,3 +88,31 @@ export interface GenerateAnalysisOptions {
   /** Skip cache and in-flight dedupe (still dedupes concurrent identical forced runs) */
   force?: boolean;
 }
+
+export interface NewsItem {
+  title: string;
+  source: string;
+  time: string;
+  imageUrl?: string;
+  url?: string;
+}
+
+export interface TrendingTopic {
+  title: string;
+  description: string;
+}
+
+export interface MarketSnapshot {
+  label: string;
+  value: string;
+  trend: "up" | "down" | "flat";
+  percentChange: string;
+}
+
+export interface DailyHubContent {
+  news: NewsItem[];
+  savingTip: string;
+  aiMoneyTip: string;
+  trendingTopics: TrendingTopic[];
+  market: MarketSnapshot[];
+}
