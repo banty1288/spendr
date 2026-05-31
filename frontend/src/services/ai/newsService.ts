@@ -40,6 +40,7 @@ export async function fetchFinancialNews(): Promise<NewsItem[]> {
           time: timeLabel,
           description: article.description || "",
           url: article.url,
+          imageUrl: article.urlToImage,
         };
       });
   } catch (err) {

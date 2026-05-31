@@ -56,14 +56,31 @@ export class GeminiClient {
     const { prompt, temperature = this.config.temperature, inlineData } = options;
 
     try {
+      const apiKey = import.meta.env.VITE_GEMINI_API_KEY;
+      if (!apiKey) {
+        throw new AiError("CONFIG", "Missing Gemini API Key in environment", false);
+      }
+
       const requestBody = {
-        prompt,
-        temperature,
-        inlineData,
-        jsonResponse: this.config.features.jsonResponse
+        system_instruction: {
+          parts: [{ text: "You are a financial analysis AI. ONLY output raw JSON. Do NOT wrap in markdown fences. Do NOT include explanations." }],
+        },
+        contents: [
+          {
+            role: "user",
+            parts: inlineData ? [
+              { text: prompt },
+              { inline_data: { mime_type: inlineData.mimeType, data: inlineData.data } }
+            ] : [{ text: prompt }],
+          },
+        ],
+        generationConfig: {
+          temperature,
+          ...(this.config.features.jsonResponse ? { responseMimeType: "application/json" } : {}),
+        },
       };
 
-      const response = await fetch(`/api/generate`, {
+      const response = await fetch(`${GEMINI_REST_URL}?key=${apiKey}`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(requestBody),
@@ -81,13 +98,22 @@ export class GeminiClient {
       }
 
       const result = await response.json();
-      const text = result.result ?? "";
+      let text = result.candidates?.[0]?.content?.parts?.[0]?.text ?? "";
 
       if (!text?.trim()) {
         throw new AiError("EMPTY", "AI returned an empty response.", true);
       }
 
-      return text.trim();
+      // Clean up markdown fences if necessary
+      let cleanText = text.trim();
+      if (cleanText.startsWith("```json")) {
+        cleanText = cleanText.replace(/^```json\s*/, "").replace(/\s*```$/, "");
+      }
+      else if (cleanText.startsWith("```")) {
+        cleanText = cleanText.replace(/^```\w*\s*/, "").replace(/\s*```$/, "");
+      }
+
+      return cleanText;
     } catch (err: any) {
       throw toAiError(err);
     }

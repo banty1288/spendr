@@ -5,11 +5,26 @@ interface ReelSlideProps {
   children: ReactNode;
   bgGradient: string;
   isActive?: boolean;
+  imageUrl?: string;
 }
 
-export function ReelSlide({ children, bgGradient, isActive = true }: ReelSlideProps) {
+export function ReelSlide({ children, bgGradient, isActive = true, imageUrl }: ReelSlideProps) {
   return (
-    <div className={`w-full h-[100dvh] snap-start relative overflow-hidden flex flex-col justify-center px-6 md:px-12 ${bgGradient}`}>
+    <div className={`w-full h-[100dvh] snap-start relative overflow-hidden flex flex-col justify-center px-6 md:px-12 ${!imageUrl ? bgGradient : 'bg-black'}`}>
+      
+      {/* Background Image Layer */}
+      {imageUrl && (
+        <div className="absolute inset-0 z-0">
+          <img 
+            src={imageUrl} 
+            alt="background" 
+            className="w-full h-full object-cover opacity-60 mix-blend-overlay"
+          />
+        </div>
+      )}
+
+      {/* Decorative gradient overlay */}
+      <div className={`absolute inset-0 ${imageUrl ? 'bg-gradient-to-t from-black/90 via-black/50 to-black/30' : bgGradient} z-0 pointer-events-none`} />
       <motion.div
         initial={{ opacity: 0, y: 30, scale: 0.95 }}
         whileInView={{ opacity: 1, y: 0, scale: 1 }}

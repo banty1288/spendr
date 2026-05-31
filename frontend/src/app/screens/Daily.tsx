@@ -66,7 +66,7 @@ export function Daily() {
     if (data.news && data.news[newsIndex]) {
       const item = data.news[newsIndex];
       slides.push(
-        <ReelSlide key={`news-${newsIndex}`} bgGradient="bg-gradient-to-tr from-accent/20 via-background to-card">
+        <ReelSlide key={`news-${newsIndex}`} bgGradient="bg-gradient-to-tr from-accent/20 via-background to-card" imageUrl={item.imageUrl}>
           <div className="relative z-10 space-y-6">
             <div className="inline-flex items-center gap-2 bg-accent/20 text-accent px-4 py-2 rounded-full text-xs font-bold uppercase tracking-wider mb-2">
               <Newspaper size={16} /> Breaking News
@@ -114,7 +114,7 @@ export function Daily() {
     if (data.news && data.news[newsIndex]) {
       const item = data.news[newsIndex];
       slides.push(
-        <ReelSlide key={`news-${newsIndex}`} bgGradient="bg-gradient-to-br from-card via-background to-accent/20">
+        <ReelSlide key={`news-${newsIndex}`} bgGradient="bg-gradient-to-br from-card via-background to-accent/20" imageUrl={item.imageUrl}>
           <div className="relative z-10 space-y-6">
             <div className="inline-flex items-center gap-2 bg-accent/20 text-accent px-4 py-2 rounded-full text-xs font-bold uppercase tracking-wider mb-2">
               <Newspaper size={16} /> Top Story
@@ -162,7 +162,7 @@ export function Daily() {
     while (data.news && newsIndex < data.news.length) {
       const item = data.news[newsIndex];
       slides.push(
-        <ReelSlide key={`news-${newsIndex}`} bgGradient="bg-gradient-to-r from-background via-card to-background">
+        <ReelSlide key={`news-${newsIndex}`} bgGradient="bg-gradient-to-r from-background via-card to-background" imageUrl={item.imageUrl}>
           <div className="relative z-10 space-y-6">
             <div className="inline-flex items-center gap-2 bg-secondary/80 text-secondary-foreground px-4 py-2 rounded-full text-xs font-bold uppercase tracking-wider mb-2">
               <Newspaper size={16} /> Financial News
