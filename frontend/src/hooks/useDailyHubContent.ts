@@ -1,5 +1,6 @@
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { generateDailyHubContent } from "../services/ai/dailyHub";
+import { fetchFinancialNews } from "../services/ai/newsService";
 import { useTransactions } from "./useTransactions";
 import { useAuthStore } from "../store/authStore";
 import type { DailyHubContent } from "../services/ai/types";
@@ -20,8 +21,15 @@ export function useDailyHubContent() {
       if (!uid) throw new AiError("CONFIG", "Sign in required", false);
       inFlightRef.current = true;
       try {
-        const result = await generateDailyHubContent(transactions);
-        return result;
+        const [geminiResult, newsResult] = await Promise.all([
+          generateDailyHubContent(transactions),
+          fetchFinancialNews(),
+        ]);
+        
+        return {
+          ...geminiResult,
+          news: newsResult,
+        };
       } catch (err) {
         throw toSafeAiError(err);
       } finally {
