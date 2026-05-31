@@ -8,35 +8,41 @@ export function AIAssistantTrigger() {
   return (
     <motion.button
       id="ai-assistant-trigger"
-      aria-label="Open AI Assistant"
+      aria-label="Open Finny AI Assistant"
       onClick={toggle}
-      className="fixed bottom-[88px] right-4 z-50 w-14 h-14 rounded-full flex items-center justify-center shadow-2xl focus:outline-none focus-visible:ring-2 focus-visible:ring-[#9d4edd]"
+      className="fixed bottom-[110px] right-6 z-50 w-16 h-16 rounded-full flex items-center justify-center focus:outline-none focus-visible:ring-2 focus-visible:ring-[#00FF99]"
       style={{
         background: isOpen
-          ? "linear-gradient(135deg, #ff3366, #9d4edd)"
-          : "linear-gradient(135deg, #00d9ff, #9d4edd)",
+          ? "rgba(24, 24, 27, 0.95)"
+          : "linear-gradient(135deg, rgba(0, 212, 255, 0.2), rgba(139, 92, 246, 0.4))",
         boxShadow: isOpen
-          ? "0 0 24px rgba(157,78,221,0.6), 0 4px 16px rgba(0,0,0,0.4)"
-          : "0 0 24px rgba(0,217,255,0.4), 0 4px 16px rgba(0,0,0,0.4)",
+          ? "0 10px 40px rgba(0,0,0,0.5), inset 0 1px 1px rgba(255,255,255,0.1)"
+          : "0 10px 40px rgba(0,212,255,0.3), inset 0 1px 1px rgba(255,255,255,0.4)",
+        backdropFilter: "blur(20px)",
+        WebkitBackdropFilter: "blur(20px)",
+        border: "1px solid rgba(255, 255, 255, 0.1)",
       }}
       initial={{ scale: 0, opacity: 0 }}
       animate={{ scale: 1, opacity: 1 }}
       transition={{ type: "spring", stiffness: 300, damping: 20, delay: 0.5 }}
-      whileHover={{ scale: 1.08 }}
-      whileTap={{ scale: 0.92 }}
+      whileHover={{ scale: 1.05 }}
+      whileTap={{ scale: 0.95 }}
     >
-      {/* Subtle pulse ring when closed */}
+      {/* Outer Pulse */}
       <AnimatePresence>
         {!isOpen && (
-          <motion.div
-            className="absolute inset-0 rounded-full"
-            style={{
-              background:
-                "linear-gradient(135deg, rgba(0,217,255,0.3), rgba(157,78,221,0.3))",
-            }}
-            animate={{ scale: [1, 1.5, 1], opacity: [0.5, 0, 0.5] }}
-            transition={{ duration: 2.5, repeat: Infinity, ease: "easeInOut" }}
-          />
+          <>
+            <motion.div
+              className="absolute inset-0 rounded-full border border-[#00D4FF]/40"
+              animate={{ scale: [1, 1.4, 1], opacity: [0.8, 0, 0] }}
+              transition={{ duration: 2, repeat: Infinity, ease: "easeOut" }}
+            />
+            <motion.div
+              className="absolute inset-0 rounded-full border border-[#8B5CF6]/30"
+              animate={{ scale: [1, 1.6, 1], opacity: [0.5, 0, 0] }}
+              transition={{ duration: 2.5, repeat: Infinity, ease: "easeOut", delay: 0.2 }}
+            />
+          </>
         )}
       </AnimatePresence>
 
@@ -47,9 +53,9 @@ export function AIAssistantTrigger() {
             initial={{ rotate: -90, opacity: 0 }}
             animate={{ rotate: 0, opacity: 1 }}
             exit={{ rotate: 90, opacity: 0 }}
-            transition={{ duration: 0.18 }}
+            transition={{ duration: 0.2 }}
           >
-            <X size={22} className="text-white" />
+            <X size={24} className="text-muted-foreground" />
           </motion.div>
         ) : (
           <motion.div
@@ -57,9 +63,12 @@ export function AIAssistantTrigger() {
             initial={{ rotate: 90, opacity: 0 }}
             animate={{ rotate: 0, opacity: 1 }}
             exit={{ rotate: -90, opacity: 0 }}
-            transition={{ duration: 0.18 }}
+            transition={{ duration: 0.2 }}
+            className="relative"
           >
-            <Sparkles size={22} className="text-white" />
+            {/* Glowing core */}
+            <div className="absolute inset-0 bg-white blur-[8px] opacity-40 rounded-full"></div>
+            <Sparkles size={26} className="text-[#00D4FF] relative z-10" />
           </motion.div>
         )}
       </AnimatePresence>

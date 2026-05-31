@@ -1,5 +1,5 @@
 import { useMemo } from "react";
-import { Home, Sparkles, TrendingUp, Trophy, User, Newspaper } from "lucide-react";
+import { Home, Compass, Calendar, BarChart2, User } from "lucide-react";
 import { useNavigate, useLocation } from "react-router";
 import { useTranslation } from "react-i18next";
 import { motion, AnimatePresence } from "motion/react";
@@ -10,32 +10,22 @@ export function BottomNav() {
   const { t } = useTranslation();
 
   const navItems = useMemo(() => [
-    { icon: Home, label: t("nav.home", "Home"), path: "/home", color: "#00d9ff" },
-    { icon: Sparkles, label: t("nav.insights", "Insights"), path: "/insights", color: "#9d4edd" },
-    { icon: Newspaper, label: t("nav.news", "Daily"), path: "/news", color: "#ff6b35" },
-    { icon: TrendingUp, label: t("nav.analytics", "Analytics"), path: "/analytics", color: "#00ff88" },
-    { icon: User, label: t("nav.profile", "Profile"), path: "/profile", color: "#ff3366" },
+    { icon: Home, label: t("nav.home", "Home"), path: "/home", color: "#00D4FF" },
+    { icon: Compass, label: t("nav.insights", "Insights"), path: "/insights", color: "#00FF99" },
+    { icon: Calendar, label: t("nav.daily", "Daily"), path: "/daily", color: "#8B5CF6" },
+    { icon: BarChart2, label: t("nav.analytics", "Analytics"), path: "/analytics", color: "#00D4FF" },
+    { icon: User, label: t("nav.profile", "Profile"), path: "/profile", color: "#A1A1AA" },
   ], [t]);
 
   return (
-    <div className="fixed bottom-0 left-0 right-0 z-50 flex justify-center px-2 pointer-events-none">
-      {/* Gradient fade above nav */}
-      <div className="absolute bottom-full left-0 right-0 h-16 bg-gradient-to-t from-black/60 to-transparent pointer-events-none" />
-
+    <div className="fixed bottom-0 left-0 right-0 z-50 flex justify-center px-4 pointer-events-none pb-safe-nav pb-4">
       <motion.div
         initial={{ y: 100, opacity: 0 }}
         animate={{ y: 0, opacity: 1 }}
         transition={{ type: "spring", stiffness: 260, damping: 28, delay: 0.1 }}
-        className="w-full max-w-[430px] md:max-w-2xl bg-[#09090b]/95 border border-border border-b-0 rounded-t-3xl relative overflow-hidden pointer-events-auto shadow-2xl"
-        style={{ paddingBottom: "max(env(safe-area-inset-bottom), 12px)", willChange: "transform" }}
+        className="w-full max-w-[400px] bg-card/90 backdrop-blur-xl border border-border rounded-full relative overflow-hidden pointer-events-auto shadow-[0_10px_40px_rgba(0,0,0,0.5)]"
       >
-        {/* Top shimmer line */}
-        <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-white/20 to-transparent" />
-
-        {/* Inner glow */}
-        <div className="absolute inset-0 bg-gradient-to-t from-white/3 to-transparent pointer-events-none" />
-
-        <nav aria-label="Primary" className="flex items-center justify-around gap-1 px-2 py-2 relative">
+        <nav aria-label="Primary" className="flex items-center justify-between px-2 py-2 relative">
           {navItems.map((item) => {
             const Icon = item.icon;
             const isActive = location.pathname === item.path;
@@ -47,49 +37,41 @@ export function BottomNav() {
                 onClick={() => navigate(item.path)}
                 aria-label={item.label}
                 aria-current={isActive ? "page" : undefined}
-                className="flex min-w-0 flex-1 flex-col items-center gap-0.5 relative rounded-2xl px-1 py-1.5 outline-none"
-                whileHover={{ scale: 1.08 }}
-                whileTap={{ scale: 0.88 }}
+                className="flex flex-1 flex-col items-center justify-center gap-1 relative rounded-full h-14 outline-none"
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.9 }}
                 transition={{ type: "spring", stiffness: 400, damping: 22 }}
               >
-                {/* Active indicator pip */}
+                {/* Active Pill Glow */}
                 <AnimatePresence>
                   {isActive && (
                     <motion.div
-                      layoutId="activeTab"
-                      initial={{ opacity: 0, scaleX: 0 }}
-                      animate={{ opacity: 1, scaleX: 1 }}
-                      exit={{ opacity: 0, scaleX: 0 }}
-                      className="absolute -top-0.5 left-1/2 -translate-x-1/2 w-8 h-[3px] rounded-full"
-                      style={{ backgroundColor: item.color }}
-                      transition={{ type: "spring", bounce: 0.3, duration: 0.5 }}
+                      layoutId="activeTabPill"
+                      className="absolute inset-0 rounded-full"
+                      style={{ background: `linear-gradient(135deg, ${item.color}22, ${item.color}0A)` }}
+                      transition={{ type: "spring", bounce: 0.2, duration: 0.5 }}
                     />
                   )}
                 </AnimatePresence>
 
-                {/* Icon wrapper */}
-                <div
-                  className="p-2 rounded-2xl relative"
-                  style={
-                    isActive
-                      ? { background: `linear-gradient(135deg, ${item.color}28, ${item.color}12)` }
-                      : {}
-                  }
-                >
+                <div className="relative z-10 flex flex-col items-center justify-center">
                   <Icon
                     size={22}
-                    className="transition-all"
-                    style={isActive ? { color: item.color } : { color: "rgba(255,255,255,0.38)" }}
+                    className="transition-colors duration-300"
+                    style={isActive ? { color: item.color } : { color: "var(--muted-foreground)" }}
+                    strokeWidth={isActive ? 2.5 : 2}
                   />
+                  {isActive && (
+                    <motion.span 
+                      initial={{ opacity: 0, y: 5 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      className="text-[10px] font-bold mt-0.5"
+                      style={{ color: item.color }}
+                    >
+                      {item.label}
+                    </motion.span>
+                  )}
                 </div>
-
-                {/* Label */}
-                <span
-                  className="max-[340px]:sr-only text-[10px] leading-none font-medium transition-colors truncate max-w-full"
-                  style={isActive ? { color: item.color } : { color: "rgba(255,255,255,0.35)" }}
-                >
-                  {item.label}
-                </span>
               </motion.button>
             );
           })}

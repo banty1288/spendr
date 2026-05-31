@@ -1,6 +1,6 @@
-import { useEffect } from "react";
+import { useEffect, useState, Suspense, lazy } from "react";
 import { motion } from "motion/react";
-import { Sparkles, TrendingUp, TrendingDown, ArrowRight, Flame, Eye } from "lucide-react";
+import { ArrowRight, Eye, EyeOff, Plus, Users, ScanLine, MoreHorizontal, Bell } from "lucide-react";
 import { useNavigate } from "react-router";
 import { format } from "date-fns";
 import { useTranslation } from "react-i18next";
@@ -15,24 +15,14 @@ import { useWeeklyReport } from "../../hooks/useWeeklyReport";
 import { useFinancialLevels } from "../../hooks/useFinancialLevels";
 import { useAchievements } from "../../hooks/useAchievements";
 
-import { HealthScoreCard } from "../components/home/HealthScoreCard";
-import { PersonalitySnapshotCard } from "../components/home/PersonalitySnapshotCard";
-import { WeeklySummaryCard } from "../components/home/WeeklySummaryCard";
-
-import { lazy, Suspense } from "react";
-const AIInsightsCarousel = lazy(() => import("../components/home/AIInsightsCarousel").then(m => ({ default: m.AIInsightsCarousel })));
-const SpendingTrendWidget = lazy(() => import("../components/home/SpendingTrendWidget").then(m => ({ default: m.SpendingTrendWidget })));
-import { BillSplitWidget } from "../components/home/BillSplitWidget";
-import { SplitCreationFlow } from "../components/smartsplit/SplitCreationFlow";
-import { useBillSplits } from "../../hooks/useBillSplits";
-import { useState } from "react";
-
 import { computeBalanceFromTransactions, getMonthTotals } from "../../lib/transactions/analytics";
 import { getCategoryById } from "../../lib/transactions/constants";
 import { formatRelativeTime } from "../../lib/transactions/format";
-import { getGreeting } from "../../lib/userDisplay";
 import { useCurrency } from "../../hooks/useCurrency";
 import { trackDashboardOpened } from "../../services/analytics";
+
+import { SplitCreationFlow } from "../components/smartsplit/SplitCreationFlow";
+import { useBillSplits } from "../../hooks/useBillSplits";
 
 export function Home() {
   const navigate = useNavigate();
@@ -42,264 +32,248 @@ export function Home() {
   const { transactions: allTx, isLoading: txLoading } = useTransactions();
   const { t } = useTranslation();
   const { convertAndFormat } = useCurrency();
-  const [isCreateSplitOpen, setIsCreateSplitOpen] = useState(false);
   const { createSplit } = useBillSplits();
+  
+  const [isCreateSplitOpen, setIsCreateSplitOpen] = useState(false);
+  const [showBalance, setShowBalance] = useState(true);
 
   const monthKey = format(new Date(), "yyyy-MM");
   const { income, expenses } = getMonthTotals(allTx, monthKey);
   
-  const { breakdown, monthly: monthlyTrendData, isLoading: isTrendLoading } = useTransactionAnalytics(monthKey);
-  const totalSpending = breakdown.reduce((acc, item) => acc + item.value, 0);
-
-  // Gamification & Health Score
   const { statuses: achievements } = useAchievements(allTx, userData ?? null);
-  const { financialLevel, isLoading: isLevelLoading } = useFinancialLevels(allTx, achievements, userData ?? null);
+  const { financialLevel } = useFinancialLevels(allTx, achievements, userData ?? null);
 
-  // Personality Store
-  const { personality, fetchPersonality, loading: isPersonalityLoading, initialized: isPersonalityInitialized } = usePersonalityStore();
-  
-  // Insights
-  const { analysis, isLoading: isAnalysisLoading } = useGeminiInsights();
-  const { insights: emotionalInsights, isLoading: isEmotionalLoading } = useEmotionalInsights();
-  
-  // Weekly Report
-  const { latestReport, isLoading: isWeeklyLoading } = useWeeklyReport();
-
-  // Fetch initial personality data if not cached
-  useEffect(() => {
-    if (uid && !isPersonalityInitialized && !isPersonalityLoading) {
-      fetchPersonality(uid);
-    }
-  }, [uid, fetchPersonality, isPersonalityInitialized, isPersonalityLoading]);
-
-  // Track dashboard view once on mount
   useEffect(() => {
     trackDashboardOpened();
   }, []);
 
-  const displayName = userData?.displayName ?? authUser?.displayName ?? "there";
+  const displayName = userData?.displayName ?? authUser?.displayName ?? "User";
   const balance = allTx.length > 0 ? computeBalanceFromTransactions(allTx) : (userData?.balance ?? 0);
   const recent = allTx.slice(0, 4);
 
   return (
-    <div className="min-h-[100dvh] pb-safe-nav relative overflow-hidden bg-background">
-      {/* Background Orbs */}
-      <div className="absolute inset-0 opacity-20 pointer-events-none">
-        <div className="absolute top-0 right-0 w-80 h-80 bg-card rounded-full hidden" />
-        <div className="absolute bottom-40 left-0 w-80 h-80 bg-card rounded-full hidden" />
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-card rounded-full hidden" />
-      </div>
-
-      <div className="relative z-10 px-4 md:px-8 lg:px-12 pt-12 pb-6 max-w-7xl mx-auto">
-        {/* Header */}
-        <motion.div
-          initial={{ opacity: 0, y: -20 }}
-          animate={{ opacity: 1, y: 0 }}
-          className="flex items-center justify-between mb-8"
-        >
+    <div className="min-h-[100dvh] pb-safe-nav bg-background px-4 md:px-8 lg:px-12 pt-12">
+      
+      {/* 1. Header Section */}
+      <motion.div 
+        initial={{ opacity: 0, y: -10 }} 
+        animate={{ opacity: 1, y: 0 }} 
+        className="flex justify-between items-center mb-8"
+      >
+        <div className="flex items-center gap-3">
+          <button onClick={() => navigate("/profile")} className="w-12 h-12 rounded-full overflow-hidden border-2 border-border p-0.5">
+            {userData?.photoURL || authUser?.photoURL ? (
+              <img src={userData?.photoURL || authUser?.photoURL} alt="User" className="w-full h-full rounded-full object-cover" />
+            ) : (
+              <div className="w-full h-full rounded-full bg-gradient-to-br from-primary to-accent flex items-center justify-center">
+                <span className="text-primary-foreground font-bold text-lg">{displayName.charAt(0).toUpperCase()}</span>
+              </div>
+            )}
+          </button>
           <div>
-            <p className="text-white/60 text-sm mb-1">{t("home.greeting")} 👋</p>
-            <h1 className="text-2xl font-bold text-white">
-              {isProfileLoading ? "…" : displayName}
-            </h1>
-          </div>
-          <div className="flex items-center gap-3">
-            <motion.div
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-              onClick={() => navigate("/financial-wellness")}
-              className="flex items-center gap-1.5 bg-gradient-to-r from-card to-card px-3 py-2 rounded-full border border-[#ff6b35]/30 cursor-pointer"
-            >
-              <div>
-                <Flame size={16} className="text-[#ff6b35]" />
-              </div>
-              <span className="text-[#ff6b35] font-bold text-sm">
-                {userData?.streakDays ?? 0}
-              </span>
-            </motion.div>
-
-          </div>
-        </motion.div>
-
-        {/* Hero Section: Total Balance */}
-        <motion.div
-          initial={{ opacity: 0, scale: 0.95 }}
-          animate={{ opacity: 1, scale: 1 }}
-          whileHover={{ scale: 1.02 }}
-          transition={{ delay: 0.1 }}
-          className="bg-gradient-to-br from-card to-card  p-6 rounded-3xl border border-border mb-6 relative overflow-hidden cursor-pointer group"
-          onClick={() => navigate("/transactions")}
-        >
-          <div className="absolute inset-0 bg-gradient-to-br from-card to-card opacity-65" />
-          <div className="absolute top-0 right-0 w-40 h-40 bg-card rounded-full blur-3xl group-hover:bg-card transition-colors" />
-          <div className="relative">
-            <div className="flex items-center justify-between mb-2">
-              <p className="text-white/60 mb-2">{t("home.totalBalance")}</p>
-              <div>
-                <Eye size={16} className="text-white/40" />
-              </div>
-            </div>
-            <motion.h2
-              className="text-5xl font-black bg-gradient-to-r from-white via-[#00d9ff] to-[#00ff88] bg-clip-text text-transparent mb-1"
-              initial={{ opacity: 0, y: 10 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.3 }}
-            >
-              {isProfileLoading || txLoading ? "—" : convertAndFormat(balance)}
-            </motion.h2>
-            <p className="text-white/50 text-xs mb-4">{t("home.liveBalance", "Live balance from your transactions")}</p>
-            <div className="flex items-center gap-4 flex-wrap">
-              <div className="flex items-center gap-2">
-                <div className="bg-card p-2 rounded-xl">
-                  <TrendingUp size={16} className="text-[#00ff88]" />
-                </div>
-                <div>
-                  <p className="text-white/40 text-xs">{t("home.income", "Income")}</p>
-                  <p className="text-white font-bold">{convertAndFormat(income)}</p>
-                </div>
-              </div>
-              <div className="w-px h-8 bg-white/10 hidden sm:block" />
-              <div className="flex items-center gap-2">
-                <div className="bg-card p-2 rounded-xl">
-                  <TrendingDown size={16} className="text-[#ff3366]" />
-                </div>
-                <div>
-                  <p className="text-white/40 text-xs">{t("home.expenses", "Expenses")}</p>
-                  <p className="text-white font-bold">{convertAndFormat(expenses)}</p>
-                </div>
-              </div>
-            </div>
-          </div>
-        </motion.div>
-
-        {/* Quick Actions */}
-        <div className="flex gap-4 mb-6">
-          <button
-            onClick={() => navigate("/transactions")}
-            className="flex-1 bg-gradient-to-r from-[#00d9ff]/10 to-[#00ff88]/10 border border-[#00d9ff]/30 rounded-2xl py-3 text-[#00d9ff] font-semibold text-sm hover:from-[#00d9ff]/20 hover:to-[#00ff88]/20 transition-all"
-          >
-            + Add Expense
-          </button>
-          <button
-            onClick={() => setIsCreateSplitOpen(true)}
-            className="flex-1 bg-card border border-border rounded-2xl py-3 text-white/80 font-semibold text-sm hover:border-white/20 transition-all flex items-center justify-center gap-2"
-          >
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
-            Split Bill
-          </button>
-        </div>
-
-        {/* Financial Wellness Hub */}
-        <motion.div
-          initial={{ opacity: 0, y: 10 }}
-          animate={{ opacity: 1, y: 0 }}
-          className="mb-8"
-        >
-          <button 
-            onClick={() => navigate("/financial-wellness")}
-            className="w-full bg-gradient-to-r from-card to-card border border-[#00ff88]/30 rounded-3xl p-5 flex items-center justify-between hover:border-[#00ff88]/50 transition-colors shadow-lg shadow-[#00ff88]/5 group"
-          >
-            <div className="flex items-center gap-4">
-              <div className="bg-[#00ff88]/10 p-3 rounded-2xl">
-                <Flame size={24} className="text-[#00ff88]" />
-              </div>
-              <div className="text-left">
-                <h3 className="text-white font-bold text-lg">Financial Wellness</h3>
-                <p className="text-white/50 text-sm">Rewards, Streaks & Gamification</p>
-              </div>
-            </div>
-            <div className="bg-white/5 p-2 rounded-xl group-hover:bg-[#00ff88]/20 transition-colors">
-              <ArrowRight size={20} className="text-white/60 group-hover:text-[#00ff88]" />
-            </div>
-          </button>
-        </motion.div>
-
-        {/* Dashboard Adaptive Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6 mb-8">
-          <HealthScoreCard financialLevel={financialLevel} isLoading={isLevelLoading || txLoading} />
-          
-          <PersonalitySnapshotCard personality={personality} isLoading={isPersonalityLoading} />
-          
-          <div className="md:col-span-2 xl:col-span-3">
-            <Suspense fallback={<div className="h-40 bg-card rounded-3xl border border-border animate-pulse" />}>
-              <AIInsightsCarousel analysis={analysis} emotionalInsights={emotionalInsights} isLoading={isAnalysisLoading || isEmotionalLoading} />
-            </Suspense>
-          </div>
-          
-          <WeeklySummaryCard report={latestReport ?? null} isLoading={isWeeklyLoading} />
-          
-          <BillSplitWidget onCreateClick={() => setIsCreateSplitOpen(true)} />
-          
-          <div className="xl:col-span-2">
-            <Suspense fallback={<div className="h-64 bg-card rounded-3xl border border-border animate-pulse" />}>
-              <SpendingTrendWidget monthlyData={monthlyTrendData} totalSpending={totalSpending} isLoading={isTrendLoading} />
-            </Suspense>
+            <p className="text-muted-foreground text-xs font-medium flex items-center gap-1">
+              Hello 👋
+            </p>
+            <h1 className="text-xl font-bold text-foreground leading-tight">{displayName}</h1>
           </div>
         </div>
+        <button className="relative w-10 h-10 flex items-center justify-center rounded-full bg-card border border-border shadow-sm">
+          <Bell size={20} className="text-foreground" />
+          <span className="absolute top-2 right-2.5 w-2 h-2 bg-destructive rounded-full border border-card"></span>
+        </button>
+      </motion.div>
 
-        {/* Section 6: Recent Activity */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.4 }}
-        >
-          <div className="flex items-center justify-between mb-4">
-            <h3 className="text-white font-semibold flex-1">{t("home.recentTransactions", "Recent Transactions")}</h3>
-            <button 
-              onClick={() => navigate("/transactions")}
-              className="text-[#00d9ff] text-sm hover:text-white transition-colors flex items-center gap-1"
-            >
-              {t("home.viewAll", "View all")} <ArrowRight size={14} />
+      {/* 2. Hero Balance Card */}
+      <motion.div
+        initial={{ opacity: 0, scale: 0.95 }}
+        animate={{ opacity: 1, scale: 1 }}
+        transition={{ delay: 0.1, duration: 0.4, type: "spring" }}
+        className="relative w-full rounded-[24px] bg-card border border-border p-6 shadow-2xl mb-8 overflow-hidden group"
+      >
+        {/* Soft Glass Glow */}
+        <div className="absolute top-0 right-0 w-64 h-64 bg-accent/10 rounded-full blur-[80px] pointer-events-none transition-all duration-700 group-hover:bg-primary/10" />
+        
+        <div className="relative z-10">
+          <div className="flex justify-between items-center mb-4">
+            <p className="text-muted-foreground text-sm font-medium">Total Balance</p>
+            <button onClick={() => setShowBalance(!showBalance)} className="text-muted-foreground hover:text-foreground transition-colors">
+              {showBalance ? <Eye size={18} /> : <EyeOff size={18} />}
             </button>
           </div>
-          <div className="space-y-3">
-            {txLoading && (
-              <p className="text-white/40 text-sm text-center py-4">Loading activity…</p>
-            )}
-            {!txLoading && recent.length === 0 && (
-              <button
-                type="button"
-                onClick={() => navigate("/transactions")}
-                className="w-full bg-card shadow-sm border border-dashed border-white/20 rounded-2xl py-8 text-[#00d9ff] text-sm font-medium"
-              >
-                + {t("home.addTransaction")}
-              </button>
-            )}
-            {recent.map((tx, index) => {
+          
+          <h2 className="text-[40px] font-black text-foreground mb-1 tracking-tight">
+            {isProfileLoading ? "..." : (showBalance ? convertAndFormat(balance) : "••••••••")}
+          </h2>
+          <p className="text-muted-foreground text-xs mb-6">Live balance from your transactions</p>
+
+          {/* Mini Graph SVG */}
+          <div className="w-full h-12 mb-6">
+            <svg viewBox="0 0 100 30" preserveAspectRatio="none" className="w-full h-full overflow-visible">
+              <defs>
+                <linearGradient id="lineGlow" x1="0" y1="0" x2="0" y2="1">
+                  <stop offset="0%" stopColor="var(--accent)" stopOpacity="0.4" />
+                  <stop offset="100%" stopColor="var(--accent)" stopOpacity="0" />
+                </linearGradient>
+              </defs>
+              <path d="M0,30 L0,20 C20,20 30,5 50,15 C70,25 80,10 100,5 L100,30 Z" fill="url(#lineGlow)" />
+              <path d="M0,20 C20,20 30,5 50,15 C70,25 80,10 100,5" fill="none" stroke="var(--accent)" strokeWidth="2" strokeLinecap="round" />
+            </svg>
+          </div>
+
+          {/* Income & Expenses */}
+          <div className="flex justify-between items-center">
+            <div className="flex items-center gap-3">
+              <div className="w-10 h-10 rounded-xl bg-accent/10 flex items-center justify-center">
+                <ArrowRight size={18} className="text-accent -rotate-45" />
+              </div>
+              <div>
+                <p className="text-muted-foreground text-xs font-medium">Income</p>
+                <p className="text-foreground font-bold text-sm">{showBalance ? convertAndFormat(income) : "••••"}</p>
+              </div>
+            </div>
+            <div className="flex items-center gap-3">
+              <div className="w-10 h-10 rounded-xl bg-destructive/10 flex items-center justify-center">
+                <ArrowRight size={18} className="text-destructive rotate-45" />
+              </div>
+              <div>
+                <p className="text-muted-foreground text-xs font-medium">Expenses</p>
+                <p className="text-foreground font-bold text-sm">{showBalance ? convertAndFormat(expenses) : "••••"}</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </motion.div>
+
+      {/* 3. Quick Actions */}
+      <motion.div 
+        initial={{ opacity: 0, y: 10 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 0.2 }}
+        className="flex justify-between items-center gap-4 mb-8"
+      >
+        {[
+          { id: 'add', icon: Plus, label: 'Add Expense', color: 'text-primary', bg: 'bg-primary/10', action: () => navigate("/transactions") },
+          { id: 'split', icon: Users, label: 'Split Bill', color: 'text-[#8B5CF6]', bg: 'bg-[#8B5CF6]/10', action: () => setIsCreateSplitOpen(true) },
+          { id: 'scan', icon: ScanLine, label: 'Scan & Pay', color: 'text-accent', bg: 'bg-accent/10', action: () => navigate("/transactions") },
+          { id: 'more', icon: MoreHorizontal, label: 'More', color: 'text-muted-foreground', bg: 'bg-muted', action: () => navigate("/financial-wellness") },
+        ].map((action) => (
+          <button 
+            key={action.id} 
+            onClick={action.action}
+            className="flex flex-col items-center gap-2 group outline-none"
+          >
+            <div className={`w-14 h-14 rounded-2xl ${action.bg} flex items-center justify-center transition-transform active:scale-95 group-hover:-translate-y-1`}>
+              <action.icon size={24} className={action.color} />
+            </div>
+            <span className="text-[11px] font-medium text-muted-foreground group-hover:text-foreground transition-colors">{action.label}</span>
+          </button>
+        ))}
+      </motion.div>
+
+      {/* 4. Financial Wellness Hero */}
+      <motion.button
+        onClick={() => navigate("/financial-wellness")}
+        initial={{ opacity: 0, y: 10 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 0.3 }}
+        className="w-full bg-card border border-border rounded-3xl p-5 mb-8 flex items-center justify-between shadow-sm hover:shadow-md transition-all active:scale-[0.98] outline-none text-left relative overflow-hidden"
+      >
+        <div className="absolute right-0 top-0 w-32 h-32 bg-accent/5 rounded-full blur-2xl pointer-events-none" />
+        <div className="flex items-center gap-4 relative z-10">
+          <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-accent/20 to-primary/20 border border-border flex items-center justify-center">
+            <span className="text-xl">🔥</span>
+          </div>
+          <div>
+            <h3 className="font-bold text-foreground text-base">Financial Wellness</h3>
+            <p className="text-xs text-muted-foreground">Rewards, Streaks & Gamification</p>
+          </div>
+        </div>
+        <ArrowRight size={20} className="text-muted-foreground relative z-10" />
+      </motion.button>
+
+      {/* 5. Progress Area (Reference implementation) */}
+      <motion.div
+        initial={{ opacity: 0, y: 10 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 0.4 }}
+        className="mb-8"
+      >
+        <div className="flex justify-between items-center mb-4">
+          <h3 className="font-bold text-foreground text-sm">Your Progress</h3>
+          <button onClick={() => navigate("/financial-wellness")} className="text-xs font-semibold text-accent">View all</button>
+        </div>
+        
+        <div className="grid grid-cols-2 gap-4">
+          <div className="bg-card border border-border rounded-2xl p-4 shadow-sm">
+            <p className="text-xs text-muted-foreground mb-1">Financial Wellness</p>
+            <h4 className="text-xl font-bold text-accent mb-3">Level {financialLevel?.level ?? 1}</h4>
+            <div className="w-full h-1.5 bg-muted rounded-full overflow-hidden mb-2">
+              <div className="h-full bg-accent rounded-full" style={{ width: `${Math.min(100, (userData?.totalPoints ?? 0) / 10)}%` }} />
+            </div>
+            <p className="text-[10px] text-muted-foreground">{userData?.totalPoints ?? 0} XP to Level {(financialLevel?.level ?? 1) + 1}</p>
+          </div>
+
+          <div className="bg-card border border-border rounded-2xl p-4 shadow-sm flex flex-col justify-between">
+            <div className="flex justify-between items-start">
+              <div className="w-8 h-8 rounded-lg bg-primary/20 flex items-center justify-center text-primary font-bold">💎</div>
+              <div className="text-right">
+                <p className="text-xs font-bold text-foreground">65/100</p>
+                <p className="text-[10px] text-muted-foreground">Match</p>
+              </div>
+            </div>
+            <div>
+              <p className="text-xs font-semibold text-foreground mb-0.5">Future Builder</p>
+              <p className="text-[10px] text-muted-foreground leading-tight">Keep going! You're building a strong future.</p>
+            </div>
+          </div>
+        </div>
+      </motion.div>
+
+      {/* 6. Recent Transactions */}
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 0.5 }}
+      >
+        <div className="flex justify-between items-center mb-4">
+          <h3 className="font-bold text-foreground text-sm">Recent Transactions</h3>
+          <button onClick={() => navigate("/transactions")} className="text-xs font-semibold text-primary">View all</button>
+        </div>
+
+        <div className="space-y-3">
+          {txLoading ? (
+            <p className="text-muted-foreground text-sm text-center py-4">Loading activity…</p>
+          ) : recent.length === 0 ? (
+            <button
+              onClick={() => navigate("/transactions")}
+              className="w-full bg-card shadow-sm border border-dashed border-border rounded-2xl py-8 text-primary text-sm font-medium"
+            >
+              + {t("home.addTransaction")}
+            </button>
+          ) : (
+            recent.map((tx, index) => {
               const cat = getCategoryById(tx.categoryId);
               const isIncome = tx.type === "income";
               return (
-                <motion.button
-                  type="button"
-                  key={tx.id}
-                  onClick={() => navigate("/transactions")}
-                  initial={{ opacity: 0, x: -20 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  whileHover={{ scale: 1.02, x: 4 }}
-                  transition={{ delay: 0.5 + index * 0.1 }}
-                  className={`w-full bg-card shadow-sm  p-4 rounded-2xl border ${
-                    isIncome ? "border-[#00ff88]/20" : "border-border"
-                  } flex items-center gap-4 text-left group relative overflow-hidden`}
-                >
-                  <div className="text-3xl">{cat.icon}</div>
-                  <div className="flex-1 min-w-0">
-                    <p className="text-white font-medium truncate">{tx.merchant}</p>
-                    <p className="text-white/40 text-xs">
-                      {cat.label} · {formatRelativeTime(tx.date)}
-                    </p>
+                <div key={tx.id} className="flex items-center justify-between p-4 bg-card border border-border rounded-2xl shadow-sm">
+                  <div className="flex items-center gap-4">
+                    <div className="w-12 h-12 rounded-full bg-muted flex items-center justify-center text-2xl shadow-inner">
+                      {cat.icon}
+                    </div>
+                    <div>
+                      <h4 className="font-bold text-foreground text-sm">{tx.merchant}</h4>
+                      <p className="text-xs text-muted-foreground">{formatRelativeTime(tx.date)}</p>
+                    </div>
                   </div>
-                  <div className="text-right shrink-0">
-                    <p className={`font-bold text-sm ${isIncome ? "text-[#00ff88]" : "text-white"}`}>
-                      {isIncome ? "+" : "-"}
-                      {convertAndFormat(tx.amount)}
-                    </p>
+                  <div className={`font-black text-sm ${isIncome ? "text-accent" : "text-foreground"}`}>
+                    {isIncome ? "+" : "-"}{convertAndFormat(tx.amount)}
                   </div>
-                </motion.button>
+                </div>
               );
-            })}
-          </div>
-        </motion.div>
-      </div>
+            })
+          )}
+        </div>
+      </motion.div>
 
       <SplitCreationFlow 
         isOpen={isCreateSplitOpen}

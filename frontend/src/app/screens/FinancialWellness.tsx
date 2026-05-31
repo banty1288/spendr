@@ -41,7 +41,7 @@ export function FinancialWellness() {
   const xpToNext = financialLevel.xpToNext;
 
   return (
-    <PageShell orbs={[{ color: "#00ff88", position: "top-right" }, { color: "#00d9ff", position: "bottom-left" }]}>
+    <PageShell orbs={[{ color: "var(--primary)", position: "top-right" }, { color: "var(--accent)", position: "bottom-left" }]}>
       <div className="relative px-4 sm:px-6 pt-12 pb-6 max-w-2xl mx-auto">
         <motion.div
           initial={{ opacity: 0, y: -10 }}
@@ -50,11 +50,11 @@ export function FinancialWellness() {
         >
           <BackButton onClick={() => navigate("/home")} />
           <div className="flex-1 min-w-0">
-            <h1 className="text-2xl font-bold text-white flex items-center gap-2">
-              <Activity size={24} className="text-[#00ff88]" />
-              Financial Wellness
+            <h1 className="text-3xl font-black text-foreground flex items-center gap-2">
+              <Activity size={28} className="text-primary" />
+              Gamification
             </h1>
-            <p className="text-white/50 text-sm">Track your habits, earn rewards, level up</p>
+            <p className="text-muted-foreground text-sm font-medium">Track your habits, earn rewards, level up</p>
           </div>
         </motion.div>
 
@@ -62,40 +62,40 @@ export function FinancialWellness() {
         <motion.div
           initial={{ opacity: 0, scale: 0.95 }}
           animate={{ opacity: 1, scale: 1 }}
-          className="bg-gradient-to-br from-card to-card p-6 rounded-3xl border border-[#00ff88]/30 mb-6 relative overflow-hidden"
+          className="bg-card p-6 rounded-3xl border border-primary/30 mb-6 relative overflow-hidden shadow-[0_10px_40px_rgba(0,255,153,0.1)]"
         >
-          <div className="absolute inset-0 bg-gradient-to-br from-[#00ff88]/5 to-[#00d9ff]/5" />
+          <div className="absolute -top-10 -right-10 w-40 h-40 bg-primary/20 rounded-full blur-3xl pointer-events-none" />
           <div className="relative">
             <div className="flex items-center justify-between mb-4">
               <div className="flex items-center gap-3">
-                <div className="bg-gradient-to-br from-[#00ff88] to-[#00d9ff] p-3 rounded-2xl">
-                  <Trophy size={32} className="text-black" />
+                <div className="bg-gradient-to-br from-primary to-accent p-3 rounded-2xl shadow-sm">
+                  <Trophy size={32} className="text-background" />
                 </div>
                 <div>
-                  <p className="text-white/60 text-xs mb-1">Financial Health Level</p>
+                  <p className="text-muted-foreground text-xs font-semibold mb-1 uppercase tracking-widest">Wellness Level</p>
                   <div className="flex items-baseline gap-2">
-                    <h2 className="text-4xl font-black text-white">Lvl {currentLevel}</h2>
-                    <span className="text-[#00ff88] text-sm font-bold">{levelTitle}</span>
+                    <h2 className="text-4xl font-black text-foreground">Lvl {currentLevel}</h2>
+                    <span className="text-primary text-sm font-bold">{levelTitle}</span>
                   </div>
                 </div>
               </div>
               <div className="text-right">
-                <p className="text-white/60 text-xs mb-1">Total Wellness XP</p>
-                <p className="text-white text-3xl font-black">{totalXp.toLocaleString()}</p>
-                <p className="text-[#00d9ff] text-xs font-semibold">{xpToNext} XP to next level</p>
+                <p className="text-muted-foreground text-xs font-semibold mb-1 uppercase tracking-widest">Total XP</p>
+                <p className="text-foreground text-3xl font-black">{totalXp.toLocaleString()}</p>
+                <p className="text-accent text-xs font-bold">{xpToNext} XP to next level</p>
               </div>
             </div>
             
-            <div className="relative h-4 bg-white/10 rounded-full overflow-hidden mt-6">
+            <div className="relative h-3 bg-muted rounded-full overflow-hidden mt-6">
               <motion.div
                 initial={{ width: 0 }}
                 animate={{ width: `${levelProgress}%` }}
                 transition={{ delay: 0.2, duration: 1.2, ease: "easeOut" }}
-                className="absolute inset-y-0 left-0 bg-gradient-to-r from-[#00ff88] to-[#00d9ff] rounded-full"
+                className="absolute inset-y-0 left-0 bg-gradient-to-r from-primary to-accent rounded-full shadow-[0_0_12px_rgba(0,255,153,0.6)]"
               />
-              <div className="absolute right-2 top-1/2 -translate-y-1/2 text-black text-xs font-bold mix-blend-difference text-white">
-                {Math.round(levelProgress)}%
-              </div>
+            </div>
+            <div className="text-right mt-2 text-muted-foreground text-xs font-bold">
+              {Math.round(levelProgress)}%
             </div>
           </div>
         </motion.div>
@@ -107,20 +107,20 @@ export function FinancialWellness() {
           transition={{ delay: 0.1 }}
           className="grid grid-cols-3 gap-3 mb-6"
         >
-          <div className="bg-card p-4 rounded-2xl border border-border text-center">
-            <Flame size={24} className="text-[#ff6b35] mx-auto mb-2" />
-            <p className="text-white text-2xl font-black mb-1">{streakAchievement?.current ?? 0}</p>
-            <p className="text-white/60 text-xs">Day Streak</p>
+          <div className="bg-card p-4 rounded-3xl border border-border text-center shadow-sm hover:border-orange-500/50 transition-colors">
+            <Flame size={28} className="text-orange-500 mx-auto mb-2 drop-shadow-[0_0_8px_rgba(249,115,22,0.4)]" />
+            <p className="text-foreground text-2xl font-black mb-1">{streakAchievement?.current ?? 0}</p>
+            <p className="text-muted-foreground text-xs font-bold uppercase tracking-wider">Day Streak</p>
           </div>
-          <div className="bg-card p-4 rounded-2xl border border-border text-center">
-            <Award size={24} className="text-[#00d9ff] mx-auto mb-2" />
-            <p className="text-white text-2xl font-black mb-1">{unlockedCount}</p>
-            <p className="text-white/60 text-xs">Milestones</p>
+          <div className="bg-card p-4 rounded-3xl border border-border text-center shadow-sm hover:border-accent/50 transition-colors">
+            <Award size={28} className="text-accent mx-auto mb-2 drop-shadow-[0_0_8px_rgba(0,212,255,0.4)]" />
+            <p className="text-foreground text-2xl font-black mb-1">{unlockedCount}</p>
+            <p className="text-muted-foreground text-xs font-bold uppercase tracking-wider">Milestones</p>
           </div>
-          <div className="bg-card p-4 rounded-2xl border border-border text-center">
-            <Zap size={24} className="text-[#ffd60a] mx-auto mb-2" />
-            <p className="text-white text-2xl font-black mb-1">{rareCount}</p>
-            <p className="text-white/60 text-xs">Rare Unlocks</p>
+          <div className="bg-card p-4 rounded-3xl border border-border text-center shadow-sm hover:border-yellow-400/50 transition-colors">
+            <Zap size={28} className="text-yellow-400 mx-auto mb-2 drop-shadow-[0_0_8px_rgba(250,204,21,0.4)]" />
+            <p className="text-foreground text-2xl font-black mb-1">{rareCount}</p>
+            <p className="text-muted-foreground text-xs font-bold uppercase tracking-wider">Rare Unlocks</p>
           </div>
         </motion.div>
 
@@ -131,7 +131,7 @@ export function FinancialWellness() {
           transition={{ delay: 0.2 }}
           className="mb-6"
         >
-          <h3 className="text-white font-semibold mb-4">Habit Building Challenges</h3>
+          <h3 className="text-foreground font-bold mb-4 text-lg">Habit Building Challenges</h3>
           <div className="space-y-4">
             {activeChallenges.length > 0 ? (
               activeChallenges.map((challenge) => (
@@ -142,7 +142,7 @@ export function FinancialWellness() {
                 icon={<Target size={32} />}
                 title="No active challenges"
                 description="Accept a challenge from the Home screen to start building better habits."
-                accentColor="#00d9ff"
+                accentColor="var(--accent)"
               />
             )}
           </div>
@@ -155,7 +155,7 @@ export function FinancialWellness() {
           transition={{ delay: 0.45 }}
           className="mb-6"
         >
-          <h3 className="text-white font-semibold mb-4">Milestone Gallery</h3>
+          <h3 className="text-foreground font-bold mb-4 text-lg">Milestone Gallery</h3>
           <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-3">
             {statuses.map((achievement) => (
               <AchievementBadgeCard key={achievement.id} achievement={achievement} />
@@ -171,8 +171,8 @@ export function FinancialWellness() {
           className="pb-6"
         >
           <div className="flex items-center justify-between mb-6">
-            <h3 className="text-white font-semibold">Reward History</h3>
-            {rewardsLoading && <div className="w-4 h-4 rounded-full border-2 border-[#00ff88] border-t-transparent animate-spin" />}
+            <h3 className="text-foreground font-bold text-lg">Reward History</h3>
+            {rewardsLoading && <div className="w-5 h-5 rounded-full border-2 border-primary border-t-transparent animate-spin" />}
           </div>
           <RewardTimeline rewards={rewards} />
         </motion.div>

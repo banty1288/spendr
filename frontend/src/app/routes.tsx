@@ -38,8 +38,8 @@ const Savings = lazy(() =>
 const FinancialWellness = lazy(() =>
   import("./screens/FinancialWellness").then((m) => ({ default: m.FinancialWellness }))
 );
-const NewsHub = lazy(() =>
-  import("./screens/NewsHub").then((m) => ({ default: m.NewsHub }))
+const Daily = lazy(() =>
+  import("./screens/Daily").then((m) => ({ default: m.Daily }))
 );
 const BillSplit = lazy(() =>
   import("./screens/BillSplit").then((m) => ({ default: m.BillSplit }))
@@ -168,10 +168,10 @@ export const router = createBrowserRouter([
                     ),
                   },
                   {
-                    path: "news",
+                    path: "daily",
                     element: (
                       <LazyScreen>
-                        <NewsHub />
+                        <Daily />
                       </LazyScreen>
                     ),
                   },

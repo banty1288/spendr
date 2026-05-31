@@ -150,17 +150,17 @@ export function AIAssistantPanel() {
             // Desktop: side drawer from right
             className={[
               "fixed z-[60] flex flex-col overflow-hidden",
-              "bg-[#0d0d10]/98 backdrop-blur-xl",
-              "border border-white/10",
+              "bg-card/95 backdrop-blur-xl",
+              "border border-border",
               // Mobile: full-width bottom sheet, 78vh tall
               "bottom-0 left-0 right-0 rounded-t-3xl",
-              "md:bottom-6 md:right-6 md:left-auto md:rounded-2xl md:w-[400px]",
+              "md:bottom-[100px] md:right-6 md:left-auto md:rounded-3xl md:w-[400px]",
               // Heights
               "h-[78vh] md:h-[600px] max-h-[90vh]",
             ].join(" ")}
             style={{
               boxShadow:
-                "0 -4px 60px rgba(0,217,255,0.08), 0 -2px 30px rgba(157,78,221,0.08), 0 0 0 1px rgba(255,255,255,0.06)",
+                "0 20px 40px rgba(0,0,0,0.5), inset 0 1px 1px rgba(255,255,255,0.1)",
             }}
             initial={{ opacity: 0, y: "100%", scale: 0.98 }}
             animate={{ opacity: 1, y: 0, scale: 1 }}
@@ -172,7 +172,7 @@ export function AIAssistantPanel() {
             }}
           >
             {/* Top gradient accent line */}
-            <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-[#00d9ff]/60 to-transparent" />
+            <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-primary via-accent to-primary opacity-80" />
 
             {/* Handle — mobile only */}
             <div className="flex justify-center pt-3 pb-1 md:hidden">
@@ -182,15 +182,15 @@ export function AIAssistantPanel() {
             {/* Header */}
             <div className="flex items-center gap-3 px-4 py-3 border-b border-white/6">
               {/* Logo */}
-              <div className="w-8 h-8 rounded-xl bg-gradient-to-br from-[#00d9ff]/20 to-[#9d4edd]/20 border border-[#9d4edd]/30 flex items-center justify-center shrink-0">
-                <Sparkles size={15} className="text-[#9d4edd]" />
+              <div className="w-8 h-8 rounded-xl bg-gradient-to-br from-primary/20 to-accent/20 border border-accent/30 flex items-center justify-center shrink-0">
+                <Sparkles size={15} className="text-accent" />
               </div>
 
               <div className="flex-1 min-w-0">
-                <p className="text-white font-semibold text-sm leading-none">
-                  Aoede
+                <p className="text-foreground font-semibold text-sm leading-none">
+                  Finny
                 </p>
-                <p className="text-white/40 text-[11px] mt-0.5">
+                <p className="text-muted-foreground text-[11px] mt-0.5">
                   AI Financial Assistant
                 </p>
               </div>
@@ -264,14 +264,14 @@ export function AIAssistantPanel() {
                   className="flex flex-col items-center justify-center h-full gap-4 pb-4"
                 >
                   {/* Avatar */}
-                  <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-[#00d9ff]/10 to-[#9d4edd]/20 border border-[#9d4edd]/20 flex items-center justify-center">
-                    <Sparkles size={28} className="text-[#9d4edd]" />
+                  <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-primary/10 to-accent/20 border border-accent/20 flex items-center justify-center">
+                    <Sparkles size={28} className="text-accent" />
                   </div>
                   <div className="text-center">
-                    <p className="text-white font-semibold text-base">
-                      Hi! I'm Aoede 👋
+                    <p className="text-foreground font-semibold text-base">
+                      Hi! I'm Finny 👋
                     </p>
-                    <p className="text-white/40 text-sm mt-1 max-w-[220px]">
+                    <p className="text-muted-foreground text-sm mt-1 max-w-[220px]">
                       Your AI financial assistant. Ask me anything about your
                       money.
                     </p>
