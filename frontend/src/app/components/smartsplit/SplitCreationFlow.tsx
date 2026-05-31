@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion, AnimatePresence } from "motion/react";
 import { Receipt, X, Check, Users, ArrowRight, Wand2 } from 'lucide-react';
 import { BillSplit, BillParticipant, SplitMethod, BillItem } from '../../../types/billSplit';
 import { ReceiptScanner } from './ReceiptScanner';

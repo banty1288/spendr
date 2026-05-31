@@ -63,7 +63,7 @@ export function Home() {
         <div className="flex items-center gap-3">
           <button onClick={() => navigate("/profile")} className="w-12 h-12 rounded-full overflow-hidden border-2 border-border p-0.5">
             {userData?.photoURL || authUser?.photoURL ? (
-              <img src={userData?.photoURL || authUser?.photoURL} alt="User" className="w-full h-full rounded-full object-cover" />
+              <img src={userData?.photoURL || authUser?.photoURL || undefined} alt="User" className="w-full h-full rounded-full object-cover" />
             ) : (
               <div className="w-full h-full rounded-full bg-gradient-to-br from-primary to-accent flex items-center justify-center">
                 <span className="text-primary-foreground font-bold text-lg">{displayName.charAt(0).toUpperCase()}</span>
@@ -206,11 +206,11 @@ export function Home() {
         <div className="grid grid-cols-2 gap-4">
           <div className="bg-card border border-border rounded-2xl p-4 shadow-sm">
             <p className="text-xs text-muted-foreground mb-1">Financial Wellness</p>
-            <h4 className="text-xl font-bold text-accent mb-3">Level {financialLevel?.level ?? 1}</h4>
+            <h4 className="text-xl font-bold text-accent mb-3">Level {financialLevel?.currentLevel ?? 1}</h4>
             <div className="w-full h-1.5 bg-muted rounded-full overflow-hidden mb-2">
-              <div className="h-full bg-accent rounded-full" style={{ width: `${Math.min(100, (userData?.totalPoints ?? 0) / 10)}%` }} />
+              <div className="h-full bg-accent rounded-full" style={{ width: `${Math.min(100, ((financialLevel?.totalXp ?? 0) % 100))}%` }} />
             </div>
-            <p className="text-[10px] text-muted-foreground">{userData?.totalPoints ?? 0} XP to Level {(financialLevel?.level ?? 1) + 1}</p>
+            <p className="text-[10px] text-muted-foreground">{financialLevel?.totalXp ?? 0} XP Total</p>
           </div>
 
           <div className="bg-card border border-border rounded-2xl p-4 shadow-sm flex flex-col justify-between">

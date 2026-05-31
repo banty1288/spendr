@@ -1,5 +1,5 @@
 import React, { useMemo } from 'react';
-import { motion } from 'framer-motion';
+import { motion } from 'motion/react';
 import { Receipt, ArrowRight, ArrowUpRight, ArrowDownLeft } from 'lucide-react';
 import { useNavigate } from 'react-router';
 import { useBillSplits, useBillSplitDetails } from '../../../hooks/useBillSplits';

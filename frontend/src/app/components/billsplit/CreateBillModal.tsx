@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion, AnimatePresence } from "motion/react";
 import { X, Plus, Users, Receipt, PieChart, TrendingUp, IndianRupee } from 'lucide-react';
 import { BillSplit, BillParticipant, SplitMethod } from '../../../types/billSplit';
 import { calculateSplit, ParticipantDraft } from '../../../lib/settlementEngine';

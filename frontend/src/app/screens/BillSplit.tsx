@@ -1,5 +1,5 @@
 import React, { useState, useMemo } from 'react';
-import { motion } from 'framer-motion';
+import { motion } from 'motion/react';
 import { Receipt, Plus, History, ArrowUpRight, ArrowDownLeft, Activity } from 'lucide-react';
 import { useBillSplits, useBillSplitDetails } from '../../hooks/useBillSplits';
 import { SplitCreationFlow } from '../components/smartsplit/SplitCreationFlow';
@@ -88,7 +88,10 @@ export function BillSplit() {
               {activeBills.map(bill => (
                 <div 
                   key={bill.id} 
-                  onClick={() => setSelectedBillId(selectedBillId === bill.id ? null : bill.id)}
+                  onClick={(e: React.MouseEvent) => {
+                    e.stopPropagation();
+                    setSelectedBillId(selectedBillId === bill.id ? null : bill.id);
+                  }}
                   className="bg-white/5 border border-white/10 rounded-2xl p-4 cursor-pointer hover:bg-white/10 transition-colors"
                 >
                   <div className="flex justify-between items-start mb-2">

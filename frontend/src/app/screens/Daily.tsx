@@ -5,6 +5,7 @@ import { useAuthStore } from "../../store/authStore";
 import { useUserData } from "../../hooks/useUserData";
 import { useTransactions } from "../../hooks/useTransactions";
 import { useAchievements } from "../../hooks/useAchievements";
+import { useFinancialLevels } from "../../hooks/useFinancialLevels";
 import { format } from "date-fns";
 
 export function Daily() {
@@ -13,6 +14,7 @@ export function Daily() {
   const { data: userData } = useUserData();
   const { transactions } = useTransactions();
   const { statuses: achievements } = useAchievements(transactions, userData ?? null);
+  const { financialLevel } = useFinancialLevels(transactions, achievements, userData ?? null);
 
   const streak = userData?.streakDays ?? 0;
   
@@ -56,9 +58,7 @@ export function Daily() {
           <div className="bg-primary/10 p-3 rounded-2xl mb-3">
             <Trophy size={28} className="text-primary" />
           </div>
-          <h2 className="text-2xl font-black text-primary">
-            {userData?.totalPoints ?? 0}
-          </h2>
+          <p className="text-foreground text-xl font-black">{financialLevel.totalXp}</p>
           <p className="text-sm text-muted-foreground font-medium">Total XP</p>
         </motion.div>
       </div>
