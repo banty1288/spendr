@@ -14,6 +14,92 @@ Spendr is a personal finance and expense management web application designed to 
 * **News and financial tips**: Access relevant financial news and daily insights.
 * **AI-powered assistance**: Use Gemini AI via text or voice for contextual financial advice and transaction analysis.
 
+---
+
+## AEGIS Intelligence Layer
+
+### What is AEGIS?
+
+AEGIS (AI Economic & Global Intelligence System) is the market intelligence and risk analysis engine being developed alongside Spendr. 
+
+It continuously analyzes:
+- Global commodity markets
+- Inflation trends
+- Interest rate movements
+- Economic indicators
+- Geopolitical developments
+- Financial news and market sentiment
+
+Its purpose is to convert complex macroeconomic signals into actionable financial intelligence.
+
+### Why Spendr Needs AEGIS
+
+Most personal finance applications focus on historical data. They answer:
+- Where money was spent
+- How much was saved
+- What investments were made
+
+However, they rarely answer:
+**"How will future economic events affect my financial life?"**
+
+Spendr is being built to solve both problems. It helps users manage their finances today while preparing them for tomorrow. AEGIS enables that future-focused intelligence.
+
+### The Spendr + AEGIS Ecosystem
+
+**Spendr** focuses on:
+- Expense Management
+- Budgeting
+- Goal Tracking
+- Bill Splitting
+- Savings Optimization
+- Financial Wellness
+- Personal Financial Insights
+
+**AEGIS** focuses on:
+- Market Intelligence
+- Commodity Analysis
+- Inflation Monitoring
+- Economic Forecasting
+- Black Swan Detection
+- Risk Assessment
+- Scenario Simulation
+
+Together they create a unified platform that understands both **Personal Finance** and **Global Economic Conditions**.
+
+### Future Features Powered by AEGIS
+
+#### Financial Weather Forecast
+Provide users with a simple outlook of upcoming financial conditions.
+*Examples: Fuel costs expected to rise, Food inflation increasing, Interest rates likely to change, Market volatility increasing.*
+
+#### Life Impact Engine
+Translate macroeconomic events into personal financial consequences.
+*Example: Global Event: Crude oil prices increase significantly. Spendr Insight: "Based on your spending patterns, transportation costs may increase by approximately 10–15% over the next two months."*
+
+#### Goal Protection System
+Monitor financial goals and assess how economic changes may impact progress.
+*Examples: Buying a car, Purchasing a home, Building an emergency fund, Achieving investment targets.*
+AI can recommend adjustments before goals are affected.
+
+#### Personal Risk Intelligence
+Provide proactive warnings about potential financial risks.
+*Examples: Inflation pressure, Economic slowdowns, Commodity shocks, Credit tightening, Recession indicators.*
+
+#### AI Scenario Simulator
+Allow users to explore hypothetical situations.
+*Examples: What happens if inflation reaches 8%? What if fuel prices rise by 20%? What if interest rates increase again?*
+The platform generates personalized impact assessments.
+
+### Long-Term Vision
+
+Spendr is evolving beyond a budgeting application. The long-term vision is to create an AI-native Financial Operating System that combines personal financial management with real-time economic intelligence.
+
+Instead of only answering *"Where did my money go?"*, Spendr will help users answer *"What should I do today to prepare for tomorrow?"*
+
+AEGIS serves as the intelligence layer that makes this possible.
+
+---
+
 ## Tech Stack
 
 **Frontend:**
@@ -93,6 +179,25 @@ This repository uses a monorepo structure with four primary domains:
 
 Spendr relies on a serverless architecture. The React frontend communicates directly with Firebase for authentication and database operations via the client SDK. Computationally heavy or secure operations are handled via Vercel Serverless APIs (`/api`) and Firebase Cloud Functions (`backend/functions`). 
 
+                    AEGIS
+      (Economic & Market Intelligence Engine)
+                              │
+                              ▼
+ ┌─────────────────────────────────────────┐
+ │                 SPENDR                  │
+ ├─────────────────────────────────────────┤
+ │ Expense Management                      │
+ │ Budgeting                               │
+ │ Goal Tracking                           │
+ │ Bill Splitting                          │
+ │ Savings Optimization                    │
+ │ Financial Wellness                      │
+ │ AI Insights                             │
+ └─────────────────────────────────────────┘
+                              │
+                              ▼
+                 Personalized Financial Decisions
+
 **Security Features:**
 * **API Key Protection:** The Google Gemini API is accessed securely through a Vercel Serverless Function proxy (`api/generate.ts`), preventing client-side exposure of API keys.
 * **Strict Data Boundaries:** Advanced Firestore rules enforce strict IDOR prevention and explicitly reject unauthenticated attempts to alter balance or profile state.
@@ -118,6 +223,10 @@ pnpm run deploy:firebase
 ## Contributing
 
 Please refer to `docs/CONTRIBUTING.md` and `docs/Guidelines.md` for coding standards, pull request processes, and architectural boundaries.
+
+---
+
+**Spendr is the Financial Operating System. AEGIS is the Intelligence Engine. Together they form a next-generation AI-powered Financial Intelligence Platform designed to help individuals understand, manage, and anticipate the future of their financial lives.**
 
 ## License
 
