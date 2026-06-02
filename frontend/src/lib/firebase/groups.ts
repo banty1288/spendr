@@ -47,16 +47,27 @@ export async function getGroupsForUser(userId: string): Promise<Group[]> {
 
   const groupIds = memberSnaps.docs.map(d => d.data().groupId);
   
-  // Since 'in' queries are limited to 10, chunk if necessary.
-  // Assuming a user isn't in > 10 groups right now for simplicity, or we do individual gets.
+  // 'in' queries are limited to 30 items per chunk in Firestore.
+  // We'll chunk them safely and use Promise.all to fetch concurrently.
+  const chunks = groupIds.reduce((resultArray, item, index) => { 
+    const chunkIndex = Math.floor(index / 30);
+    if (!resultArray[chunkIndex]) resultArray[chunkIndex] = [];
+    resultArray[chunkIndex].push(item);
+    return resultArray;
+  }, [] as string[][]);
+
+  const promises = chunks.map((chunk: string[]) => {
+    return getDocs(query(collection(db, GROUPS_COLLECTION), where("__name__", "in", chunk)));
+  });
+
+  const snapshots = await Promise.all(promises);
   const groups: Group[] = [];
   
-  for (const gid of groupIds) {
-    const gSnap = await getDoc(doc(db, GROUPS_COLLECTION, gid));
-    if (gSnap.exists()) {
-      groups.push(gSnap.data() as Group);
-    }
-  }
+  snapshots.forEach(snap => {
+    snap.docs.forEach((d: any) => {
+      groups.push(d.data() as Group);
+    });
+  });
 
   return groups;
 }
@@ -69,4 +80,28 @@ export async function getGroupMembers(groupId: string): Promise<GroupMember[]> {
   
   const memberSnaps = await getDocs(membersQuery);
   return memberSnaps.docs.map(d => d.data() as GroupMember);
+}
+
+export async function getGroupDetails(groupId: string): Promise<Group | null> {
+  const gSnap = await getDoc(doc(db, GROUPS_COLLECTION, groupId));
+  if (!gSnap.exists()) return null;
+  return gSnap.data() as Group;
+}
+
+export async function addGroupMember(
+  groupId: string,
+  userId: string,
+  name: string,
+  role: "admin" | "member" = "member"
+): Promise<void> {
+  const memberRef = doc(collection(db, GROUP_MEMBERS_COLLECTION));
+  const member: GroupMember = {
+    id: memberRef.id,
+    groupId,
+    userId,
+    name,
+    role,
+    joinedAt: new Date().toISOString()
+  };
+  await setDoc(memberRef, member);
 }

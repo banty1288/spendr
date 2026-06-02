@@ -28,6 +28,17 @@ if (typeof window !== "undefined") {
       event.preventDefault();
     }
   });
+
+  // Unregister any existing service workers to ensure users get the latest version
+  if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.getRegistrations().then((registrations) => {
+      for (const registration of registrations) {
+        registration.unregister().then(boolean => {
+          console.log(boolean ? 'Successfully unregistered service worker' : 'Service worker unregistration failed');
+        });
+      }
+    });
+  }
 }
 
 createRoot(document.getElementById("root")!).render(

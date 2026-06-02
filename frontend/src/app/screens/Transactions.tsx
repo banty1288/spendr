@@ -1,4 +1,4 @@
-import { useState, useCallback } from "react";
+import { useState, useCallback, useMemo } from "react";
 import { useNavigate } from "react-router";
 import { useTranslation } from "react-i18next";
 import { motion } from "motion/react";
@@ -55,11 +55,10 @@ export function Transactions() {
   const { transactions, all, isLoading, isError, availableMonths } =
     useFilteredTransactions(filters);
 
-  const monthKey =
-    filters.month === "all" ? format(new Date(), "yyyy-MM") : filters.month;
-  const totals = getMonthTotals(all, monthKey);
-  const breakdown = getCategoryBreakdown(all, monthKey);
-  const monthlyChart = getMonthlySummaries(all, 6);
+  const monthKey = useMemo(() => filters.month === "all" ? format(new Date(), "yyyy-MM") : filters.month, [filters.month]);
+  const totals = useMemo(() => getMonthTotals(all, monthKey), [all, monthKey]);
+  const breakdown = useMemo(() => getCategoryBreakdown(all, monthKey), [all, monthKey]);
+  const monthlyChart = useMemo(() => getMonthlySummaries(all, 6), [all]);
 
   const handleEdit = useCallback((tx: Transaction) => {
     setEditing(tx);

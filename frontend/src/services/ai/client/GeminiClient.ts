@@ -94,7 +94,7 @@ export class GeminiClient {
           throw new AiError("API", "Rate limit exceeded. Please wait a moment.", true);
         }
         
-        throw new Error(errorData?.error || `API Error: ${status}`);
+        throw new Error(errorData?.error?.message || errorData?.error || `API Error: ${status}`);
       }
 
       const result = await response.json();

@@ -1,233 +1,125 @@
-# Spendr
+# Spendr 💸
 
-Spendr is a personal finance and expense management web application designed to help users track their spending, manage budgets, and gain financial insights. It integrates AI-powered analysis to provide contextual recommendations and simplify financial planning.
+**Spendr** is a production-ready, AI-powered personal finance application built for the modern Indian user. It simplifies expense tracking, group debt settlements, and financial planning through an intuitive mobile-first interface and deeply integrated AI assistants.
 
-## Key Features
+## 🌟 The Problem We Solve
+Managing personal finances across multiple apps is exhausting. Splitting bills with roommates, tracking UPI payments, budgeting monthly expenses, and getting actionable financial advice typically requires four different tools. 
 
-* **Intelligent Bill Splitting**: Create customized splits via manual entry, percentage-based splits, or itemized selections with real-time settlement tracking.
-* **AI Receipt Smart Scan**: Instantly parse and auto-assign line items from physical receipts or invoices using multimodal AI.
-* **Groups & Settlements Dashboard**: Manage individual and group balances in a unified Settlement Center, complete with payment histories.
-* **Expense tracking**: Log and categorize daily transactions.
-* **Budget planning**: Set and monitor spending limits across different categories.
-* **Financial insights**: View analytics and trends to understand spending behavior.
-* **Financial wellness tools**: Track financial habits and goals.
-* **News and financial tips**: Access relevant financial news and daily insights.
-* **AI-powered assistance**: Use Gemini AI via text or voice for contextual financial advice and transaction analysis.
+**Spendr unifies this experience.** It allows users to track expenses, settle debts within groups, and receive personalized AI insights in one seamless application.
 
----
+## ✨ Key Features
+- **Smart Expense Tracking**: Log daily expenses, incomes, and view beautiful analytical breakdowns.
+- **Group Settlements**: Create groups, split bills (equally, by percentage, or custom amounts), and track who owes whom.
+- **Debt Simplification**: Automatically calculates the most efficient way to settle group debts to minimize the number of transactions.
+- **AI Financial Assistant (Aoede)**: A conversational AI that analyzes your spending patterns, warns you if you're approaching budget limits, and can even log expenses for you via voice or text.
+- **Gamification & Rewards**: Earn XP and level up your financial wellness by maintaining streaks, staying under budget, and clearing debts.
+- **UPI Integration**: Generate UPI payment links and QR codes to settle debts instantly.
+- **Daily Hub & News**: Get a personalized feed of financial news and actionable AI-generated daily tips.
 
-## AEGIS Intelligence Layer
+## 🏗 Architecture Overview
 
-### What is AEGIS?
+Spendr operates on a modern, serverless architecture entirely hosted on the Google/Firebase ecosystem, ensuring infinite scalability and zero maintenance overhead.
 
-AEGIS (AI Economic & Global Intelligence System) is the market intelligence and risk analysis engine being developed alongside Spendr. 
+```mermaid
+graph TD
+    Client[React + Vite Frontend]
+    Auth[Firebase Authentication]
+    Functions[Firebase Functions Node.js]
+    Firestore[Firestore Database]
+    Storage[Firebase Storage]
+    Gemini[Vertex AI / Gemini]
 
-It continuously analyzes:
-- Global commodity markets
-- Inflation trends
-- Interest rate movements
-- Economic indicators
-- Geopolitical developments
-- Financial news and market sentiment
-
-Its purpose is to convert complex macroeconomic signals into actionable financial intelligence.
-
-### Why Spendr Needs AEGIS
-
-Most personal finance applications focus on historical data. They answer:
-- Where money was spent
-- How much was saved
-- What investments were made
-
-However, they rarely answer:
-**"How will future economic events affect my financial life?"**
-
-Spendr is being built to solve both problems. It helps users manage their finances today while preparing them for tomorrow. AEGIS enables that future-focused intelligence.
-
-### The Spendr + AEGIS Ecosystem
-
-**Spendr** focuses on:
-- Expense Management
-- Budgeting
-- Goal Tracking
-- Bill Splitting
-- Savings Optimization
-- Financial Wellness
-- Personal Financial Insights
-
-**AEGIS** focuses on:
-- Market Intelligence
-- Commodity Analysis
-- Inflation Monitoring
-- Economic Forecasting
-- Black Swan Detection
-- Risk Assessment
-- Scenario Simulation
-
-Together they create a unified platform that understands both **Personal Finance** and **Global Economic Conditions**.
-
-### Future Features Powered by AEGIS
-
-#### Financial Weather Forecast
-Provide users with a simple outlook of upcoming financial conditions.
-*Examples: Fuel costs expected to rise, Food inflation increasing, Interest rates likely to change, Market volatility increasing.*
-
-#### Life Impact Engine
-Translate macroeconomic events into personal financial consequences.
-*Example: Global Event: Crude oil prices increase significantly. Spendr Insight: "Based on your spending patterns, transportation costs may increase by approximately 10–15% over the next two months."*
-
-#### Goal Protection System
-Monitor financial goals and assess how economic changes may impact progress.
-*Examples: Buying a car, Purchasing a home, Building an emergency fund, Achieving investment targets.*
-AI can recommend adjustments before goals are affected.
-
-#### Personal Risk Intelligence
-Provide proactive warnings about potential financial risks.
-*Examples: Inflation pressure, Economic slowdowns, Commodity shocks, Credit tightening, Recession indicators.*
-
-#### AI Scenario Simulator
-Allow users to explore hypothetical situations.
-*Examples: What happens if inflation reaches 8%? What if fuel prices rise by 20%? What if interest rates increase again?*
-The platform generates personalized impact assessments.
-
-### Long-Term Vision
-
-Spendr is evolving beyond a budgeting application. The long-term vision is to create an AI-native Financial Operating System that combines personal financial management with real-time economic intelligence.
-
-Instead of only answering *"Where did my money go?"*, Spendr will help users answer *"What should I do today to prepare for tomorrow?"*
-
-AEGIS serves as the intelligence layer that makes this possible.
-
----
-
-## Tech Stack
-
-**Frontend:**
-* React
-* Vite
-* TypeScript
-* Tailwind CSS
-* Framer Motion (Animations)
-
-**Backend:**
-* Firebase Authentication
-* Cloud Firestore (Database)
-* Firebase Cloud Functions
-* Vercel Serverless Functions (API)
-
-**AI Integration:**
-* Google Gemini API (REST and WebSockets for Voice)
-
-## Installation
-
-### Setup
-
-1. Clone the repository:
-   ```bash
-   git clone https://github.com/banty1614-source/spendr.git
-   cd spendr
-   ```
-
-2. Install dependencies (using pnpm workspaces):
-   ```bash
-   npm install -g pnpm
-   pnpm install
-   ```
-
-### Environment Variables
-
-Copy the provided environment template from the infrastructure directory and populate it with your Firebase and Gemini credentials:
-
-```bash
-cp infrastructure/.env.example frontend/.env.local
+    Client -->|Authenticates| Auth
+    Client -->|Real-time Data via React Query| Firestore
+    Client -->|RPC Calls| Functions
+    Client -->|Uploads Receipts & Avatars| Storage
+    Functions -->|Generates Insights & Budgets| Gemini
+    Functions -->|Bypasses Client Rules| Firestore
 ```
 
-Ensure the following variables are set:
-* `VITE_FIREBASE_API_KEY`
-* `VITE_FIREBASE_PROJECT_ID`
-* `GEMINI_API_KEY` (Required for the Vercel Serverless Function proxy)
-*(See `.env.example` for the full list of required variables).*
+## 🛠 Tech Stack
+- **Frontend**: React 18, Vite, TypeScript
+- **Styling**: Tailwind CSS, Shadcn UI, Framer Motion
+- **State & Data Fetching**: TanStack Query (React Query), Zustand
+- **Backend Services**: Firebase Functions (Node.js)
+- **Database**: Firebase Firestore (NoSQL)
+- **Authentication**: Firebase Auth (Google Sign-In)
+- **AI & ML**: Google Cloud Vertex AI (Gemini 2.5 Flash)
+- **Hosting**: Firebase Hosting
 
-### Development
+## 🚀 Installation & Setup
 
-To start the local development server:
+### Prerequisites
+- Node.js (v18+)
+- `pnpm` (v9+)
+- Firebase CLI (`npm install -g firebase-tools`)
 
+### 1. Clone & Install
 ```bash
-pnpm run dev
+git clone https://github.com/banty1614-source/spendr.git
+cd spendr
+pnpm install
 ```
 
-This will run the Vite frontend development server on `http://localhost:5173`.
-
-### Build
-
-To compile the application for production:
-
+### 2. Configure Environment Variables
+Copy the template and fill in your Firebase and Gemini credentials.
 ```bash
-pnpm run build
+cp .env.example .env.local
 ```
 
-## Project Structure
-
-This repository uses a monorepo structure with four primary domains:
-
-* `frontend/`: Contains the React/Vite web application, components, and user interface logic.
-* `backend/`: Contains server-side API endpoints, Firebase Cloud Functions, and business logic.
-* `infrastructure/`: Contains deployment configurations (`firebase.json`, `vercel.json`), security rules, CI/CD workflows, and environment templates.
-* `docs/`: Contains architectural documentation, design guidelines, and contribution rules.
-
-## Architecture & Security Overview
-
-Spendr relies on a serverless architecture. The React frontend communicates directly with Firebase for authentication and database operations via the client SDK. Computationally heavy or secure operations are handled via Vercel Serverless APIs (`/api`) and Firebase Cloud Functions (`backend/functions`). 
-
-                    AEGIS
-      (Economic & Market Intelligence Engine)
-                              │
-                              ▼
- ┌─────────────────────────────────────────┐
- │                 SPENDR                  │
- ├─────────────────────────────────────────┤
- │ Expense Management                      │
- │ Budgeting                               │
- │ Goal Tracking                           │
- │ Bill Splitting                          │
- │ Savings Optimization                    │
- │ Financial Wellness                      │
- │ AI Insights                             │
- └─────────────────────────────────────────┘
-                              │
-                              ▼
-                 Personalized Financial Decisions
-
-**Security Features:**
-* **API Key Protection:** The Google Gemini API is accessed securely through a Vercel Serverless Function proxy (`api/generate.ts`), preventing client-side exposure of API keys.
-* **Strict Data Boundaries:** Advanced Firestore rules enforce strict IDOR prevention and explicitly reject unauthenticated attempts to alter balance or profile state.
-* **Prompt Injection Prevention:** The AI modules execute rigorous client and server-side text sanitization to protect structured generation paths.
-
-## Deployment
-
-**Vercel (Frontend & Serverless APIs):**
-When deploying to Vercel, set the **Root Directory** to the repository root if you are using the Vercel API routing, or configure Vercel to build the `frontend` workspace.
-
-**Firebase (Database & Functions):**
-Use the deployment scripts provided in the root `package.json`:
+### 3. Start Development Server
 ```bash
-pnpm run deploy:firebase
+npm run dev
 ```
 
-## Known Limitations
+The application will be available at `http://localhost:5173`.
 
-* Voice assistance relies on modern browser WebSockets and microphone permissions.
-* The application currently requires a Firebase project for authentication and data storage; it cannot run fully offline.
-* Real-time bill splitting sync requires active internet connections and Firebase listener quotas.
+## 🔐 Environment Variables
 
-## Contributing
+| Variable Name | Purpose | Required |
+| :--- | :--- | :--- |
+| `VITE_FIREBASE_API_KEY` | Firebase Client API Key | Yes |
+| `VITE_FIREBASE_AUTH_DOMAIN` | Firebase Auth Domain | Yes |
+| `VITE_FIREBASE_PROJECT_ID` | Firebase Project ID | Yes |
+| `VITE_FIREBASE_STORAGE_BUCKET` | Firebase Storage Bucket | Yes |
+| `VITE_FIREBASE_MESSAGING_SENDER_ID` | Firebase Cloud Messaging ID | Yes |
+| `VITE_FIREBASE_APP_ID` | Firebase Web App ID | Yes |
+| `VITE_GEMINI_API_KEY` | Google AI Studio Key (for client-side fallback) | Yes |
 
-Please refer to `docs/CONTRIBUTING.md` and `docs/Guidelines.md` for coding standards, pull request processes, and architectural boundaries.
+## 📂 Project Structure
+- `/frontend`: The complete React web application.
+  - `/src/app`: UI Components and Screens.
+  - `/src/lib/firebase`: Core Firebase configuration and data models.
+  - `/src/services`: AI, Voice, and third-party integrations.
+  - `/src/hooks`: TanStack Query data fetching logic.
+- `/backend/functions`: Secure Node.js serverless backend for AI and gamification logic.
+- `/infrastructure`: Security rules for Firestore and Storage.
 
----
+## 🚀 Deployment Guide
+Spendr is deployed natively via Firebase CLI. Ensure you are logged in to the correct Firebase project.
 
-**Spendr is the Financial Operating System. AEGIS is the Intelligence Engine. Together they form a next-generation AI-powered Financial Intelligence Platform designed to help individuals understand, manage, and anticipate the future of their financial lives.**
+```bash
+# Deploys Firestore Rules, Storage Rules, Functions, and the Frontend
+npm run deploy:firebase
+```
 
-## License
+## ⚡ Performance Optimizations
+- **Stale-While-Revalidate**: Extensive use of React Query to instantly load cached data while fetching fresh data in the background.
+- **Bundle Splitting**: The massive Firebase SDK is chunked asynchronously (`auth`, `firestore`, `core`) to guarantee fast mobile load times.
+- **Skeleton Loaders**: UI layout shifts are prevented using animated skeleton placeholders during network latency.
 
-MIT License
+## 🛡 Security Measures
+- **Backend-Authoritative Gamification**: Users cannot arbitrarily increase their XP or manipulate their subscription tiers; this logic is locked behind Firebase Functions.
+- **Document-Level Security Rules**: Firestore rules ensure users can only read/write data for groups they are explicitly a member of.
+- **Storage Quotas**: Firebase Storage rules prevent malicious uploads (capped at 2MB for avatars).
+
+## 🗺 Roadmap
+- **Current**: Expense tracking, AI insights, Group splitting, Gamification.
+- **Upcoming**: Native iOS/Android apps via Capacitor, Bank Account Syncing (Account Aggregator framework).
+- **Long-Term**: Automated mutual fund investments and personalized wealth management.
+
+## 🤝 Contributing
+We welcome contributions! Please see our [CONTRIBUTING.md](./CONTRIBUTING.md) for branch strategies, commit conventions, and pull request guidelines.
+
+## 📄 License
+This project is licensed under the MIT License - see the [LICENSE](./LICENSE) file for details.

@@ -1,6 +1,7 @@
 import { getDocs, limit, orderBy, query } from "firebase/firestore";
 import { getAuth } from "firebase/auth";
-import { app } from "../firebase";
+import { httpsCallable } from "firebase/functions";
+import { app, functions } from "../firebase";
 import { userRewardsRef } from "./paths";
 import type { RewardEvent } from "../../types/reward";
 
@@ -25,22 +26,12 @@ export async function logUserReward(uid: string, reward: Omit<RewardEvent, "id" 
   
   if (!currentUser) throw new Error("Must be logged in to claim rewards");
   
-  const idToken = await currentUser.getIdToken();
-  const baseUrl = import.meta.env.VITE_API_URL || 'https://spendr-main.vercel.app';
+  const logRewardFn = httpsCallable(functions, "logReward");
   
-  const response = await fetch(`${baseUrl}/api/logReward`, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      'Authorization': `Bearer ${idToken}`
-    },
-    body: JSON.stringify(reward)
-  });
-
-  if (!response.ok) {
-    const err = await response.json().catch(() => ({}));
-    throw new Error(err.error || "Failed to log reward");
+  try {
+    const result = await logRewardFn(reward);
+    return result.data as RewardEvent;
+  } catch (err: any) {
+    throw new Error(err.message || "Failed to log reward");
   }
-
-  return response.json();
 }

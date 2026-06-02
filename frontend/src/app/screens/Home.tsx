@@ -1,4 +1,4 @@
-import { useEffect, useState, Suspense, lazy } from "react";
+import { useEffect, useState, Suspense, lazy, useMemo } from "react";
 import { motion } from "motion/react";
 import { ArrowRight, Eye, EyeOff, Plus, Users, ScanLine, MoreHorizontal, Bell, Sparkles, Wand2 } from "lucide-react";
 import { useNavigate } from "react-router";
@@ -23,6 +23,9 @@ import { trackDashboardOpened } from "../../services/analytics";
 
 import { SplitCreationFlow } from "../components/smartsplit/SplitCreationFlow";
 import { SmartBillFlow } from "../components/smartbill/SmartBillFlow";
+import { BillSplitWidget } from "../components/home/BillSplitWidget";
+import { NotificationFeedModal } from "../components/notifications/NotificationFeedModal";
+import { useNotifications } from "../../hooks/useNotifications";
 import { useBillSplits } from "../../hooks/useBillSplits";
 import { useAssistantStore } from "../../store/assistantStore";
 
@@ -39,10 +42,20 @@ export function Home() {
   
   const [isCreateSplitOpen, setIsCreateSplitOpen] = useState(false);
   const [isSmartBillOpen, setIsSmartBillOpen] = useState(false);
+  const [isNotificationsOpen, setIsNotificationsOpen] = useState(false);
   const [showBalance, setShowBalance] = useState(true);
 
-  const monthKey = format(new Date(), "yyyy-MM");
-  const { income, expenses } = getMonthTotals(allTx, monthKey);
+  const {
+    notifications,
+    unreadCount,
+    markAsRead,
+    markAllAsRead,
+    generateCoaching,
+    isGenerating
+  } = useNotifications(userData, allTx);
+
+  const monthKey = useMemo(() => format(new Date(), "yyyy-MM"), []);
+  const { income, expenses } = useMemo(() => getMonthTotals(allTx, monthKey), [allTx, monthKey]);
   
   const { statuses: achievements } = useAchievements(allTx, userData ?? null);
   const { financialLevel } = useFinancialLevels(allTx, achievements, userData ?? null);
@@ -52,8 +65,8 @@ export function Home() {
   }, []);
 
   const displayName = userData?.displayName ?? authUser?.displayName ?? "User";
-  const balance = allTx.length > 0 ? computeBalanceFromTransactions(allTx) : (userData?.balance ?? 0);
-  const recent = allTx.slice(0, 4);
+  const balance = useMemo(() => allTx.length > 0 ? computeBalanceFromTransactions(allTx) : (userData?.balance ?? 0), [allTx, userData?.balance]);
+  const recent = useMemo(() => allTx.slice(0, 4), [allTx]);
 
   return (
     <div className="min-h-[100dvh] pb-safe-nav bg-background px-4 md:px-8 lg:px-12 pt-12">
@@ -81,9 +94,20 @@ export function Home() {
             <h1 className="text-xl font-bold text-foreground leading-tight">{displayName}</h1>
           </div>
         </div>
-        <button className="relative w-10 h-10 flex items-center justify-center rounded-full bg-card border border-border shadow-sm">
+        <button 
+          onClick={() => setIsNotificationsOpen(true)}
+          className="relative w-10 h-10 flex items-center justify-center rounded-full bg-card border border-border shadow-sm hover:bg-white/5 transition-colors"
+        >
           <Bell size={20} className="text-foreground" />
-          <span className="absolute top-2 right-2.5 w-2 h-2 bg-destructive rounded-full border border-card"></span>
+          {unreadCount > 0 && (
+            <motion.span 
+              initial={{ scale: 0 }}
+              animate={{ scale: 1 }}
+              className="absolute -top-1 -right-1 w-5 h-5 flex items-center justify-center bg-destructive text-[10px] font-bold text-white rounded-full border border-card"
+            >
+              {unreadCount > 9 ? "9+" : unreadCount}
+            </motion.span>
+          )}
         </button>
       </motion.div>
 
@@ -157,7 +181,7 @@ export function Home() {
       >
         {[
           { id: 'add', icon: Plus, label: 'Add Expense', color: 'text-primary', bg: 'bg-primary/10', action: () => navigate("/transactions") },
-          { id: 'split', icon: Users, label: 'Split Bill', color: 'text-[#8B5CF6]', bg: 'bg-[#8B5CF6]/10', action: () => setIsCreateSplitOpen(true) },
+          { id: 'split', icon: Users, label: 'Split Bill', color: 'text-[#8B5CF6]', bg: 'bg-[#8B5CF6]/10', action: () => navigate("/bill-split") },
           { id: 'smart', icon: Wand2, label: 'Smart Bill', color: 'text-accent', bg: 'bg-accent/10', action: () => setIsSmartBillOpen(true) },
           { id: 'ai', icon: Sparkles, label: 'AI Assistant', color: 'text-blue-400', bg: 'bg-blue-400/10', action: toggleAssistant },
         ].map((action) => (
@@ -233,6 +257,16 @@ export function Home() {
         </div>
       </motion.div>
 
+      {/* Bill Splits Widget */}
+      <motion.div
+        initial={{ opacity: 0, y: 15 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 0.45 }}
+        className="mb-8"
+      >
+        <BillSplitWidget onCreateClick={() => navigate("/bill-split")} />
+      </motion.div>
+
       {/* 6. Recent Transactions */}
       <motion.div
         initial={{ opacity: 0, y: 20 }}
@@ -287,6 +321,16 @@ export function Home() {
       <SmartBillFlow 
         isOpen={isSmartBillOpen}
         onClose={() => setIsSmartBillOpen(false)}
+      />
+
+      <NotificationFeedModal
+        isOpen={isNotificationsOpen}
+        onClose={() => setIsNotificationsOpen(false)}
+        notifications={notifications}
+        onMarkAsRead={markAsRead}
+        onMarkAllAsRead={markAllAsRead}
+        onGenerateCoaching={generateCoaching}
+        isGenerating={isGenerating}
       />
     </div>
   );

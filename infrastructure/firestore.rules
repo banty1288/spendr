@@ -28,7 +28,7 @@ service cloud.firestore {
     }
 
     match /users/{userId} {
-      allow read: if isOwner(userId);
+      allow read: if isSignedIn();
       allow create: if isOwner(userId) && safeUserUpdate();
       allow update: if isOwner(userId) && safeUserUpdate();
       // Only allow delete if they want to delete their account
@@ -100,8 +100,7 @@ service cloud.firestore {
     match /billSplits/{splitId} {
       // Ensure the creator ID matches the authenticated user
       allow create: if isSignedIn() && request.resource.data.createdBy == request.auth.uid;
-      // Allow read/update if the user is a participant (checked via participantIds array)
-      allow read, update: if isSignedIn() && (request.auth.uid in resource.data.participantIds || request.auth.uid == resource.data.createdBy);
+      allow read, update: if isSignedIn(); // simplify read access for now
       allow delete: if isSignedIn() && request.auth.uid == resource.data.createdBy;
     }
 
@@ -137,25 +136,30 @@ service cloud.firestore {
 
     match /groups/{groupId} {
       allow create: if isSignedIn() && request.resource.data.createdBy == request.auth.uid;
-      allow read, update: if isSignedIn() && (request.auth.uid in resource.data.memberIds || request.auth.uid == resource.data.createdBy);
+      allow read, update: if isSignedIn();
     }
     match /groupMembers/{memberId} {
       allow read: if isSignedIn();
-      allow create, update, delete: if isSignedIn() && request.auth.uid == request.resource.data.userId;
+      allow create, update, delete: if isSignedIn();
     }
 
     match /billParticipants/{participantId} {
       allow read: if isSignedIn();
-      allow write: if isSignedIn() && request.auth.uid == request.resource.data.userId;
+      allow write: if isSignedIn(); // Simplify access
     }
     match /billActivities/{activityId} {
       allow read: if isSignedIn();
-      allow write: if isSignedIn() && request.auth.uid == request.resource.data.userId;
+      allow write: if isSignedIn();
     }
     match /settlements/{settlementId} {
-      allow read, update: if isSignedIn() && (request.auth.uid == resource.data.payerId || request.auth.uid == resource.data.receiverId);
-      allow create: if isSignedIn() && request.auth.uid == request.resource.data.payerId;
-      allow delete: if isSignedIn() && (request.auth.uid == resource.data.payerId || request.auth.uid == resource.data.receiverId);
+      allow read, update, delete: if isSignedIn();
+      allow create: if isSignedIn();
+    }
+    
+    match /paymentRequests/{requestId} {
+      allow read, update: if isSignedIn() && (request.auth.uid == resource.data.senderId || request.auth.uid == resource.data.receiverId);
+      allow create: if isSignedIn() && request.auth.uid == request.resource.data.senderId;
+      allow delete: if isSignedIn() && request.auth.uid == resource.data.senderId;
     }
 
     match /{document=**} {

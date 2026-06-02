@@ -4,6 +4,8 @@ import { BudgetRecommendation } from "../types/budget";
 import { useAuthStore } from "../store/authStore";
 import { toast } from "sonner";
 import { useUserData } from "./useUserData";
+import { functions } from "../lib/firebase";
+import { httpsCallable } from "firebase/functions";
 
 const QUERY_KEY = "budget";
 
@@ -26,27 +28,15 @@ export function useAIBudget(month: string) {
     mutationFn: async (transactions: any[]) => {
       if (!user?.uid) throw new Error("Not authenticated");
       
-      const idToken = await user.getIdToken();
-      
-      const res = await fetch("/api/generateBudget", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${idToken}`,
-        },
-        body: JSON.stringify({
-          month,
-          transactions,
-          income: userData?.balance || 0,
-          currency: userData?.preferences?.currency || "USD"
-        }),
+      const generateBudgetFn = httpsCallable(functions, "generateBudget");
+      const result = await generateBudgetFn({
+        month,
+        transactions,
+        income: userData?.balance || 0,
+        currency: userData?.preferences?.currency || "USD"
       });
 
-      if (!res.ok) {
-        throw new Error("Failed to generate budget");
-      }
-
-      const data = await res.json();
+      const data = result.data as any;
       
       // Save the generated budget to Firebase
       await saveBudget(user.uid, month, data.budget);

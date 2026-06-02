@@ -6,15 +6,30 @@ import { generateUpiIntent } from '../../../lib/upi';
 
 interface SettlementCardProps {
   debt: SimplifiedDebt;
-  receiverUpiId?: string;
+  onRequestPayment?: (debt: SimplifiedDebt) => Promise<void>;
   onMarkPaid: (debt: SimplifiedDebt) => Promise<void>;
 }
 
-export function SettlementCard({ debt, receiverUpiId, onMarkPaid }: SettlementCardProps) {
+import { doc, getDoc } from 'firebase/firestore';
+import { db } from '../../../lib/firebase';
+
+export function SettlementCard({ debt, onMarkPaid, onRequestPayment }: SettlementCardProps) {
   const { user } = useAuthStore();
   const isPayer = user?.uid === debt.payerId;
   const isReceiver = user?.uid === debt.receiverId;
   const [isProcessing, setIsProcessing] = useState(false);
+  const [isRequesting, setIsRequesting] = useState(false);
+  const [receiverUpiId, setReceiverUpiId] = useState<string | undefined>();
+
+  React.useEffect(() => {
+    if (debt.receiverId) {
+      getDoc(doc(db, "users", debt.receiverId)).then(snap => {
+        if (snap.exists()) {
+          setReceiverUpiId(snap.data().upiId);
+        }
+      }).catch(console.error);
+    }
+  }, [debt.receiverId]);
 
   const handlePayUPI = () => {
     if (!receiverUpiId) {
@@ -33,28 +48,39 @@ export function SettlementCard({ debt, receiverUpiId, onMarkPaid }: SettlementCa
     window.location.href = upiLink;
   };
 
-  const handleRequestMoney = () => {
-    if (!receiverUpiId) {
-      alert("You haven't provided your UPI ID to request money.");
-      return;
-    }
-    const upiLink = generateUpiIntent({
-      pa: receiverUpiId,
-      pn: debt.receiverName,
-      am: debt.amount.toString(),
-      cu: 'INR',
-      tn: `Spendr Bill Split`
-    });
-
-    if (navigator.share) {
-      navigator.share({
-        title: 'Payment Request',
-        text: `Hi ${debt.payerName}, you owe me ₹${debt.amount}. Please pay using this link:`,
-        url: upiLink
-      }).catch(console.error);
+  const handleRequestMoney = async () => {
+    if (onRequestPayment) {
+      setIsRequesting(true);
+      try {
+        await onRequestPayment(debt);
+      } catch (e) {
+        console.error(e);
+      } finally {
+        setIsRequesting(false);
+      }
     } else {
-      navigator.clipboard.writeText(upiLink);
-      alert('Payment link copied to clipboard! You can paste it in WhatsApp.');
+      if (!receiverUpiId) {
+        alert("You haven't provided your UPI ID to request money.");
+        return;
+      }
+      const upiLink = generateUpiIntent({
+        pa: receiverUpiId,
+        pn: debt.receiverName,
+        am: debt.amount.toString(),
+        cu: 'INR',
+        tn: `Spendr Bill Split`
+      });
+
+      if (navigator.share) {
+        navigator.share({
+          title: 'Payment Request',
+          text: `Hi ${debt.payerName}, you owe me ₹${debt.amount}. Please pay using this link:`,
+          url: upiLink
+        }).catch(console.error);
+      } else {
+        navigator.clipboard.writeText(upiLink);
+        alert('Payment link copied to clipboard! You can paste it in WhatsApp.');
+      }
     }
   };
 
@@ -120,19 +146,20 @@ export function SettlementCard({ debt, receiverUpiId, onMarkPaid }: SettlementCa
           </button>
         )}
 
-        {isReceiver && receiverUpiId && (
+        {isReceiver && (
           <>
             <button 
               onClick={handleSendWhatsApp}
               className="px-3 py-1.5 bg-green-500/20 hover:bg-green-500/30 text-green-400 text-xs font-semibold rounded-lg transition-colors flex items-center gap-1"
             >
-              <Share className="w-3.5 h-3.5" /> Send
+              <Share className="w-3.5 h-3.5" /> WhatsApp
             </button>
             <button 
               onClick={handleRequestMoney}
-              className="px-3 py-1.5 bg-blue-500/20 hover:bg-blue-500/30 text-blue-400 text-xs font-semibold rounded-lg transition-colors flex items-center gap-1 hidden sm:flex"
+              disabled={isRequesting}
+              className="px-3 py-1.5 bg-blue-500/20 hover:bg-blue-500/30 text-blue-400 text-xs font-semibold rounded-lg transition-colors flex items-center gap-1"
             >
-              <Share className="w-3.5 h-3.5" /> Share
+              {isRequesting ? 'Wait...' : <><Share className="w-3.5 h-3.5" /> Request</>}
             </button>
           </>
         )}

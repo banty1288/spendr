@@ -10,8 +10,7 @@
     "build": "pnpm --filter frontend build",
     "lint": "pnpm --filter frontend lint",
     "preview": "pnpm --filter frontend preview",
-    "deploy:firebase": "firebase deploy --config infrastructure/firebase.json",
-    "deploy:vercel": "vercel --local-config infrastructure/vercel.json"
+    "deploy:firebase": "firebase deploy"
   },
   "devDependencies": {
     "@vercel/node": "^5.8.8"

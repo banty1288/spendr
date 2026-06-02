@@ -18,6 +18,7 @@ export function PersonalInfo() {
   const [displayName, setDisplayName] = useState("");
   const [email, setEmail] = useState("");
   const [phone, setPhone] = useState("");
+  const [upiId, setUpiId] = useState("");
   const [photoUrl, setPhotoUrl] = useState("");
   const [isUploading, setIsUploading] = useState(false);
 
@@ -27,12 +28,14 @@ export function PersonalInfo() {
       setEmail(userData.email || "");
       setPhotoUrl((userData.profile as any)?.avatarUrl || user?.photoURL || "");
       setPhone("");
+      setUpiId(userData.upiId || "");
     }
   }, [userData, user]);
 
   const handleSave = () => {
     updateUser({ 
       displayName, 
+      upiId,
       profile: { ...userData?.profile, avatarUrl: photoUrl } as any 
     })
       .then(() => toast.success("Profile updated successfully"))
@@ -172,6 +175,22 @@ export function PersonalInfo() {
                   onChange={(e) => setPhone(e.target.value)}
                   className="w-full bg-card shadow-sm border border-border rounded-2xl py-4 pl-12 pr-4 text-white placeholder:text-white/30 focus:outline-none focus:border-[#00d9ff] transition-colors"
                   placeholder="Add phone number"
+                />
+              </div>
+            </div>
+
+            <div className="space-y-2">
+              <label className="text-sm text-white/60 ml-1">UPI ID</label>
+              <div className="relative">
+                <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+                  <span className="text-white/40 font-bold text-xs border border-white/40 rounded px-1">UPI</span>
+                </div>
+                <input
+                  type="text"
+                  value={upiId}
+                  onChange={(e) => setUpiId(e.target.value)}
+                  className="w-full bg-card shadow-sm border border-border rounded-2xl py-4 pl-14 pr-4 text-white placeholder:text-white/30 focus:outline-none focus:border-[#00d9ff] transition-colors"
+                  placeholder="e.g. username@okhdfcbank"
                 />
               </div>
             </div>

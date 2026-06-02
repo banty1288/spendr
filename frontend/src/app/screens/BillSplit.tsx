@@ -185,7 +185,6 @@ function BillDetailsView({ billId }: { billId: string }) {
                 <SettlementCard 
                   key={idx}
                   debt={s}
-                  receiverUpiId={participants.find(p => p.userId === s.receiverId)?.upiId}
                   onMarkPaid={async (debt) => {
                     if (!payerParticipant) return;
                     await markParticipantPaid({

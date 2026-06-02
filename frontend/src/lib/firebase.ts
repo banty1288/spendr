@@ -8,6 +8,7 @@ import {
 } from "firebase/auth";
 import { getFirestore, initializeFirestore, persistentLocalCache, persistentMultipleTabManager } from "firebase/firestore";
 import { getStorage } from "firebase/storage";
+import { getFunctions } from "firebase/functions";
 import { sanitizeEnv } from "./firebase/env";
 
 // Your web app's Firebase configuration
@@ -99,6 +100,7 @@ export const db = initializeFirestore(app, {
   ignoreUndefinedProperties: true
 });
 export const storage = getStorage(app);
+export const functions = getFunctions(app, "us-central1");
 export const googleProvider = new GoogleAuthProvider();
 googleProvider.setCustomParameters({ prompt: "select_account" });
 

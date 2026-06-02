@@ -7,7 +7,8 @@ import { buildSystemInstruction } from "../lib/firebase/voiceContext";
 import { useAuthStore } from "../store/authStore";
 import { useUserData } from "./useUserData";
 import { addDoc, collection } from "firebase/firestore";
-import { db } from "../lib/firebase";
+import { db, functions } from "../lib/firebase";
+import { httpsCallable } from "firebase/functions";
 import { useAssistantStore } from "../store/assistantStore";
 
 export type AssistantState = "idle" | "connecting" | "listening" | "thinking" | "speaking" | "error";
@@ -97,15 +98,11 @@ export function useVoiceAssistant() {
       if (!token) throw new Error("No auth token");
 
       // Get API Key
-      const baseUrl = import.meta.env.VITE_API_URL || 'https://spendr-main.vercel.app';
       let apiKey = "";
       try {
-        const res = await fetch(`${baseUrl}/api/getVoiceToken`, {
-          headers: { "Authorization": `Bearer ${token}` }
-        });
-        if (!res.ok) throw new Error(`HTTP ${res.status}`);
-        const data = await res.json();
-        apiKey = data.token;
+        const getTokenFn = httpsCallable(functions, "getVoiceToken");
+        const res = await getTokenFn();
+        apiKey = (res.data as any).token;
       } catch (e) {
         console.warn("Failed to fetch from backend, using fallback token", e);
         // Fallback for local development if the Vercel backend rejects the token due to Project ID mismatch

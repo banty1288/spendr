@@ -4,6 +4,8 @@ import { toggleLike, hasUserLiked } from "../lib/firebase/news";
 import { useAuthStore } from "../store/authStore";
 import { useTransactions } from "./useTransactions";
 import { useUserData } from "./useUserData";
+import { functions } from "../lib/firebase";
+import { httpsCallable } from "firebase/functions";
 
 const QUERY_KEY = "personalizedFeed";
 
@@ -22,16 +24,9 @@ export function useNews() {
         wellnessScore: userData?.profile?.financialGoals ? 75 : 50 // arbitrary default if missing complex wellness scoring
       };
 
-      const baseUrl = import.meta.env.VITE_API_URL || 'https://spendr-main.vercel.app';
-      const res = await fetch(`${baseUrl}/api/getPersonalizedFeed`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(context)
-      });
-      
-      if (!res.ok) throw new Error("Failed to fetch personalized feed");
-      const data: FeedItem[] = await res.json();
-      return data;
+      const getFeedFn = httpsCallable(functions, "getPersonalizedFeed");
+      const res = await getFeedFn(context);
+      return (res.data as any).articles as FeedItem[];
     },
     staleTime: 1000 * 60 * 60, // 1 hour caching so we don't spam Gemini
     enabled: !!user // Only fetch if user is present

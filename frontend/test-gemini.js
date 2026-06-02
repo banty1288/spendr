@@ -1,33 +1,15 @@
-import fs from 'fs';
-
 const GEMINI_REST_URL = "https://generativelanguage.googleapis.com/v1beta/models/gemini-flash-latest:generateContent";
-const apiKey = "AIzaSyBiVbB0gi4UpsWRq1OvX3Dn53DvSN65Bfg"; // from .env.local
+const apiKey = "AIzaSyBiVbB0gi4UpsWRq1OvX3Dn53DvSN65Bfg";
 
-async function test() {
-  const requestBody = {
-    system_instruction: {
-      parts: [{ text: "System prompt" }],
-    },
-    contents: [
-      {
-        role: "user",
-        parts: [{ text: "Hello" }],
-      },
-    ],
-    generationConfig: {
-      temperature: 0.7,
-      maxOutputTokens: 512,
-    },
-  };
+const requestBody = {
+  contents: [{ role: "user", parts: [{ text: "Hello" }] }],
+};
 
-  const response = await fetch(`${GEMINI_REST_URL}?key=${apiKey}`, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(requestBody),
-  });
-
-  const text = await response.text();
-  console.log("Status:", response.status);
-  console.log("Response:", text);
-}
-test();
+fetch(`${GEMINI_REST_URL}?key=${apiKey}`, {
+  method: "POST",
+  headers: { "Content-Type": "application/json" },
+  body: JSON.stringify(requestBody),
+})
+  .then((r) => r.json().then(j => ({ ok: r.ok, status: r.status, json: j })))
+  .then((res) => console.log(JSON.stringify(res, null, 2)))
+  .catch(console.error);

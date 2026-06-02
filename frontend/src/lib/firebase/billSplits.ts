@@ -8,6 +8,7 @@ import {
   serverTimestamp,
   onSnapshot,
   getDocs,
+  documentId
 } from "firebase/firestore";
 import { db } from "../firebase";
 import { BillSplit, BillParticipant, Settlement, BillActivity } from "../../types/billSplit";
@@ -90,12 +91,24 @@ export function subscribeToUserBillSplits(
       return resultArray;
     }, [] as string[][]);
     
+    const promises = chunks.map(chunk => {
+      const bQuery = query(collection(db, BILLS_COLLECTION), where(documentId(), "in", chunk));
+      return getDocs(bQuery);
+    });
+    
+    const snapshots = await Promise.all(promises);
     let allBills: BillSplit[] = [];
-    for (const chunk of chunks) {
-      const bQuery = query(collection(db, BILLS_COLLECTION), where("__name__", "in", chunk));
-      const bSnap = await getDocs(bQuery);
-      allBills = allBills.concat(bSnap.docs.map(d => ({ id: d.id, ...d.data() } as BillSplit)));
-    }
+    
+    snapshots.forEach(bSnap => {
+      allBills = allBills.concat(bSnap.docs.map(d => {
+        const data = d.data();
+        return { 
+          id: d.id, 
+          ...data,
+          createdAt: data.createdAt?.toDate ? data.createdAt.toDate().toISOString() : (data.createdAt || new Date().toISOString())
+        } as BillSplit;
+      }));
+    });
     
     allBills.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
     onUpdate(allBills);
@@ -169,4 +182,27 @@ export async function createSettlement(
   }
 
   await batch.commit();
+}
+
+export function subscribeToGroupBillSplits(
+  groupId: string,
+  onUpdate: (bills: BillSplit[]) => void
+): () => void {
+  const bQuery = query(
+    collection(db, BILLS_COLLECTION),
+    where("groupId", "==", groupId),
+    orderBy("createdAt", "desc")
+  );
+
+  return onSnapshot(bQuery, (snapshot) => {
+    const allBills = snapshot.docs.map(d => {
+      const data = d.data();
+      return { 
+        id: d.id, 
+        ...data,
+        createdAt: data.createdAt?.toDate ? data.createdAt.toDate().toISOString() : (data.createdAt || new Date().toISOString())
+      } as BillSplit;
+    });
+    onUpdate(allBills);
+  });
 }
