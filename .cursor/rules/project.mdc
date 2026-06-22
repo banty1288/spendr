@@ -37,7 +37,7 @@ Personal-finance mobile app. Design: https://www.figma.com/design/oKN131gbYKd6PR
 
 ## Folder structure
 
-```
+``
 src/
   app/
     screens/          # Full-page views
